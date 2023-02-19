@@ -1,0 +1,85 @@
+//
+//  ProgressionView.swift
+//  JobHuntr
+//
+//  Created by Adam Ali on 13/02/2023.
+//
+
+import SwiftUI
+
+struct ProgressionView: View {
+    @Binding var applicationStage: ApplicationStage
+    
+    var body: some View {
+        VStack {
+            ZStack {
+//                Rectangle()
+//                    .fill(.gray)
+//                    .frame(width: 200, height: 4)
+                let currentStage = enumerateStage(applicationStage)
+                HStack {
+                    VStack(alignment: .leading) {
+                        Circle()
+                            .frame(width: 24, height: 24)
+                            .padding(.horizontal)
+                            .foregroundColor(
+                                currentStage >= enumerateStage(.applied) ? .orange : .gray)
+                        Text("Applied")
+                    }
+                    VStack {
+                        Circle()
+                            .frame(width: 24, height: 24)
+                            .padding(.horizontal)
+                            .foregroundColor(currentStage >= enumerateStage(.preInterview) ? .blue : .gray)
+                        Text("Pre-Interview")
+                    }
+                    VStack {
+                        Circle()
+                            .frame(width: 24, height: 24)
+                            .padding(.horizontal)
+                            .foregroundColor(currentStage >= enumerateStage(.interviewing) ? .blue : .gray)
+                        Text("Interview")
+                    }
+                    
+                    VStack {
+                        Circle()
+                            .frame(width: 24, height: 24)
+                            .padding(.horizontal)
+                            .foregroundColor(
+                                applicationStage == .offer ? .yellow :
+                                    applicationStage == .rejection ? .red :
+                                    applicationStage == .accepted ? .green : .gray
+                            )
+                        Text("Offer")
+                    }
+                }
+            }
+            
+        }
+        .padding()
+
+    }
+    
+    func enumerateStage(_ applicationStage: ApplicationStage) -> Int {
+        switch applicationStage {
+        case .applied:
+            return 0
+        case .preInterview:
+            return 1
+        case .interviewing:
+            return 2
+        case .offer:
+            return 3
+        case .rejection:
+            return 4
+        case .accepted:
+            return 5
+        }
+    }
+}
+
+struct ProgressionView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProgressionView(applicationStage: .constant(.accepted))
+    }
+}
