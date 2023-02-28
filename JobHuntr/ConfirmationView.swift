@@ -12,21 +12,29 @@ struct ConfirmationView: View {
     @EnvironmentObject var sessionManager: SessionManager
     
     @State var confirmationCode = ""
+    @State var error = ""
     
     let username: String
     
     var body: some View {
         VStack {
             Section {
+                Text("Check your e-mail for a confirmation code.")
                 Text("Username: \(username)")
                 TextField("Confirmation Code", text: $confirmationCode)
+                Text(error)
+                    .font(.headline)
+                    .foregroundColor(.red)
             }
             .textFieldStyle(RoundedBorderTextFieldStyle())
             
             Button("Confirm", action: {
                 Task {
-                    await sessionManager.confirmSignUp(for: username, with: confirmationCode)
+                    await sessionManager.confirmSignUp(for: username, with: confirmationCode, errorMsg: $error)
                 }
+            })
+            Button("Cancel", action: {
+                sessionManager.showLogin()
             })
         }
         .padding()

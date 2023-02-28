@@ -19,7 +19,7 @@ struct ApplicationCardView: View {
         ZStack {
             HStack {
                 Circle()
-                    .fill(stageColor(application.currentStage))
+                    .fill(stageColor(application.currentStage!))
                     .frame(width: 20, height: 20)
                 
                 VStack(alignment: .leading) {
@@ -30,8 +30,11 @@ struct ApplicationCardView: View {
                         Text("Unknown Company")
                             .font(.headline)
                     }
-                    Text(application.jobTitle)
-                    let dateStr = application.dateApplied.foundationDate.formatted(date: .numeric, time: .omitted)
+                    Text(application.jobTitle!)
+                    Text(application.id)
+                    
+                    let dateStr = formatDateString(from: application.dateApplied!.foundationDate)
+                    
                     Text("Applied \(dateStr)")
                         .font(.subheadline)
                 }
@@ -39,9 +42,17 @@ struct ApplicationCardView: View {
         }
         .onAppear {
             Task {
-                company = await sessionManager.fetchCompany(application.companyID)
+                company = await sessionManager.fetchCompany(application.companyID!)
             }
         }
+    }
+    
+    func formatDateString(from date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        
+        return dateFormatter.string(from: date)
     }
     
     func stageColor(_ stage: ApplicationStage) -> Color {

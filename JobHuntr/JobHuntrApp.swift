@@ -10,6 +10,7 @@ import AWSDataStorePlugin
 import AWSCognitoAuthPlugin
 import AWSDataStorePlugin
 import AWSAPIPlugin
+import AWSS3StoragePlugin
 import SwiftUI
 
 @main
@@ -40,33 +41,57 @@ struct JobHuntrApp: App {
     }
     
     init() {
-        self.configureAmplify()
         self.initialUpdate()
         
     }
     
     func initialUpdate() {
         Task {
+            print("===========================================================")
+            print("Starting Listeners")
+            self.setupListeners()
+            print("Configuring Amplify")
+            self.configureAmplify()
+            print("Getting current auth user")
             await sessionManager.getCurrentAuthUser()
+            print("Starting DataStore")
             await startDataStore()
+            print("===========================================================")
+        }
+    }
+    
+    func setupListeners() {
+        let _ = Amplify.Hub.listen(to: .dataStore) { event in
+            if event.eventName == HubPayload.EventName.DataStore.networkStatus {
+                guard let networkStatus = event.data as? NetworkStatusEvent else {
+                    print("Failed to cast data as NetworkStatusEvent")
+                    return
+                }
+                print("User receives a network connection status: \(networkStatus.active)")
+            }
         }
     }
     
     func configureAmplify() {
         // Configure Amplify
         do {
+            // Define sync expressions
             let appSyncExpr = DataStoreSyncExpression.syncExpression(Application.schema) {
                 return QueryPredicateConstant.all
             }
             let companySyncExpr = DataStoreSyncExpression.syncExpression(Company.schema) {
                 return QueryPredicateConstant.all
             }
+            let syncExprs = [appSyncExpr, companySyncExpr]
             
+            // Load plugins
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.add(plugin: AWSDataStorePlugin(modelRegistration: AmplifyModels(),
-                                                       configuration: .custom(syncExpressions: [appSyncExpr, companySyncExpr]))
+                                                       configuration: .custom(syncExpressions: syncExprs))
             )
             try Amplify.add(plugin: AWSAPIPlugin())
+            try Amplify.add(plugin: AWSS3StoragePlugin())
+//            Amplify.Logging.logLevel = .verbose
             try Amplify.configure()
             print("Amplify configured.")
             

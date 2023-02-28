@@ -17,7 +17,7 @@ struct NewApplicationView: View {
     @State private var companyPhone = ""
     
     @State private var jobTitle = ""
-    @State private var dateApplied = Date.now
+    @State private var dateApplied = Date()
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var sessionManager: SessionManager
@@ -70,8 +70,10 @@ struct NewApplicationView: View {
             // Save application
             let application = Application(dateApplied: Temporal.Date(dateApplied), currentStage: .applied, userID: user.userId, jobTitle: jobTitle, companyID: companyID)
             try await Amplify.DataStore.save(application)
+        } catch let error as DataStoreError {
+            print("Unable to save company and application \(error)")
         } catch {
-            print("Unable to save company and application - \(error)")
+            print("Unexpected error \(error)")
         }
     }
 }

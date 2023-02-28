@@ -20,7 +20,10 @@ struct ApplicationsView: View {
     @State private var showingDeleteAlert = false
     
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
+            if isRefreshing {
+                ProgressView()
+            }
             List {
                 if applications.isEmpty {
                     Text("No Applications Found.")
@@ -28,34 +31,33 @@ struct ApplicationsView: View {
                     ForEach($applications, id: \.id) { $application in
                         NavigationLink(destination: ApplicationDetailView(application: $application).environmentObject(sessionManager)) {
                             ApplicationCardView(application: $application)
-                                .swipeActions {
-                                    Button {
+                                .contextMenu {
+                                    Button(action: {
                                         showingDeleteAlert = true
-                                        Task {
-                                            await sessionManager.deleteApplication(application: application)
-                                        }
-                                        // TODO: Refresh
-                                    } label: {
-                                        Image(systemName: "xmark.bin.fill")
+                                    }) {
+                                        Label("Delete", systemImage: "trash.fill")
                                     }
-                                    .tint(.red)
-                                    .alert("Delete Not Implemented", isPresented: $showingDeleteAlert) {
-                                        Button("OK", role: .cancel) { }
-                                    }
+                                }
+                                .actionSheet(isPresented: $showingDeleteAlert) {
+                                    ActionSheet(title: Text("Delete Application?"), message: Text("Are you sure you want to delete this application?"), buttons: [
+                                        .default(Text("OK"), action: {
+                                            Task {
+                                                await sessionManager.deleteApplication(application: application)
+                                                await refreshApplications()
+                                            }
+                                        }),
+                                        .cancel()
+                                    ])
                                 }
                         }
                     }
+                    .onDelete(perform: delete)
                 }
             }
+            
+            
         }
         .navigationTitle("Applications")
-        .refreshable {
-            await refreshApplications()
-        }
-        .overlay {
-            ProgressView()
-                .opacity(isRefreshing ? 1 : 0)
-        }
         .onAppear {
             Task {
                 await queryApplications()
@@ -73,7 +75,24 @@ struct ApplicationsView: View {
                 NewApplicationView(user: user)
                     .environmentObject(sessionManager)
             }
+            .onDisappear{
+                Task {
+                    await refreshApplications()
+                }
+            }
         }
+        
+        
+    }
+    
+    func delete(at offsets: IndexSet) {
+        let index = offsets[offsets.startIndex]
+        let application = self.applications[index]
+        print(application.id)
+        Task {
+            await sessionManager.deleteApplication(application: application)
+        }
+        applications.remove(atOffsets: offsets)
     }
     
     func queryApplications() async {

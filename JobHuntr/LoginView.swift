@@ -35,69 +35,46 @@ struct LoginView: View {
     
     @State var username = ""
     @State var password = ""
+    @State var error: String = ""
+    
+    @State private var isLoading: Bool = false
     
     var body: some View {
         VStack {
             VStack {
                 Spacer()
+                Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
+                    .resizable()
+                    .frame(width: 128, height: 128)
+                Spacer()
+                    .frame(minHeight: 10, idealHeight: 100, maxHeight: 600)
+                    .fixedSize()
                 Section {
                     TextField("Username", text: $username)
                     SecureField("Password", text: $password)
+                    Text(error)
+                        .font(.headline)
+                        .foregroundColor(.red)
+                    
                 }
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                
                 Button("Sign In", action: {
+                    isLoading = true
                     Task {
-                        await sessionManager.signIn(username: username, password: password)
+                        await sessionManager.signIn(username: username, password: password, errorMsg: $error)
                     }
+                    isLoading = false
                 })
+                if isLoading {
+                    ProgressView()
+                }
+                
                 Spacer()
                 Button("Don't have an account? Sign Up.", action: {
                     sessionManager.showSignUp()
                 })
             }
             .padding()
-//            SignInWithAppleButton(onRequest: configure, onCompletion: handle)
-//                .frame(height: 48)
-//                .padding()
-        }
-    }
-//
-//    func configure(_ request: ASAuthorizationAppleIDRequest) {
-//        request.requestedScopes = [.fullName, .email]
-//    }
-//
-//    func handle(_ authResults: Result<ASAuthorization, Error>) {
-//        switch authResults {
-//        case .success(let auth):
-//            switch auth.credential{
-//            case let appleIdCreds as ASAuthorizationAppleIDCredential:
-//                // Handle authorization
-//                if let appleUser = AppleUser(credentials: appleIdCreds) {
-//                    // Send to backend
-//                    let account = UserAccount(appleUserID: appleUser.userId, firstName: appleUser.firstName, lastName: appleUser.lastName, email: appleUser.email)
-//
-//                    Task {
-//                        await saveUser(account)
-//                    }
-//                }
-//            default:
-//                break
-//            }
-//
-//            break
-//        case .failure(let error):
-//            // Handle error
-//            print(error)
-//            break
-//        }
-//    }
-    
-    func saveUser(_ userAccount: UserAccount) async -> Void {
-        do {
-            try await Amplify.DataStore.save(userAccount)
-        } catch {
-            print(error)
         }
     }
 

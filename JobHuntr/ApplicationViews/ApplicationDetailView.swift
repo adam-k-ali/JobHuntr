@@ -23,7 +23,15 @@ struct ApplicationDetailView: View {
             }
             VStack {
                 // Progression View
-                ProgressionView(applicationStage: $application.currentStage)
+                let stage = Binding<ApplicationStage> (
+                    get: {
+                        return application.currentStage!
+                    },
+                    set: {
+                        application.currentStage = $0
+                    }
+                )
+                ProgressionView(applicationStage: stage)
                 Divider()
                 Button(action: {
                     showUpdateView = true
@@ -34,7 +42,7 @@ struct ApplicationDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationTitle(application.jobTitle)
+        .navigationTitle(application.jobTitle!)
         .onAppear {
             Task {
                 await refresh()
@@ -54,7 +62,9 @@ struct ApplicationDetailView: View {
     }
     
     func refresh() async {
-        company = await sessionManager.fetchCompany(application.companyID)
+        if let companyID = application.companyID {
+            company = await sessionManager.fetchCompany(companyID)
+        }
         application = await sessionManager.fetchApplication(id: application.id)!
     }
 }

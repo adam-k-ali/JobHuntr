@@ -53,7 +53,11 @@ final class SessionManager: ObservableObject {
         authState = .login
     }
     
-    func signUp(username: String, email: String, password: String) async {
+    func showConfirm(username: String) {
+        authState = .confirmCode(username: username)
+    }
+    
+    func signUp(username: String, email: String, password: String, errorMsg: Binding<String>) async {
         let attributes = [AuthUserAttribute(.email, value: email)]
         let options = AuthSignUpRequest.Options(userAttributes: attributes)
         
@@ -63,19 +67,20 @@ final class SessionManager: ObservableObject {
             if case let .confirmUser(deliveryDetails, _, userId) = signUpResult.nextStep {
                 print("Delivery details \(String(describing: deliveryDetails)) for userId: \(String(describing: userId))")
                 DispatchQueue.main.async {
-                    self.authState = .confirmCode(username: username)
+                    self.showConfirm(username: username)
                 }
             } else {
                 print("SignUp Complete")
             }
         } catch let error as AuthError {
             print("An error occurred while registering a user \(error)")
+            errorMsg.wrappedValue = error.errorDescription
         } catch {
             print("Unexpected error: \(error)")
         }
     }
     
-    func confirmSignUp(for username: String, with confirmationCode: String) async {
+    func confirmSignUp(for username: String, with confirmationCode: String, errorMsg: Binding<String>) async {
         do {
             let confirmSignUpResult = try await Amplify.Auth.confirmSignUp(
                 for: username,
@@ -90,21 +95,25 @@ final class SessionManager: ObservableObject {
             print("Confirm sign up result completed: \(confirmSignUpResult.isSignUpComplete)")
         } catch let error as AuthError {
             print("An error occurred while confirming sign up \(error)")
+            errorMsg.wrappedValue = error.errorDescription
         } catch {
             print("Unexpected error: \(error)")
         }
     }
     
-    func signIn(username: String, password: String) async {
+    func signIn(username: String, password: String, errorMsg: Binding<String>) async {
         do {
             let signInResult = try await Amplify.Auth.signIn(username: username, password: password)
             if signInResult.isSignedIn {
                 print("Sign in succeeded")
 //                await self.fetchCurrentAuthSession()
                 await self.getCurrentAuthUser()
+                await self.startDataStore()
             }
+            
         } catch let error as AuthError {
             print("Sign in failed \(error)")
+            errorMsg.wrappedValue = error.errorDescription
         } catch {
             print("Unexpected error: \(error)")
         }
@@ -118,7 +127,7 @@ final class SessionManager: ObservableObject {
         await self.getCurrentAuthUser()
         
         // Clear DataStore
-//        await self.clearDataStore()
+        await self.clearDataStore()
     }
     
     func clearDataStore() async {
@@ -137,8 +146,10 @@ final class SessionManager: ObservableObject {
         do {
             let application = try await Amplify.DataStore.query(Application.self, byId: id)
             return application
+        } catch let error as DataStoreError {
+            print("Error querying DataStore for application \(error)")
         } catch {
-            print("Error querying DataStore - \(error)")
+            print("Unexpected error \(error)")
         }
         return nil
     }
@@ -150,8 +161,10 @@ final class SessionManager: ObservableObject {
             let applications = try await Amplify.DataStore.query(Application.self, where: k.userID == user.userId)
             print("\(applications.count) applications found.")
             return applications
+        } catch let error as DataStoreError {
+            print("Error fetching user's applications \(error)")
         } catch {
-            print("Error fetching applications: \(error)")
+            print("Unexpected error \(error)")
         }
         return []
     }
@@ -159,13 +172,16 @@ final class SessionManager: ObservableObject {
     func fetchCompany(_ companyID: String) async -> Company? {
         let companyKeys = Company.keys
         do {
+            
             let company = try await Amplify.DataStore.query(Company.self, where: companyKeys.id == companyID)
             if company.isEmpty {
                 return nil
             }
             return company[0]
+        } catch let error as DataStoreError {
+            print("Error finding company \(error)")
         } catch {
-            print("Error finding company: \(error)")
+            print("Unexpected Error \(error)")
         }
         return nil
     }
@@ -178,8 +194,10 @@ final class SessionManager: ObservableObject {
                 return nil
             }
             return company[0]
+        } catch let error as DataStoreError {
+            print("Error finding company by name \(error)")
         } catch {
-            print("Error finding company: \(error)")
+            print("Unexpected Error \(error)")
         }
         return nil
     }
@@ -199,17 +217,33 @@ final class SessionManager: ObservableObject {
             
             // Save the application
             try await Amplify.DataStore.save(application.wrappedValue)
+        } catch let error as DataStoreError {
+            print("Error Saving Application \(error)")
         } catch {
-            print("Couldn't save application: \(error)")
+            print("Unexpected Error \(error)")
         }
     }
     
     func deleteApplication(application: Application) async {
         do {
             let appKeys = Application.keys
-            try await Amplify.DataStore.delete(Application.self, where: appKeys.id == application.id)
+            try await Amplify.DataStore.delete(Application.self, where: appKeys.id == application.id && appKeys.userID == application.userID)
+        } catch let error as DataStoreError {
+            print("Error Deleting Application \(error)")
         } catch {
-            print("Couldn't delete application - \(error)")
+            print("Unexpected Error \(error)")
+        }
+    }
+    
+    func startDataStore() async {
+        do {
+            try await Amplify.DataStore.stop()
+            try await Amplify.DataStore.start()
+            print("DataStore Started")
+        } catch let error as DataStoreError {
+            print("Starting DataStore failed with error \(error)")
+        } catch {
+            print("Unexpected Error \(error)")
         }
     }
     

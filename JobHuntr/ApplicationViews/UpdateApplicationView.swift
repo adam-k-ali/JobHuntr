@@ -50,18 +50,13 @@ struct UpdateApplicationView: View {
     
     func updateApplication() async {
         do {
-            let newApplication = Application(id: application.id,
-                                             dateApplied: application.dateApplied,
-                                             currentStage: applicationStage,
-                                             userID: application.userID,
-                                             jobTitle: application.jobTitle,
-                                             companyID: application.companyID,
-                                             createdAt: application.createdAt,
-                                             updatedAt: Temporal.DateTime.now())
-            try await Amplify.DataStore.save(newApplication, where: Application.keys.id == application.id)
+            print("updating application...")
+            let newApplication = Application(id: application.id, currentStage: applicationStage)
+            print("Created updated application")
+            try await Amplify.DataStore.save(newApplication, where: Application.keys.userID == application.userID && Application.keys.id == application.id)
             print("Updated application successfully")
         } catch let error as DataStoreError {
-            print("Couldn't update application - \(error)")
+            print("Couldn't update application \(error)")
         } catch {
             print("Unexpected error \(error)")
         }

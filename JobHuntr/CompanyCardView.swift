@@ -48,13 +48,6 @@ struct CompanyCardView: View {
                     Divider()
                 }
             }
-//            Link(destination: URL(string: "www.google.com")!) {
-//                HStack {
-//                    Image(systemName: "map.fill")
-//                    Text(company.address.UKFormat)
-//                        .multilineTextAlignment(.leading)
-//                }
-//            }
         }
         .padding()
     }
