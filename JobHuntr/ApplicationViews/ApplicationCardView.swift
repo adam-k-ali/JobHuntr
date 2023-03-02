@@ -18,11 +18,6 @@ struct ApplicationCardView: View {
     var body: some View {
         ZStack {
             HStack {
-//                Circle()
-//                    .fill(stageColor(application.currentStage ?? .applied))
-//                    .frame(width: 20, height: 20)
-                
-                
                 VStack(alignment: .leading) {
                     if let company = company {
                         Text(company.name)
@@ -43,7 +38,7 @@ struct ApplicationCardView: View {
                     }
                     ZStack {
                         Capsule()
-                            .fill(.gray)
+                            .fill(Color(uiColor: .systemGray3))
                             .frame(width: 128, height: 32)
                         Text(application.currentStage!.name)
                     }
@@ -68,6 +63,27 @@ struct ApplicationCardView: View {
         
         return dateFormatter.string(from: date)
     }
+}
+
+extension UIColor {
+    var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+            var red: CGFloat = 0
+            var green: CGFloat = 0
+            var blue: CGFloat = 0
+            var alpha: CGFloat = 0
+            getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+            return (red, green, blue, alpha)
+        }
+}
+
+extension Color {
+    init(uiColor: UIColor) {
+            self.init(red: Double(uiColor.rgba.red),
+                      green: Double(uiColor.rgba.green),
+                      blue: Double(uiColor.rgba.blue),
+                      opacity: Double(uiColor.rgba.alpha))
+        }
 }
 
 struct ApplicationCardView_Previews: PreviewProvider {

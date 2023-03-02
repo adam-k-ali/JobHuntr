@@ -30,7 +30,7 @@ struct MainMenuView: View {
                         ApplicationsView(user: user)
                             .environmentObject(sessionManager)
                     }) {
-                        Text("Your Applications")
+                        Text("Your Job Applications")
                     }
                 }
                 

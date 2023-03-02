@@ -23,21 +23,21 @@ struct ProgressionView: View {
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)
                             .foregroundColor(
-                                currentStage >= enumerateStage(.applied) ? .orange : .gray)
+                                currentStage >= enumerateStage(.applied) ? .orange : Color(uiColor: .systemGray3))
                         Text("Applied")
                     }
                     VStack {
                         Circle()
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)
-                            .foregroundColor(currentStage >= enumerateStage(.preInterview) ? .blue : .gray)
+                            .foregroundColor(currentStage >= enumerateStage(.preInterview) ? .blue : Color(uiColor: .systemGray3))
                         Text("Pre-Interview")
                     }
                     VStack {
                         Circle()
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)
-                            .foregroundColor(currentStage >= enumerateStage(.interviewing) ? .blue : .gray)
+                            .foregroundColor(currentStage >= enumerateStage(.interviewing) ? .blue : Color(uiColor: .systemGray3))
                         Text("Interview")
                     }
                     
@@ -48,7 +48,7 @@ struct ProgressionView: View {
                             .foregroundColor(
                                 applicationStage == .offer ? .yellow :
                                     applicationStage == .rejection ? .red :
-                                    applicationStage == .accepted ? .green : .gray
+                                    applicationStage == .accepted ? .green : Color(uiColor: .systemGray3)
                             )
                         Text("Offer")
                     }
