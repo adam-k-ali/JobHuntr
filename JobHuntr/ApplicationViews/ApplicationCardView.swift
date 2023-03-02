@@ -32,8 +32,7 @@ struct ApplicationCardView: View {
                     }
                     if let jobTitle = application.jobTitle {
                         Text(jobTitle)
-                    }
-                    Text(application.id)
+                    }Ç
                     
                     if let dateApplied = application.dateApplied {
                         let dateStr = formatDateString(from: dateApplied.foundationDate)
