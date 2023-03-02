@@ -22,6 +22,7 @@
 		72921F9B299ABE9500165D38 /* CompanyCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F9A299ABE9500165D38 /* CompanyCardView.swift */; };
 		72921F9D299AC0CA00165D38 /* ProgressionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F9C299AC0CA00165D38 /* ProgressionView.swift */; };
 		72921F9F299AC5F200165D38 /* UpdateApplicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F9E299AC5F200165D38 /* UpdateApplicationView.swift */; };
+		72DC200D29B169E900E373C2 /* ModelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DC200C29B169E900E373C2 /* ModelExtensions.swift */; };
 		72ED1E3D299B069A00EC3B14 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED1E3C299B069A00EC3B14 /* SignUpView.swift */; };
 		72ED1E3F299B08BC00EC3B14 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED1E3E299B08BC00EC3B14 /* SessionManager.swift */; };
 		72ED1E41299B9DD400EC3B14 /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED1E40299B9DD400EC3B14 /* ConfirmationView.swift */; };
@@ -56,6 +57,7 @@
 		72921F9A299ABE9500165D38 /* CompanyCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyCardView.swift; sourceTree = "<group>"; };
 		72921F9C299AC0CA00165D38 /* ProgressionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionView.swift; sourceTree = "<group>"; };
 		72921F9E299AC5F200165D38 /* UpdateApplicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateApplicationView.swift; sourceTree = "<group>"; };
+		72DC200C29B169E900E373C2 /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
 		72ED1E3C299B069A00EC3B14 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		72ED1E3E299B08BC00EC3B14 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		72ED1E40299B9DD400EC3B14 /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				72ED1E3C299B069A00EC3B14 /* SignUpView.swift */,
 				72ED1E3E299B08BC00EC3B14 /* SessionManager.swift */,
 				72ED1E40299B9DD400EC3B14 /* ConfirmationView.swift */,
+				72DC200C29B169E900E373C2 /* ModelExtensions.swift */,
 			);
 			path = JobHuntr;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				72921F9D299AC0CA00165D38 /* ProgressionView.swift in Sources */,
 				4C18D087B791A5FC167381C9 /* AmplifyModels.swift in Sources */,
 				72921F94299AA67000165D38 /* ApplicationsView.swift in Sources */,
+				72DC200D29B169E900E373C2 /* ModelExtensions.swift in Sources */,
 				72921F92299AA63D00165D38 /* ApplicationCardView.swift in Sources */,
 				72921F9B299ABE9500165D38 /* CompanyCardView.swift in Sources */,
 				72ED1E41299B9DD400EC3B14 /* ConfirmationView.swift in Sources */,

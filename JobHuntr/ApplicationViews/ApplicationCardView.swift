@@ -18,9 +18,10 @@ struct ApplicationCardView: View {
     var body: some View {
         ZStack {
             HStack {
-                Circle()
-                    .fill(stageColor(application.currentStage ?? .applied))
-                    .frame(width: 20, height: 20)
+//                Circle()
+//                    .fill(stageColor(application.currentStage ?? .applied))
+//                    .frame(width: 20, height: 20)
+                
                 
                 VStack(alignment: .leading) {
                     if let company = company {
@@ -32,13 +33,19 @@ struct ApplicationCardView: View {
                     }
                     if let jobTitle = application.jobTitle {
                         Text(jobTitle)
-                    }Ç
+                    }
                     
                     if let dateApplied = application.dateApplied {
                         let dateStr = formatDateString(from: dateApplied.foundationDate)
                         
                         Text("Applied \(dateStr)")
                             .font(.subheadline)
+                    }
+                    ZStack {
+                        Capsule()
+                            .fill(.gray)
+                            .frame(width: 128, height: 32)
+                        Text(application.currentStage!.name)
                     }
                 }
             }
@@ -60,23 +67,6 @@ struct ApplicationCardView: View {
         dateFormatter.timeStyle = .none
         
         return dateFormatter.string(from: date)
-    }
-    
-    func stageColor(_ stage: ApplicationStage) -> Color {
-        switch stage {
-        case .applied:
-            return .yellow
-        case .preInterview:
-            return .blue
-        case .interviewing:
-            return .blue
-        case .offer:
-            return .yellow
-        case .rejection:
-            return .red
-        case .accepted:
-            return .green
-        }
     }
 }
 
