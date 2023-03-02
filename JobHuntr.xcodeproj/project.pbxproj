@@ -12,6 +12,7 @@
 		4C18D087B791A5FC167381C9 /* AmplifyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29565740097BBC660DEA9B11 /* AmplifyModels.swift */; };
 		535D2CBF2D66487144299A66 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB88012BB360AE21D6E0B1DC /* Application.swift */; };
 		5DA2C72823E26D32CEDD0EA3 /* ApplicationStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE59424D23741508201B9043 /* ApplicationStage.swift */; };
+		72617D3929AFA8950009BA18 /* Refreshable in Frameworks */ = {isa = PBXBuildFile; productRef = 72617D3829AFA8950009BA18 /* Refreshable */; };
 		72921F8E299AA4C100165D38 /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F8D299AA4C100165D38 /* MainMenuView.swift */; };
 		72921F90299AA54A00165D38 /* ProfileCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F8F299AA54A00165D38 /* ProfileCardView.swift */; };
 		72921F92299AA63D00165D38 /* ApplicationCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F91299AA63D00165D38 /* ApplicationCardView.swift */; };
@@ -82,6 +83,7 @@
 				72FE4A7C29968F9700F81353 /* AWSPluginsCore in Frameworks */,
 				72FE4A7E29968F9700F81353 /* AWSS3StoragePlugin in Frameworks */,
 				72FE4A7A29968F9700F81353 /* AWSPinpointAnalyticsPlugin in Frameworks */,
+				72617D3929AFA8950009BA18 /* Refreshable in Frameworks */,
 				72FE4A7829968F9700F81353 /* AWSLocationGeoPlugin in Frameworks */,
 				72FE4A7429968F9700F81353 /* AWSCognitoAuthPlugin in Frameworks */,
 			);
@@ -196,6 +198,7 @@
 				72FE4A7B29968F9700F81353 /* AWSPluginsCore */,
 				72FE4A7D29968F9700F81353 /* AWSS3StoragePlugin */,
 				72FE4A7F29968F9700F81353 /* Amplify */,
+				72617D3829AFA8950009BA18 /* Refreshable */,
 			);
 			productName = JobHuntr;
 			productReference = 72FE4A5F29968ED200F81353 /* JobHuntr.app */;
@@ -227,6 +230,7 @@
 			mainGroup = 72FE4A5629968ED200F81353;
 			packageReferences = (
 				72FE4A7029968F9700F81353 /* XCRemoteSwiftPackageReference "amplify-swift" */,
+				72617D3729AFA8950009BA18 /* XCRemoteSwiftPackageReference "Refreshable" */,
 			);
 			productRefGroup = 72FE4A6029968ED200F81353 /* Products */;
 			projectDirPath = "";
@@ -492,6 +496,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		72617D3729AFA8950009BA18 /* XCRemoteSwiftPackageReference "Refreshable" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftUI-Plus/Refreshable.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		72FE4A7029968F9700F81353 /* XCRemoteSwiftPackageReference "amplify-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/aws-amplify/amplify-swift";
@@ -503,6 +515,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		72617D3829AFA8950009BA18 /* Refreshable */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 72617D3729AFA8950009BA18 /* XCRemoteSwiftPackageReference "Refreshable" */;
+			productName = Refreshable;
+		};
 		72FE4A7129968F9700F81353 /* AWSAPIPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 72FE4A7029968F9700F81353 /* XCRemoteSwiftPackageReference "amplify-swift" */;

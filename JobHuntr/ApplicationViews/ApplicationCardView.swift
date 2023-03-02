@@ -19,7 +19,7 @@ struct ApplicationCardView: View {
         ZStack {
             HStack {
                 Circle()
-                    .fill(stageColor(application.currentStage!))
+                    .fill(stageColor(application.currentStage ?? .applied))
                     .frame(width: 20, height: 20)
                 
                 VStack(alignment: .leading) {
@@ -30,19 +30,27 @@ struct ApplicationCardView: View {
                         Text("Unknown Company")
                             .font(.headline)
                     }
-                    Text(application.jobTitle!)
+                    if let jobTitle = application.jobTitle {
+                        Text(jobTitle)
+                    }
                     Text(application.id)
                     
-                    let dateStr = formatDateString(from: application.dateApplied!.foundationDate)
-                    
-                    Text("Applied \(dateStr)")
-                        .font(.subheadline)
+                    if let dateApplied = application.dateApplied {
+                        let dateStr = formatDateString(from: dateApplied.foundationDate)
+                        
+                        Text("Applied \(dateStr)")
+                            .font(.subheadline)
+                    }
                 }
             }
         }
         .onAppear {
             Task {
-                company = await sessionManager.fetchCompany(application.companyID!)
+                if let companyID = application.companyID {
+                    company = await sessionManager.fetchCompany(companyID)
+                } else {
+                    company = Company(name: "Unknown Company", website: "", email: "", phone: "")
+                }
             }
         }
     }

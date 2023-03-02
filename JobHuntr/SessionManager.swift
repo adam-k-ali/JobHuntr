@@ -226,8 +226,7 @@ final class SessionManager: ObservableObject {
     
     func deleteApplication(application: Application) async {
         do {
-            let appKeys = Application.keys
-            try await Amplify.DataStore.delete(Application.self, where: appKeys.id == application.id && appKeys.userID == application.userID)
+            try await Amplify.DataStore.delete(application)
         } catch let error as DataStoreError {
             print("Error Deleting Application \(error)")
         } catch {

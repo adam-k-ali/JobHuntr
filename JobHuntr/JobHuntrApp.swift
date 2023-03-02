@@ -91,7 +91,7 @@ struct JobHuntrApp: App {
             )
             try Amplify.add(plugin: AWSAPIPlugin())
             try Amplify.add(plugin: AWSS3StoragePlugin())
-//            Amplify.Logging.logLevel = .verbose
+            Amplify.Logging.logLevel = .verbose
             try Amplify.configure()
             print("Amplify configured.")
             
