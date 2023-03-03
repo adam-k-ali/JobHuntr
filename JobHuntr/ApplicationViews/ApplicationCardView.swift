@@ -18,7 +18,7 @@ struct ApplicationCardView: View {
     var body: some View {
         ZStack {
             HStack {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 8) {
                     if let company = company {
                         Text(company.name)
                             .font(.headline)
