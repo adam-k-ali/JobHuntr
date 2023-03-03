@@ -20,21 +20,21 @@ struct ProgressionView: View {
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)
                             .foregroundColor(
-                                currentStage >= enumerateStage(.applied) ? .orange : Color(uiColor: .systemGray3))
+                                currentStage >= enumerateStage(.applied) ? ApplicationStage.applied.color : Color(uiColor: .systemGray3))
                         Text("Applied")
                     }
                     VStack {
                         Circle()
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)
-                            .foregroundColor(currentStage >= enumerateStage(.preInterview) ? .blue : Color(uiColor: .systemGray3))
+                            .foregroundColor(currentStage >= enumerateStage(.preInterview) ? ApplicationStage.preInterview.color : Color(uiColor: .systemGray3))
                         Text("Pre-Interview")
                     }
                     VStack {
                         Circle()
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)
-                            .foregroundColor(currentStage >= enumerateStage(.interviewing) ? .blue : Color(uiColor: .systemGray3))
+                            .foregroundColor(currentStage >= enumerateStage(.interviewing) ? ApplicationStage.interviewing.color : Color(uiColor: .systemGray3))
                         Text("Interview")
                     }
                     
@@ -42,10 +42,7 @@ struct ProgressionView: View {
                         Circle()
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)
-                            .foregroundColor(
-                                applicationStage == .offer ? .yellow :
-                                    applicationStage == .rejection ? .red :
-                                    applicationStage == .accepted ? .green : Color(uiColor: .systemGray3)
+                            .foregroundColor(currentStage >= enumerateStage(.offer) ? applicationStage.color : Color(uiColor: .systemGray3)
                             )
                         Text("Offer")
                     }

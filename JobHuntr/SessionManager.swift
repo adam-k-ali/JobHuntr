@@ -42,7 +42,9 @@ class SessionManager: ObservableObject {
                 self.userSettings = UserSettings(userID: user.userId, colorBlind: false)
                 return
             }
-            self.userSettings = settings[0]
+            DispatchQueue.main.async {
+                self.userSettings = settings[0]
+            }
         } catch let error as DataStoreError {
             print("Error fetching user settings - \(error)")
         } catch {
