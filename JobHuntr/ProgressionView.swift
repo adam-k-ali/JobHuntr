@@ -13,9 +13,6 @@ struct ProgressionView: View {
     var body: some View {
         VStack {
             ZStack {
-//                Rectangle()
-//                    .fill(.gray)
-//                    .frame(width: 200, height: 4)
                 let currentStage = enumerateStage(applicationStage)
                 HStack {
                     VStack(alignment: .leading) {

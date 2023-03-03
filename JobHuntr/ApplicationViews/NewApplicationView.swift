@@ -19,22 +19,26 @@ struct NewApplicationView: View {
     @State private var jobTitle = ""
     @State private var dateApplied = Date()
     
+    @State private var error = ""
+    
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var sessionManager: SessionManager
     
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("Company Information")) {
-                    TextField("Company Name", text: $companyName)
-                    TextField("Company Website", text: $companyWebsite)
-                    TextField("Company E-Mail Address", text: $companyEmail)
-                    TextField("Company Phone Number", text: $companyPhone)
-                }
-                
-                Section(header: Text("Application")) {
-                    TextField("Job Title", text: $jobTitle)
-                    DatePicker("Date Applied", selection: $dateApplied, displayedComponents: [.date])
+            VStack {
+                Text(error)
+                    .font(.headline)
+                    .foregroundColor(.red)
+                Form {
+                    Section(header: Text("Company Information")) {
+                        TextField("Company Name", text: $companyName)
+                    }
+                    
+                    Section(header: Text("Application")) {
+                        TextField("Job Title", text: $jobTitle)
+                        DatePicker("Date Applied", selection: $dateApplied, displayedComponents: [.date])
+                    }
                 }
             }
         }
@@ -46,6 +50,14 @@ struct NewApplicationView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
+                    if jobTitle.isEmpty {
+                        error = "Enter a job title"
+                        return
+                    }
+                    if companyName.isEmpty {
+                        error = "Enter a company name"
+                        return
+                    }
                     Task {
                         await saveApplication()
                     }
