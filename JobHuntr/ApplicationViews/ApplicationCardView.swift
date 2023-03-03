@@ -33,8 +33,11 @@ struct ApplicationCardView: View {
                     if let dateApplied = application.dateApplied {
                         let dateStr = formatDateString(from: dateApplied.foundationDate)
                         
-                        Text("Applied \(dateStr)")
-                            .font(.subheadline)
+                        HStack {
+                            Image(systemName: "calendar")
+                            Text("Applied \(dateStr)")
+                                .font(.subheadline)
+                        }
                     }
                     ZStack {
                         Capsule()
