@@ -9,12 +9,18 @@ import Amplify
 import Foundation
 import SwiftUI
 
+struct DummyUser: AuthUser {
+    let userId: String = "1"
+    let username: String = "dummy"
+}
+
 enum AuthState {
     case signUp, login, confirmCode(username: String), session(user: AuthUser)
 }
 
-final class SessionManager: ObservableObject {
+class SessionManager: ObservableObject {
     @Published var authState: AuthState = .login
+    @Published var userSettings: UserSettings = UserSettings(userID: "", colorBlind: false)
     
     func fetchCurrentAuthSession() async {
         print("Fetching Auth Session")
@@ -28,13 +34,30 @@ final class SessionManager: ObservableObject {
         }
     }
     
+    func fetchUserSettings(user: AuthUser) async {
+        do {
+            let settings = try await Amplify.DataStore.query(UserSettings.self, where: UserSettings.keys.userID == user.userId)
+            if settings.isEmpty {
+                print("No settings found. Using defaults.")
+                self.userSettings = UserSettings(userID: user.userId, colorBlind: false)
+                return
+            }
+            self.userSettings = settings[0]
+        } catch let error as DataStoreError {
+            print("Error fetching user settings - \(error)")
+        } catch {
+            print("Unexpected error - \(error)")
+        }
+    }
+    
     func getCurrentAuthUser() async {
         print("Fetching Auth User")
         
         do {
             let user = try await Amplify.Auth.getCurrentUser()
-            
+            await self.fetchUserSettings(user: user)
             DispatchQueue.main.async {
+                // Update auth state
                 self.authState = .session(user: user)
             }
         } catch {
@@ -243,6 +266,16 @@ final class SessionManager: ObservableObject {
             print("Starting DataStore failed with error \(error)")
         } catch {
             print("Unexpected Error \(error)")
+        }
+    }
+    
+    func saveSettings() async {
+        do {
+            try await Amplify.DataStore.save(userSettings)
+        } catch let error as DataStoreError {
+            print("Saving settings failed - \(error)")
+        } catch {
+            print("Unexppected Error \(error)")
         }
     }
     

@@ -8,16 +8,10 @@
 import Amplify
 import SwiftUI
 
-struct DummyUser: AuthUser {
-    let userId: String = "1"
-    let username: String = "dummy"
-}
-
 struct MainMenuView: View {
     @EnvironmentObject var sessionManager: SessionManager
     
     let user: AuthUser
-
     
     var body: some View {
         VStack {
@@ -38,29 +32,24 @@ struct MainMenuView: View {
             .listStyle(InsetGroupedListStyle())
         }
         .toolbar {
-//            ToolbarItem(placement: .confirmationAction) {
-//                Button("Sign Out") {
-//                    Task {
-//                        await sessionManager.signOut()
-//                    }
-//                }
-//            }
             ToolbarItem(placement: .confirmationAction) {
-                Button {
-                    print("Show settings")
-                } label: {
+                NavigationLink(destination: {
+                    SettingsView(settings: $sessionManager.userSettings)
+                        .environmentObject(sessionManager)
+                }, label: {
                     Image(systemName: "gear")
-                }
+                })
             }
         }
     }
     
 }
 
-struct MainMenu_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            MainMenuView(user: DummyUser())
-        }
-    }
-}
+//struct MainMenu_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            MainMenuView(user: DummyUser())
+//                .environmentObject(DummySessionManager())
+//        }
+//    }
+//}

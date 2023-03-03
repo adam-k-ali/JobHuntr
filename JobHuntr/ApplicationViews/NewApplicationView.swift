@@ -91,6 +91,7 @@ struct NewApplicationView: View {
 }
 
 struct NewApplicationView_Previews: PreviewProvider {
+    
     static var previews: some View {
         NewApplicationView(user: DummyUser())
     }
