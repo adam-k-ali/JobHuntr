@@ -30,20 +30,23 @@ struct ApplicationCardView: View {
                         Text(jobTitle)
                     }
                     
-                    if let dateApplied = application.dateApplied {
-                        let dateStr = formatDateString(from: dateApplied.foundationDate)
-                        
-                        HStack {
-                            Image(systemName: "calendar")
-                            Text("Applied \(dateStr)")
-                                .font(.subheadline)
+                    
+                    HStack {
+                        ZStack {
+                            Capsule()
+                                .fill(Color(uiColor: .systemGray))
+                                .frame(width: 128, height: 32)
+                            Text(application.currentStage!.name)
                         }
-                    }
-                    ZStack {
-                        Capsule()
-                            .fill(Color(uiColor: .systemGray))
-                            .frame(width: 128, height: 32)
-                        Text(application.currentStage!.name)
+                        if let dateApplied = application.dateApplied {
+                            let dateStr = formatDateString(from: dateApplied.foundationDate)
+                            
+                            HStack {
+                                Image(systemName: "calendar")
+                                Text("Applied \(dateStr)")
+                                    .font(.subheadline)
+                            }
+                        }
                     }
                 }
             }
