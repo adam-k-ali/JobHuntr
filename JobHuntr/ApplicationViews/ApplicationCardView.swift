@@ -38,7 +38,7 @@ struct ApplicationCardView: View {
                     }
                     ZStack {
                         Capsule()
-                            .fill(Color(uiColor: .systemGray3))
+                            .fill(Color(uiColor: .systemGray))
                             .frame(width: 128, height: 32)
                         Text(application.currentStage!.name)
                     }

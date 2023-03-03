@@ -38,11 +38,18 @@ struct MainMenuView: View {
             .listStyle(InsetGroupedListStyle())
         }
         .toolbar {
+//            ToolbarItem(placement: .confirmationAction) {
+//                Button("Sign Out") {
+//                    Task {
+//                        await sessionManager.signOut()
+//                    }
+//                }
+//            }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Sign Out") {
-                    Task {
-                        await sessionManager.signOut()
-                    }
+                Button {
+                    print("Show settings")
+                } label: {
+                    Image(systemName: "gear")
                 }
             }
         }
