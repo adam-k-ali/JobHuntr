@@ -22,7 +22,7 @@ extension ApplicationStage {
             case .rejection:
             return Color(hex: "#ea5545")
             case .accepted:
-            return Color(hex: "#bdcf32")
+            return Color(hex: "#87bc45")
         }
     }
     var name: String {

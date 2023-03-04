@@ -15,18 +15,20 @@ struct SettingsView: View {
     
     var body: some View {
         VStack {
-            // Accessibility
-            Section {
-                Toggle(isOn: $settings.colorBlind, label: {
-                    Text("Color Blindness")
-                })
-            }
-            
-            // Account
-            Section {
-                Button("Sign Out") {
-                    Task {
-                        await sessionManager.signOut()
+            List {
+                // Accessibility
+                Section(header: Text("Accessibility")) {
+                    Toggle(isOn: $settings.colorBlind, label: {
+                        Text("Colour Blindness")
+                    })
+                }
+                
+                // Account
+                Section(header: Text("Account Management")) {
+                    Button("Sign Out") {
+                        Task {
+                            await sessionManager.signOut()
+                        }
                     }
                 }
             }
