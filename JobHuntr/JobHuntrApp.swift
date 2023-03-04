@@ -11,6 +11,8 @@ import AWSCognitoAuthPlugin
 import AWSDataStorePlugin
 import AWSAPIPlugin
 import AWSS3StoragePlugin
+import UserNotifications
+import AWSPinpoint
 import SwiftUI
 
 @main
@@ -48,7 +50,6 @@ struct JobHuntrApp: App {
     
     init() {
         self.initialUpdate()
-        
     }
     
     func initialUpdate() {
@@ -97,7 +98,7 @@ struct JobHuntrApp: App {
             )
             try Amplify.add(plugin: AWSAPIPlugin())
             try Amplify.add(plugin: AWSS3StoragePlugin())
-            Amplify.Logging.logLevel = .verbose
+//            Amplify.Logging.logLevel = .verbose
             try Amplify.configure()
             print("Amplify configured.")
             

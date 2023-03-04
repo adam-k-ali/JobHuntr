@@ -245,6 +245,20 @@ class SessionManager: ObservableObject {
         return []
     }
     
+    func fetchApplicationsByDate(user: AuthUser) async -> [Application] {
+        let keys = Application.keys
+        do {
+            let applications = try await Amplify.DataStore.query(Application.self, where: keys.userID == user.userId, sort: .descending(keys.dateApplied))
+            print("\(applications.count) applications found.")
+            return applications
+        } catch let error as DataStoreError {
+            print("Error fetching user's applications \(error)")
+        } catch {
+            print("Unexpected error \(error)")
+        }
+        return []
+    }
+    
     func fetchCompany(_ companyID: String) async -> Company? {
         let companyKeys = Company.keys
         do {

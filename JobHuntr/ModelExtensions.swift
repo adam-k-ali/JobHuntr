@@ -88,3 +88,16 @@ extension Color {
             )
         }
 }
+
+extension Date {
+    func now() -> Date {
+        return Date()
+    }
+    
+}
+
+extension Calendar {
+    public func daysSince(date: Date) -> Int {
+        return self.dateComponents([.day], from: date, to: Date()).day!
+    }
+}

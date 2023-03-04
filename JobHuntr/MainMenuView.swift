@@ -17,7 +17,8 @@ struct MainMenuView: View {
         VStack {
             // Profile
             ProfileCardView(user: user)
-            
+                .environmentObject(sessionManager)
+            Divider()
             List {
                 Section {
                     NavigationLink(destination: {
@@ -37,7 +38,7 @@ struct MainMenuView: View {
                     SettingsView(settings: $sessionManager.userSettings)
                         .environmentObject(sessionManager)
                 }, label: {
-                    Image(systemName: "gear")
+                    Image(systemName: "gearshape")
                 })
             }
         }
