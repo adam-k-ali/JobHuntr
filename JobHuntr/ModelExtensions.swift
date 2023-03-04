@@ -16,7 +16,7 @@ extension ApplicationStage {
             case .preInterview:
             return Color(hex: "#f46a9b")
             case .interviewing:
-            return Color(hex: "#87bc45")
+            return Color(hex: "#27aeef")
             case .offer:
             return Color(hex: "#f46a9b")
             case .rejection:
