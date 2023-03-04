@@ -14,6 +14,7 @@ struct SignUpView: View {
     @State var username = ""
     @State var email = ""
     @State var password = ""
+    @State var confirmPassword = ""
     @State var error = ""
     
     @State private var isLoading: Bool = false
@@ -25,6 +26,7 @@ struct SignUpView: View {
                 TextField("Username", text: $username)
                 TextField("E-Mail", text: $email)
                 SecureField("Password", text: $password)
+                SecureField("Confirm Password", text: $confirmPassword)
                 Text(error)
                     .font(.headline)
                     .foregroundColor(.red)
@@ -32,6 +34,10 @@ struct SignUpView: View {
             .textFieldStyle(RoundedBorderTextFieldStyle())
 
             Button("Sign Up", action: {
+                if password != confirmPassword {
+                    error = "Passwords don't match"
+                    return
+                }
                 isLoading = true
                 Task {
                     await sessionManager.signUp(username: username, email: email, password: password, errorMsg: $error)

@@ -234,7 +234,7 @@ class SessionManager: ObservableObject {
         print("Fetching user applications. UserID: \(user.userId)")
         let k = Application.keys
         do {
-            let applications = try await Amplify.DataStore.query(Application.self, where: k.userID == user.userId)
+            let applications = try await Amplify.DataStore.query(Application.self, where: k.userID == user.userId, sort: .ascending(k.currentStage))
             print("\(applications.count) applications found.")
             return applications
         } catch let error as DataStoreError {
