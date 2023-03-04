@@ -8,6 +8,7 @@
 import Amplify
 import Foundation
 import SwiftUI
+import AWSCognitoAuthPlugin
 
 struct DummyUser: AuthUser {
     let userId: String = "1"
@@ -15,7 +16,7 @@ struct DummyUser: AuthUser {
 }
 
 enum AuthState {
-    case signUp, login, confirmCode(username: String), session(user: AuthUser)
+    case signUp, login, confirmCode(username: String), session(user: AuthUser), confirmReset(username: String), resetPassword
 }
 
 class SessionManager: ObservableObject {
@@ -39,7 +40,9 @@ class SessionManager: ObservableObject {
             let settings = try await Amplify.DataStore.query(UserSettings.self, where: UserSettings.keys.userID == user.userId)
             if settings.isEmpty {
                 print("No settings found. Using defaults.")
-                self.userSettings = UserSettings(userID: user.userId, colorBlind: false)
+                DispatchQueue.main.async {
+                    self.userSettings = UserSettings(userID: user.userId, colorBlind: false)
+                }
                 return
             }
             DispatchQueue.main.async {
@@ -80,6 +83,54 @@ class SessionManager: ObservableObject {
     
     func showConfirm(username: String) {
         authState = .confirmCode(username: username)
+    }
+    
+    func showResetPassword() {
+        authState = .resetPassword
+    }
+    
+    func showConfirmReset(username: String) {
+        authState = .confirmReset(username: username)
+    }
+    
+    func confirmResetPassword(username: String, newPassword: String, confirmationCode: String, errorMsg: Binding<String>) async {
+        do {
+            try await Amplify.Auth.confirmResetPassword(
+                for: username,
+                with: newPassword,
+                confirmationCode: confirmationCode
+            )
+            print("Password reset confirmed")
+        } catch let error as AuthError {
+            print("Reset password failed with error \(error)")
+            errorMsg.wrappedValue = error.errorDescription
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func resetPassword(username: String, errorMsg: Binding<String>) async {
+        do {
+            let resetResult = try await Amplify.Auth.resetPassword(for: username)
+            switch resetResult.nextStep {
+                case .confirmResetPasswordWithCode(let deliveryDetails, let info):
+                    print("Confirm reset password with code send to - \(deliveryDetails) \(String(describing: info))")
+                case .done:
+                    print("Reset completed")
+            }
+        } catch let error as AuthError {
+            print("Reset password failed with error \(error)")
+            switch (error.underlyingError as? AWSCognitoAuthError) {
+            case .userNotFound:
+                errorMsg.wrappedValue = "User Not Found"
+            case .invalidParameter:
+                errorMsg.wrappedValue = "Invalid Parameter"
+            default:
+                errorMsg.wrappedValue = error.errorDescription
+            }
+        } catch {
+            print("Unexpected error: \(error)")
+        }
     }
     
     func signUp(username: String, email: String, password: String, errorMsg: Binding<String>) async {
