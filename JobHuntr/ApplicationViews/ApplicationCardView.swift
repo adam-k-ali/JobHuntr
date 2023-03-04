@@ -18,58 +18,61 @@ struct ApplicationCardView: View {
     var body: some View {
         ZStack {
             HStack {
-                Circle()
-                    .fill(stageColor(application.currentStage!))
-                    .frame(width: 20, height: 20)
-                
-                VStack(alignment: .leading) {
-                    if let company = company {
-                        Text(company.name)
-                            .font(.headline)
-                    } else {
-                        Text("Unknown Company")
-                            .font(.headline)
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        if let company = company {
+                            Text(company.name)
+                                .font(.headline)
+                        } else {
+                            Text("Unknown Company")
+                                .font(.headline)
+                        }
+                        Spacer()
+                        if let dateApplied = application.dateApplied {
+                            let dateStr = formatDateString(from: dateApplied.foundationDate)
+                            
+                            HStack {
+                                Text(dateStr)
+                                    .font(.headline)
+                                    .foregroundColor(.gray)
+                            }
+                        }
                     }
-                    Text(application.jobTitle!)
-                    Text(application.id)
+                    if let jobTitle = application.jobTitle {
+                        Text(jobTitle)
+                    }
                     
-                    let dateStr = formatDateString(from: application.dateApplied!.foundationDate)
                     
-                    Text("Applied \(dateStr)")
-                        .font(.subheadline)
+                    HStack {
+                        ZStack {
+                            Capsule()
+                                .fill(application.currentStage!.color)
+//                                .fill(Color(uiColor: .systemGray))
+                                .frame(width: 128, height: 32)
+                            Text(application.currentStage!.name)
+                        }
+                        
+                    }
                 }
             }
         }
         .onAppear {
             Task {
-                company = await sessionManager.fetchCompany(application.companyID!)
+                if let companyID = application.companyID {
+                    company = await sessionManager.fetchCompany(companyID)
+                } else {
+                    company = Company(name: "Unknown Company", website: "", email: "", phone: "")
+                }
             }
         }
     }
     
     func formatDateString(from date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .short
+        dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .none
         
         return dateFormatter.string(from: date)
-    }
-    
-    func stageColor(_ stage: ApplicationStage) -> Color {
-        switch stage {
-        case .applied:
-            return .yellow
-        case .preInterview:
-            return .blue
-        case .interviewing:
-            return .blue
-        case .offer:
-            return .yellow
-        case .rejection:
-            return .red
-        case .accepted:
-            return .green
-        }
     }
 }
 

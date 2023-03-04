@@ -31,6 +31,8 @@ struct ApplicationDetailView: View {
                         application.currentStage = $0
                     }
                 )
+                let dateStr = formatDateString(from: application.dateApplied!.foundationDate)
+                Text("Applied on \(dateStr)")
                 ProgressionView(applicationStage: stage)
                 Divider()
                 Button(action: {
@@ -42,7 +44,7 @@ struct ApplicationDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationTitle(application.jobTitle!)
+        .navigationTitle(application.jobTitle ?? "Unknown Job")
         .onAppear {
             Task {
                 await refresh()
@@ -55,10 +57,18 @@ struct ApplicationDetailView: View {
             }
         }) {
             NavigationView {
-                UpdateApplicationView(application: application)
+                UpdateApplicationView(application: $application)
             }
         }
         
+    }
+    
+    func formatDateString(from date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        
+        return dateFormatter.string(from: date)
     }
     
     func refresh() async {

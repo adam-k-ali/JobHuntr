@@ -24,8 +24,9 @@ struct ProfileCardView: View {
     }
 }
 
-struct ProfileCardView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileCardView(user: DummyUser())
-    }
-}
+//struct ProfileCardView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileCardView(user: DummyUser())
+//            .environmentObject(DummySessionManager())
+//    }
+//}

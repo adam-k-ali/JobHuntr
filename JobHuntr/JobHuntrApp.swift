@@ -34,6 +34,12 @@ struct JobHuntrApp: App {
                 case .session(let user):
                     MainMenuView(user: user)
                         .environmentObject(sessionManager)
+                case .confirmReset(let username):
+                    ResetConfirmationView(username: username)
+                        .environmentObject(sessionManager)
+                case .resetPassword:
+                    ResetPasswordView()
+                        .environmentObject(sessionManager)
                 }
                 SignUpView()
             }
@@ -91,7 +97,7 @@ struct JobHuntrApp: App {
             )
             try Amplify.add(plugin: AWSAPIPlugin())
             try Amplify.add(plugin: AWSS3StoragePlugin())
-//            Amplify.Logging.logLevel = .verbose
+            Amplify.Logging.logLevel = .verbose
             try Amplify.configure()
             print("Amplify configured.")
             

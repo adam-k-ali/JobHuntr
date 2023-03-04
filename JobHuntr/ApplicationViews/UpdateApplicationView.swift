@@ -9,15 +9,11 @@ import Amplify
 import SwiftUI
 
 struct UpdateApplicationView: View {
-    var application: Application
+    @Binding var application: Application
     @State var applicationStage: ApplicationStage = .applied
     @Environment(\.presentationMode) var presentationMode
     
     let stages: [ApplicationStage] = [.applied, .preInterview, .interviewing, .offer, .accepted, .rejection]
-    
-    init(application: Application) {
-        self.application = application
-    }
     
     var body: some View {
         NavigationView {
@@ -51,9 +47,9 @@ struct UpdateApplicationView: View {
     func updateApplication() async {
         do {
             print("updating application...")
-            let newApplication = Application(id: application.id, currentStage: applicationStage)
+            application.currentStage = applicationStage
             print("Created updated application")
-            try await Amplify.DataStore.save(newApplication, where: Application.keys.userID == application.userID && Application.keys.id == application.id)
+            try await Amplify.DataStore.save(application)
             print("Updated application successfully")
         } catch let error as DataStoreError {
             print("Couldn't update application \(error)")
@@ -80,10 +76,10 @@ struct UpdateApplicationView: View {
     }
 }
 
-struct UpdateApplicationView_Previews: PreviewProvider {
-    static var previews: some View {
-        UpdateApplicationView(application:
-            Application.sampleApplication
-        )
-    }
-}
+//struct UpdateApplicationView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UpdateApplicationView(application:
+//            Application.sampleApplication
+//        )
+//    }
+//}

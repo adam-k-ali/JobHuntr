@@ -8,13 +8,20 @@
 import Amplify
 import Foundation
 import SwiftUI
+import AWSCognitoAuthPlugin
 
-enum AuthState {
-    case signUp, login, confirmCode(username: String), session(user: AuthUser)
+struct DummyUser: AuthUser {
+    let userId: String = "1"
+    let username: String = "dummy"
 }
 
-final class SessionManager: ObservableObject {
+enum AuthState {
+    case signUp, login, confirmCode(username: String), session(user: AuthUser), confirmReset(username: String), resetPassword
+}
+
+class SessionManager: ObservableObject {
     @Published var authState: AuthState = .login
+    @Published var userSettings: UserSettings = UserSettings(userID: "", colorBlind: false)
     
     func fetchCurrentAuthSession() async {
         print("Fetching Auth Session")
@@ -28,13 +35,34 @@ final class SessionManager: ObservableObject {
         }
     }
     
+    func fetchUserSettings(user: AuthUser) async {
+        do {
+            let settings = try await Amplify.DataStore.query(UserSettings.self, where: UserSettings.keys.userID == user.userId)
+            if settings.isEmpty {
+                print("No settings found. Using defaults.")
+                DispatchQueue.main.async {
+                    self.userSettings = UserSettings(userID: user.userId, colorBlind: false)
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                self.userSettings = settings[0]
+            }
+        } catch let error as DataStoreError {
+            print("Error fetching user settings - \(error)")
+        } catch {
+            print("Unexpected error - \(error)")
+        }
+    }
+    
     func getCurrentAuthUser() async {
         print("Fetching Auth User")
         
         do {
             let user = try await Amplify.Auth.getCurrentUser()
-            
+            await self.fetchUserSettings(user: user)
             DispatchQueue.main.async {
+                // Update auth state
                 self.authState = .session(user: user)
             }
         } catch {
@@ -55,6 +83,54 @@ final class SessionManager: ObservableObject {
     
     func showConfirm(username: String) {
         authState = .confirmCode(username: username)
+    }
+    
+    func showResetPassword() {
+        authState = .resetPassword
+    }
+    
+    func showConfirmReset(username: String) {
+        authState = .confirmReset(username: username)
+    }
+    
+    func confirmResetPassword(username: String, newPassword: String, confirmationCode: String, errorMsg: Binding<String>) async {
+        do {
+            try await Amplify.Auth.confirmResetPassword(
+                for: username,
+                with: newPassword,
+                confirmationCode: confirmationCode
+            )
+            print("Password reset confirmed")
+        } catch let error as AuthError {
+            print("Reset password failed with error \(error)")
+            errorMsg.wrappedValue = error.errorDescription
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func resetPassword(username: String, errorMsg: Binding<String>) async {
+        do {
+            let resetResult = try await Amplify.Auth.resetPassword(for: username)
+            switch resetResult.nextStep {
+                case .confirmResetPasswordWithCode(let deliveryDetails, let info):
+                    print("Confirm reset password with code send to - \(deliveryDetails) \(String(describing: info))")
+                case .done:
+                    print("Reset completed")
+            }
+        } catch let error as AuthError {
+            print("Reset password failed with error \(error)")
+            switch (error.underlyingError as? AWSCognitoAuthError) {
+            case .userNotFound:
+                errorMsg.wrappedValue = "User Not Found"
+            case .invalidParameter:
+                errorMsg.wrappedValue = "Invalid Parameter"
+            default:
+                errorMsg.wrappedValue = error.errorDescription
+            }
+        } catch {
+            print("Unexpected error: \(error)")
+        }
     }
     
     func signUp(username: String, email: String, password: String, errorMsg: Binding<String>) async {
@@ -158,7 +234,7 @@ final class SessionManager: ObservableObject {
         print("Fetching user applications. UserID: \(user.userId)")
         let k = Application.keys
         do {
-            let applications = try await Amplify.DataStore.query(Application.self, where: k.userID == user.userId)
+            let applications = try await Amplify.DataStore.query(Application.self, where: k.userID == user.userId, sort: .ascending(k.currentStage))
             print("\(applications.count) applications found.")
             return applications
         } catch let error as DataStoreError {
@@ -226,8 +302,7 @@ final class SessionManager: ObservableObject {
     
     func deleteApplication(application: Application) async {
         do {
-            let appKeys = Application.keys
-            try await Amplify.DataStore.delete(Application.self, where: appKeys.id == application.id && appKeys.userID == application.userID)
+            try await Amplify.DataStore.delete(application)
         } catch let error as DataStoreError {
             print("Error Deleting Application \(error)")
         } catch {
@@ -244,6 +319,16 @@ final class SessionManager: ObservableObject {
             print("Starting DataStore failed with error \(error)")
         } catch {
             print("Unexpected Error \(error)")
+        }
+    }
+    
+    func saveSettings() async {
+        do {
+            try await Amplify.DataStore.save(userSettings)
+        } catch let error as DataStoreError {
+            print("Saving settings failed - \(error)")
+        } catch {
+            print("Unexppected Error \(error)")
         }
     }
     

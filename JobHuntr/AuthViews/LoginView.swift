@@ -50,21 +50,28 @@ struct LoginView: View {
                     .frame(minHeight: 10, idealHeight: 100, maxHeight: 600)
                     .fixedSize()
                 Section {
-                    TextField("Username", text: $username)
-                    SecureField("Password", text: $password)
                     Text(error)
                         .font(.headline)
                         .foregroundColor(.red)
+                    TextField("Username", text: $username)
+                    SecureField("Password", text: $password)
+                    
                     
                 }
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                Button("Sign In", action: {
-                    isLoading = true
-                    Task {
-                        await sessionManager.signIn(username: username, password: password, errorMsg: $error)
-                    }
-                    isLoading = false
-                })
+                HStack {
+                    Button("Forgotton Password", action: {
+                        sessionManager.showResetPassword()
+                    })
+                    Spacer()
+                    Button("Sign In", action: {
+                        isLoading = true
+                        Task {
+                            await sessionManager.signIn(username: username, password: password, errorMsg: $error)
+                        }
+                        isLoading = false
+                    })
+                }
                 if isLoading {
                     ProgressView()
                 }
