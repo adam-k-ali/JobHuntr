@@ -22,7 +22,7 @@ extension ApplicationStage {
             case .rejection:
             return Color(hex: "#ea5545")
             case .accepted:
-            return Color(hex: "#bdcf32")
+            return Color(hex: "#87bc45")
         }
     }
     var name: String {
@@ -87,4 +87,17 @@ extension Color {
                 opacity: Double(a) / 255
             )
         }
+}
+
+extension Date {
+    func now() -> Date {
+        return Date()
+    }
+    
+}
+
+extension Calendar {
+    public func daysSince(date: Date) -> Int {
+        return self.dateComponents([.day], from: date, to: Date()).day!
+    }
 }

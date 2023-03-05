@@ -53,7 +53,7 @@ struct ApplicationsView: View {
                 .onDelete(perform: delete)
             }
         }
-        .navigationTitle("Applications")
+        .navigationTitle("Applications (\(applications.count))")
         .onAppear {
             refreshView()
         }
