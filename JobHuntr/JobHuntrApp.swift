@@ -50,6 +50,7 @@ struct JobHuntrApp: App {
     
     init() {
         self.initialUpdate()
+        sessionManager.requestNotificationPermissions()
     }
     
     func initialUpdate() {

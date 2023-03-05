@@ -346,4 +346,40 @@ class SessionManager: ObservableObject {
         }
     }
     
+    func requestNotificationPermissions() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+            if success {
+                self.scheduleNotification()
+                print("All set")
+            } else if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func scheduleNotification() {
+        // Create notification content
+        let content = UNMutableNotificationContent()
+        content.title = "Job Applications"
+        content.body = "Add a Job Application now to extend your streak!"
+        
+        // Create trigger at 19:00 hours
+        var dateComponents = DateComponents()
+        dateComponents.calendar = Calendar.current
+        dateComponents.hour = 19 // 19:00 hrs
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        // Create the request
+        let uuidString = UUID().uuidString
+        let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
+        
+        // Schedule the request
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.add(request) { (error) in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }

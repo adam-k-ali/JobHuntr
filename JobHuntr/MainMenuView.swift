@@ -31,6 +31,7 @@ struct MainMenuView: View {
                 
             }
             .listStyle(InsetGroupedListStyle())
+            Divider()
         }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
