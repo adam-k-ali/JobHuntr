@@ -79,10 +79,11 @@ struct ApplicationDetailView: View {
     }
 }
 
-struct ApplicationDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            ApplicationDetailView(application: .constant(Application.sampleApplication))
-        }
-    }
-}
+//struct ApplicationDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            ApplicationDetailView(application: .constant(Application.sampleApplication))
+//                .environmentObject(SessionManager())
+//        }
+//    }
+//}

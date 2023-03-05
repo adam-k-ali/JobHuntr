@@ -33,7 +33,6 @@ struct SettingsView: View {
                 }
             }
         }
-        .padding()
         .onDisappear {
             Task {
                 await sessionManager.saveSettings()
@@ -42,8 +41,9 @@ struct SettingsView: View {
     }
 }
 
-//struct SettingsViewq_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SettingsView()
-//    }
-//}
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingsView(settings: .constant(UserSettings(userID: "", colorBlind: false)))
+            .environmentObject(SessionManager())
+    }
+}

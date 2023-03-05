@@ -18,7 +18,8 @@ struct MainMenuView: View {
             // Profile
             ProfileCardView(user: user)
                 .environmentObject(sessionManager)
-            Divider()
+//            Divider()
+            MenuButton(iconName: "tray.full.fill", title: "Your Job Applications", onClick: {})
             List {
                 Section {
                     NavigationLink(destination: {
@@ -47,11 +48,11 @@ struct MainMenuView: View {
     
 }
 
-//struct MainMenu_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationView {
-//            MainMenuView(user: DummyUser())
-//                .environmentObject(DummySessionManager())
-//        }
-//    }
-//}
+struct MainMenu_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            MainMenuView(user: DummyUser())
+                .environmentObject(SessionManager())
+        }
+    }
+}

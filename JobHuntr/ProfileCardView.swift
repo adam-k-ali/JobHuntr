@@ -24,37 +24,9 @@ struct ProfileCardView: View {
             Divider()
             HStack {
                 Spacer()
-                // Streak
-                ZStack {
-                    RoundedRectangle(cornerRadius: 8.0)
-                        .frame(width: 128, height: 50)
-                        .foregroundColor(Color(uiColor: .systemGray5))
-                    HStack {
-                        Image(systemName: "flame.fill")
-                        VStack(alignment: .leading) {
-                            Text("\(streak)")
-                                .font(.headline)
-                            Text("Day streak")
-                                .font(.caption)
-                        }
-                    }
-                }
+                StatCardView(iconName: "flame.fill", title: "Day streak", value: streak)
                 Spacer()
-                // XP Count
-                ZStack {
-                    RoundedRectangle(cornerRadius: 8.0)
-                        .frame(width: 128, height: 50)
-                        .foregroundColor(Color(uiColor: .systemGray5))
-                    HStack {
-                        Image(systemName: "tray.full.fill")
-                        VStack(alignment: .leading) {
-                            Text("\(appCount)")
-                                .font(.headline)
-                            Text("Applications")
-                                .font(.caption)
-                        }
-                    }
-                }
+                StatCardView(iconName: "tray.full.fill", title: "Applications", value: appCount)
                 Spacer()
             }
             .onAppear {
@@ -83,9 +55,9 @@ struct ProfileCardView: View {
     }
 }
 
-//struct ProfileCardView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ProfileCardView(user: DummyUser())
-//            .environmentObject(DummySessionManager())
-//    }
-//}
+struct ProfileCardView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProfileCardView(user: DummyUser())
+            .environmentObject(SessionManager())
+    }
+}

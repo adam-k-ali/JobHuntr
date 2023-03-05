@@ -102,11 +102,11 @@ struct ApplicationsView: View {
     }
 }
 
-struct ApplicationsView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            ApplicationsView(user: DummyUser())
-        }
-    }
-}
+//struct ApplicationsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            ApplicationsView(user: DummyUser())
+//        }
+//    }
+//}
 

@@ -79,6 +79,7 @@ struct ApplicationCardView: View {
 struct ApplicationCardView_Previews: PreviewProvider {
     static var previews: some View {
         ApplicationCardView(application: .constant(Application.sampleApplication))
+            .environmentObject(SessionManager())
     }
 }
 
