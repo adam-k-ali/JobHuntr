@@ -23,13 +23,13 @@ struct EditableImage: View {
             if image != nil {
                 image!
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
                     .clipShape(Circle())
                     .frame(width: width ?? 64.0, height: height ?? 64.0)
             } else {
                 Image(uiImage: userManager.profilePic)
                     .resizable()
                     .clipShape(Circle())
+                    .aspectRatio(contentMode: .fit)
                     .frame(width: width ?? 64.0, height: height ?? 64.0)
                     
             }

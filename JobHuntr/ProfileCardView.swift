@@ -16,6 +16,7 @@ struct ProfileCardView: View {
             Image(uiImage: userManager.profilePic)
                 .resizable()
                 .clipShape(Circle())
+                .aspectRatio(contentMode: .fit)
                 .frame(width: 128.0, height: 128.0)
                 
             if userManager.profile.givenName.isEmpty || userManager.profile.lastName.isEmpty {
