@@ -32,15 +32,6 @@ struct MainMenuView: View {
                         MenuButtonView(iconName: "tray.full.fill", title: "Your Job Applications")
                     }
                 }
-                Spacer()
-                Section {
-                    NavigationLink(destination: {
-                        Text("Test")
-                    }) {
-                        MenuButtonView(iconName: "newspaper.fill", title: "Submit Feedback")
-                            .foregroundColor(.red)
-                    }
-                }
             }
             .listStyle(.plain)
             Divider()
