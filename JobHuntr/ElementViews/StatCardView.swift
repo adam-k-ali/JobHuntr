@@ -10,7 +10,7 @@ import SwiftUI
 struct StatCardView: View {
     var iconName: String
     var title: String
-    var value: Int
+    @Binding var value: Int
     
     var body: some View {
         ZStack {
@@ -34,6 +34,6 @@ struct StatCardView: View {
 
 struct StatCardView_Previews: PreviewProvider {
     static var previews: some View {
-        StatCardView(iconName: "tray.full.fill", title: "Applications", value: 14)
+        StatCardView(iconName: "tray.full.fill", title: "Applications", value: .constant(14))
     }
 }

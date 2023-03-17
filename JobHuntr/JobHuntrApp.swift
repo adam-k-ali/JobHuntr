@@ -8,7 +8,6 @@
 import Amplify
 import AWSDataStorePlugin
 import AWSCognitoAuthPlugin
-import AWSDataStorePlugin
 import AWSAPIPlugin
 import AWSS3StoragePlugin
 import UserNotifications
@@ -34,8 +33,9 @@ struct JobHuntrApp: App {
                     ConfirmationView(username: username)
                         .environmentObject(sessionManager)
                 case .session(let user):
-                    MainMenuView(user: user)
+                    MainMenuView()
                         .environmentObject(sessionManager)
+                        .environmentObject(UserManager(user: user))
                 case .confirmReset(let username):
                     ResetConfirmationView(username: username)
                         .environmentObject(sessionManager)

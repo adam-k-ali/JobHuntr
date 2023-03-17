@@ -9,16 +9,35 @@ import SwiftUI
 import Amplify
 
 struct SettingsView: View {
-    @Binding var settings: UserSettings
+//    @State private var settings: UserSettings
     
     @EnvironmentObject var sessionManager: SessionManager
+    @EnvironmentObject var userManager: UserManager
     
     var body: some View {
         VStack {
             List {
+                // Profile
+                Section(header: Text("Profile")) {
+                    // Name and Profile Picture
+                    HStack {
+                        EditableImage(width: 96.0, height: 96.0)
+                        
+                        VStack {
+                            TextField("Given Name", text: $userManager.profile.givenName)
+                            Spacer()
+                            TextField("Family Name", text: $userManager.profile.lastName)
+                        }
+                        .padding()
+                        
+                    }
+                    
+                    TextField("Current Job Title", text: $userManager.profile.jobTitle)
+                }
+                
                 // Accessibility
                 Section(header: Text("Accessibility")) {
-                    Toggle(isOn: $settings.colorBlind, label: {
+                    Toggle(isOn: $userManager.settings.colorBlind, label: {
                         Text("Colour Blindness")
                     })
                 }
@@ -35,15 +54,20 @@ struct SettingsView: View {
         }
         .onDisappear {
             Task {
-                await sessionManager.saveSettings()
+                await userManager.saveUserSettings()
+                await userManager.saveUserProfile()
             }
         }
+        .navigationTitle("Settings")
     }
 }
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(settings: .constant(UserSettings(userID: "", colorBlind: false)))
-            .environmentObject(SessionManager())
+        NavigationView {
+            SettingsView()
+                .environmentObject(SessionManager())
+                .environmentObject(UserManager(user: DummyUser()))
+        }
     }
 }

@@ -8,7 +8,38 @@
 import Foundation
 import SwiftUI
 
-extension ApplicationStage {
+/**
+ Make the Application model conform to Identifiable
+ */
+extension Application: Identifiable {
+}
+
+extension UserSettings {
+    var defaults: UserSettings { return UserSettings(userID: "", colorBlind: false) }
+}
+
+extension ApplicationStage: Comparable {
+    public static func < (lhs: ApplicationStage, rhs: ApplicationStage) -> Bool {
+        return lhs.intValue < rhs.intValue
+    }
+    
+    var intValue: Int {
+        switch self {
+        case .applied:
+            return 0
+        case .preInterview:
+            return 1
+        case .interviewing:
+            return 2
+        case .offer:
+            return 3
+        case .rejection:
+            return 4
+        case .accepted:
+            return 5
+        }
+    }
+    
     var color: Color {
         switch self {
             case .applied:

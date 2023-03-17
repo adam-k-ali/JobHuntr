@@ -23,17 +23,9 @@ struct ApplicationDetailView: View {
             }
             VStack {
                 // Progression View
-                let stage = Binding<ApplicationStage> (
-                    get: {
-                        return application.currentStage!
-                    },
-                    set: {
-                        application.currentStage = $0
-                    }
-                )
                 let dateStr = formatDateString(from: application.dateApplied!.foundationDate)
                 Text("Applied on \(dateStr)")
-                ProgressionView(applicationStage: stage)
+                ProgressionView(applicationStage: application.currentStage!)
                 Divider()
                 Button(action: {
                     showUpdateView = true
@@ -45,17 +37,7 @@ struct ApplicationDetailView: View {
         }
         .padding()
         .navigationTitle(application.jobTitle ?? "Unknown Job")
-        .onAppear {
-            Task {
-                await refresh()
-            }
-        }
-        
-        .sheet(isPresented: $showUpdateView, onDismiss: {
-            Task {
-                await refresh()
-            }
-        }) {
+        .sheet(isPresented: $showUpdateView) {
             NavigationView {
                 UpdateApplicationView(application: $application)
             }
@@ -71,12 +53,6 @@ struct ApplicationDetailView: View {
         return dateFormatter.string(from: date)
     }
     
-    func refresh() async {
-        if let companyID = application.companyID {
-            company = await sessionManager.fetchCompany(companyID)
-        }
-        application = await sessionManager.fetchApplication(id: application.id)!
-    }
 }
 
 //struct ApplicationDetailView_Previews: PreviewProvider {

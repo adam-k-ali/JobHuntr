@@ -9,55 +9,43 @@ import Amplify
 import SwiftUI
 
 struct ProfileCardView: View {
-    @ObservedObject var sessionManager = SessionManager()
-
-    let user: AuthUser
-    @State var streak: Int = 0
-    @State var appCount: Int = 0
+    @EnvironmentObject var userManager: UserManager
     
     var body: some View {
         VStack(alignment: .center, spacing: 16.0) {
-            Image(systemName: "person.crop.circle.fill")
+            Image(uiImage: userManager.profilePic)
                 .resizable()
-                .frame(width: 48.0, height: 48.0)
-            Text("\(user.username)")
+                .clipShape(Circle())
+                .frame(width: 128.0, height: 128.0)
+                
+            if userManager.profile.givenName.isEmpty || userManager.profile.lastName.isEmpty {
+                Text("\(userManager.getUsername())")
+                    .font(.headline)
+            } else {
+                Text("\(userManager.profile.givenName) \(userManager.profile.lastName)")
+                    .font(.headline)
+            }
+            
+            if !userManager.profile.jobTitle.isEmpty {
+                Text("\(userManager.profile.jobTitle)")
+            }
+            
             Divider()
             HStack {
                 Spacer()
-                StatCardView(iconName: "flame.fill", title: "Day streak", value: streak)
+                StatCardView(iconName: "flame.fill", title: "Day streak", value: $userManager.streak)
                 Spacer()
-                StatCardView(iconName: "tray.full.fill", title: "Applications", value: appCount)
+                StatCardView(iconName: "tray.full.fill", title: "Applications", value: $userManager.numApplications)
                 Spacer()
             }
-            .onAppear {
-                Task {
-                    let applications = await sessionManager.fetchApplicationsByDate(user: user)
-                    streak = calculateStreak(applications: applications)
-                    appCount = applications.count
-                }
-            }
-//            Text("\(user.firstName) \(user.lastName)")
-//                .font(.headline)
-//            Text("\(user.occupation)")
         }
     }
     
-    func calculateStreak(applications: [Application]) -> Int {
-        var streak = 0
-        for application in applications {
-            let daysSince = Calendar.current.daysSince(date: application.dateApplied!.foundationDate)
-            if daysSince - streak > 1 {
-                break
-            }
-            streak += 1
-        }
-        return streak
-    }
 }
 
 struct ProfileCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileCardView(user: DummyUser())
-            .environmentObject(SessionManager())
+        ProfileCardView()
+            .environmentObject(UserManager(user: DummyUser()))
     }
 }

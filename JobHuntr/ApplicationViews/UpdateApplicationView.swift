@@ -76,10 +76,8 @@ struct UpdateApplicationView: View {
     }
 }
 
-//struct UpdateApplicationView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UpdateApplicationView(application:
-//            Application.sampleApplication
-//        )
-//    }
-//}
+struct UpdateApplicationView_Previews: PreviewProvider {
+    static var previews: some View {
+        UpdateApplicationView(application: .constant(Application.sampleApplication))
+    }
+}
