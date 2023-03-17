@@ -12,10 +12,12 @@ struct ContentView: View {
     @EnvironmentObject var userManager: UserManager
     
     var body: some View {
-        if (userManager.loadProgress >= 1.0) {
+        if !userManager.isLoading {
             MainMenuView()
+                .environmentObject(sessionManager)
+                .environmentObject(userManager)
         } else {
-            LoadingView(progressValue: $userManager.loadProgress)
+            LoadingView()
         }
     }
 }

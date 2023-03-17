@@ -33,7 +33,7 @@ struct JobHuntrApp: App {
                     ConfirmationView(username: username)
                         .environmentObject(sessionManager)
                 case .session(let user):
-                    MainMenuView()
+                    ContentView()
                         .environmentObject(sessionManager)
                         .environmentObject(UserManager(user: user))
                 case .confirmReset(let username):

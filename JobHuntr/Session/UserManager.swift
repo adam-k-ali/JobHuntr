@@ -35,7 +35,7 @@ class UserManager: ObservableObject {
     @Published public var streak: Int = 0
     @Published public var numApplications: Int = 0
     
-    @Published public var loadProgress: Float = 0.0
+    @Published public var isLoading: Bool = true
     
     /**
      Initialize management of a given user.
@@ -46,29 +46,21 @@ class UserManager: ObservableObject {
         Task {
             await self.loadUserProfile {
                 Task {
-                    DispatchQueue.main.async {
-                        self.loadProgress = 0.10
+                    await self.downloadUserData {
+                        self.isLoading = false
                     }
-                    await self.downloadUserData()
                 }
             }
         }
-        self.getUserProfilePicture()
-        self.loadProgress = 1.0
     }
     
-    private func downloadUserData() async {
+    private func downloadUserData(completion: @escaping() -> ()) async {
         await self.downloadProfilePicture()
-        DispatchQueue.main.async {
-            self.loadProgress = 0.60
-        }
         await self.loadUserApplications()
-        DispatchQueue.main.async {
-            self.loadProgress = 0.75
-        }
         await self.loadUserSettings()
         DispatchQueue.main.async {
-            self.loadProgress = 0.85
+            self.getUserProfilePicture()
+            completion()
         }
     }
     
