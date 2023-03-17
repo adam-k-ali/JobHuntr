@@ -70,4 +70,14 @@ class GlobalDataManager {
         
         return company.id
     }
+    
+    public static func submitFeedback(feedback: Feedback) async {
+        do {
+            try await Amplify.DataStore.save(feedback)
+        } catch let error as DataStoreError {
+            print("Unable to submit feedback. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
 }

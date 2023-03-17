@@ -259,24 +259,29 @@ class UserManager: ObservableObject {
      - parameter application: The application to save or update.
      - parameter company: The company of the application.
      */
-    public func saveOrUpdateApplication(application: Application, company: Company) async {
-        // Get the required company ID, whether that's one that's already saved to the cloud, or a new company ID.
-        let companyID = await GlobalDataManager.saveOrFetchCompany(company: company)
-        
-        // Update the application's company ID
+    public func saveOrUpdateApplication(application: Application, company: Company?) async {
         var application = application
-        application.companyID = companyID
+        if let company = company {
+            // Get the required company ID, whether that's one that's already saved to the cloud, or a new company ID.
+            let companyID = await GlobalDataManager.saveOrFetchCompany(company: company)
+            
+            // Update the application's company ID
+            application.companyID = companyID
+        }
+        
+        let updatedApplication = application
         
         // Update the local list of applications
-        self.applications.removeAll(where: {$0.id == application.id})
-        self.applications.append(application)
-        self.applications.sort(by: {$0.currentStage! < $1.currentStage!})
-        self.numApplications = self.applications.count
-        self.streak = calculateStreak(applications: self.applications)
-        
+        DispatchQueue.main.async {
+            self.applications.removeAll(where: {$0.id == updatedApplication.id})
+            self.applications.append(updatedApplication)
+            self.applications.sort(by: {$0.currentStage! < $1.currentStage!})
+            self.numApplications = self.applications.count
+            self.streak = self.calculateStreak(applications: self.applications)
+        }
         // Update the application on the cloud
         do {
-            try await Amplify.DataStore.save(application)
+            try await Amplify.DataStore.save(updatedApplication)
         } catch let error as DataStoreError {
             print("Error saving application. \(error)")
         } catch {
@@ -289,8 +294,11 @@ class UserManager: ObservableObject {
      - parameter application: The application to delete
      */
     public func deleteApplication(application: Application) async {
-        // Delete the application from the local list of applications
-        self.applications.removeAll(where: {$0.id == application.id})
+        DispatchQueue.main.async {
+            // Delete the application from the local list of applications
+            self.applications.removeAll(where: {$0.id == application.id})
+        }
+        
         
         // Delete the application from the cloud
         do {

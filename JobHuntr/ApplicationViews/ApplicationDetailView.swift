@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ApplicationDetailView: View {
-    @EnvironmentObject var sessionManager: SessionManager
+    @EnvironmentObject var userManager: UserManager
 
     @Binding var application: Application
     
@@ -40,6 +40,7 @@ struct ApplicationDetailView: View {
         .sheet(isPresented: $showUpdateView) {
             NavigationView {
                 UpdateApplicationView(application: $application)
+                    .environmentObject(userManager)
             }
         }
         

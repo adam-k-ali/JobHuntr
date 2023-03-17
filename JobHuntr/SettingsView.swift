@@ -14,6 +14,8 @@ struct SettingsView: View {
     @EnvironmentObject var sessionManager: SessionManager
     @EnvironmentObject var userManager: UserManager
     
+    @State var showFeedbackForm: Bool = false
+    
     var body: some View {
         VStack {
             List {
@@ -50,12 +52,27 @@ struct SettingsView: View {
                         }
                     }
                 }
+                
+                // Other
+                Section(header: Text("Other")) {
+                    Button {
+                        showFeedbackForm = true
+                    } label: {
+                        Text("Send Feedback")
+                    }
+                }
             }
         }
         .onDisappear {
             Task {
                 await userManager.saveUserSettings()
                 await userManager.saveUserProfile()
+            }
+        }
+        .sheet(isPresented: $showFeedbackForm) {
+            NavigationView {
+                FeedbackView()
+                    .environmentObject(userManager)
             }
         }
         .navigationTitle("Settings")

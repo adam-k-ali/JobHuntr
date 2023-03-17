@@ -43,6 +43,10 @@
 		72FD4A1D29C4A15400A6F310 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A1C29C4A15400A6F310 /* ProgressBar.swift */; };
 		72FD4A1F29C4A29800A6F310 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A1E29C4A29800A6F310 /* ContentView.swift */; };
 		72FD4A2129C4A66800A6F310 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A2029C4A66800A6F310 /* ProfileView.swift */; };
+		72FD4A2329C4AB5F00A6F310 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A2229C4AB5F00A6F310 /* FeedbackView.swift */; };
+		72FD4A2729C4AE4000A6F310 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A2429C4AE4000A6F310 /* Feedback.swift */; };
+		72FD4A2829C4AE4000A6F310 /* FeedbackType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A2529C4AE4000A6F310 /* FeedbackType.swift */; };
+		72FD4A2929C4AE4000A6F310 /* Feedback+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A2629C4AE4000A6F310 /* Feedback+Schema.swift */; };
 		72FE4A6329968ED200F81353 /* JobHuntrApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FE4A6229968ED200F81353 /* JobHuntrApp.swift */; };
 		72FE4A6529968ED200F81353 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FE4A6429968ED200F81353 /* LoginView.swift */; };
 		72FE4A6729968ED200F81353 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72FE4A6629968ED200F81353 /* Assets.xcassets */; };
@@ -99,6 +103,10 @@
 		72FD4A1C29C4A15400A6F310 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		72FD4A1E29C4A29800A6F310 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		72FD4A2029C4A66800A6F310 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		72FD4A2229C4AB5F00A6F310 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
+		72FD4A2429C4AE4000A6F310 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Feedback.swift; path = amplify/generated/models/Feedback.swift; sourceTree = "<group>"; };
+		72FD4A2529C4AE4000A6F310 /* FeedbackType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedbackType.swift; path = amplify/generated/models/FeedbackType.swift; sourceTree = "<group>"; };
+		72FD4A2629C4AE4000A6F310 /* Feedback+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Feedback+Schema.swift"; path = "amplify/generated/models/Feedback+Schema.swift"; sourceTree = "<group>"; };
 		72FE4A5F29968ED200F81353 /* JobHuntr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobHuntr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72FE4A6229968ED200F81353 /* JobHuntrApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHuntrApp.swift; sourceTree = "<group>"; };
 		72FE4A6429968ED200F81353 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -228,6 +236,7 @@
 				72FD4A1A29C49E6E00A6F310 /* LoadingView.swift */,
 				72FD4A1E29C4A29800A6F310 /* ContentView.swift */,
 				72FD4A2029C4A66800A6F310 /* ProfileView.swift */,
+				72FD4A2229C4AB5F00A6F310 /* FeedbackView.swift */,
 			);
 			path = JobHuntr;
 			sourceTree = "<group>";
@@ -243,6 +252,9 @@
 		9B4E5F05B6EEA36CDF89EB9D /* AmplifyModels */ = {
 			isa = PBXGroup;
 			children = (
+				72FD4A2429C4AE4000A6F310 /* Feedback.swift */,
+				72FD4A2629C4AE4000A6F310 /* Feedback+Schema.swift */,
+				72FD4A2529C4AE4000A6F310 /* FeedbackType.swift */,
 				72FD4A1629C4855500A6F310 /* UserProfile.swift */,
 				72FD4A1729C4855500A6F310 /* UserProfile+Schema.swift */,
 				29565740097BBC660DEA9B11 /* AmplifyModels.swift */,
@@ -369,11 +381,15 @@
 				72ED1E41299B9DD400EC3B14 /* ConfirmationView.swift in Sources */,
 				72FD4A1F29C4A29800A6F310 /* ContentView.swift in Sources */,
 				7267CEA229B501510021E0ED /* MenuButtonView.swift in Sources */,
+				72FD4A2929C4AE4000A6F310 /* Feedback+Schema.swift in Sources */,
 				7229BE5F29BFD1B9005C3AAA /* GlobalDataManager.swift in Sources */,
+				72FD4A2729C4AE4000A6F310 /* Feedback.swift in Sources */,
 				7267CEA429B560340021E0ED /* CategoryCapsuleView.swift in Sources */,
 				72ED1E3D299B069A00EC3B14 /* SignUpView.swift in Sources */,
+				72FD4A2329C4AB5F00A6F310 /* FeedbackView.swift in Sources */,
 				7267CEA029B4FFB90021E0ED /* StatCardView.swift in Sources */,
 				72921F99299ABD7600165D38 /* ApplicationDetailView.swift in Sources */,
+				72FD4A2829C4AE4000A6F310 /* FeedbackType.swift in Sources */,
 				DC3472B5E021ABEB8270A156 /* Application+Schema.swift in Sources */,
 				7267CEA829B78C360021E0ED /* ImagePicker.swift in Sources */,
 				72FD4A2129C4A66800A6F310 /* ProfileView.swift in Sources */,

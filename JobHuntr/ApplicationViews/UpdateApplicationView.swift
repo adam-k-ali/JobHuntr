@@ -9,6 +9,8 @@ import Amplify
 import SwiftUI
 
 struct UpdateApplicationView: View {
+    @EnvironmentObject var userManager: UserManager
+    
     @Binding var application: Application
     @State var applicationStage: ApplicationStage = .applied
     @Environment(\.presentationMode) var presentationMode
@@ -21,7 +23,7 @@ struct UpdateApplicationView: View {
                 Section(header: Text("Application Stage")) {
                     Picker("Stage", selection: $applicationStage) {
                         ForEach(stages, id: \.self) { stage in
-                            Text(stageName(stage: stage))
+                            Text(stage.name)
                         }
                     }
                 }
@@ -36,48 +38,18 @@ struct UpdateApplicationView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Update") {
                     Task {
-                        await updateApplication()
+                        application.currentStage = applicationStage
+                        await userManager.saveOrUpdateApplication(application: application, company: nil)
                     }
                     presentationMode.wrappedValue.dismiss()
                 }
             }
         }
     }
-    
-    func updateApplication() async {
-        do {
-            print("updating application...")
-            application.currentStage = applicationStage
-            print("Created updated application")
-            try await Amplify.DataStore.save(application)
-            print("Updated application successfully")
-        } catch let error as DataStoreError {
-            print("Couldn't update application \(error)")
-        } catch {
-            print("Unexpected error \(error)")
-        }
-    }
-    
-    func stageName(stage: ApplicationStage) -> String {
-        switch stage {
-        case .applied:
-            return "Applied"
-        case .preInterview:
-            return "Pre-Interview"
-        case .interviewing:
-            return "Interviewing"
-        case .offer:
-            return "Offer Received"
-        case .accepted:
-            return "Accepted"
-        case .rejection:
-            return "Rejected"
-        }
-    }
 }
 
-struct UpdateApplicationView_Previews: PreviewProvider {
-    static var previews: some View {
-        UpdateApplicationView(application: .constant(Application.sampleApplication))
-    }
-}
+//struct UpdateApplicationView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UpdateApplicationView(application: .constant(Application.sampleApplication))
+//    }
+//}
