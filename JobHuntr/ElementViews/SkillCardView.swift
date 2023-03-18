@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SkillCardView<Content: View>: View {
     @ViewBuilder var content: Content
-    var onClick: () -> () = {}
     
     let idleColor: Color = Color(uiColor: .systemIndigo)
     

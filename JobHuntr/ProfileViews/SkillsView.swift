@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct SkillsView: View {
-    var skills: [String] = ["Test", "Skill", "Another Skill", "AAA"]
+    @EnvironmentObject var userManager: UserManager
+    @Binding var skills: [String]
+    
+    @State var showingNewSkill = false
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -16,21 +19,28 @@ struct SkillsView: View {
                 ForEach(skills, id: \.self) { skill in
                     SkillCardView(content: {Text(skill)})
                 }
-                SkillCardView(content: {
-                    Button(action: {
-                        
-                    }, label: {
-                        Image(systemName: "plus")
-                    })
-                    .buttonStyle(.plain)
+                Button(action: {
+                    showingNewSkill = true
+                    print("Pressed")
+                }, label: {
+                    Image(systemName: "plus")
                 })
+                .buttonStyle(.plain)
+            }
+            
+        }
+        .sheet(isPresented: $showingNewSkill) {
+            NavigationView {
+                NewSkillView()
+                    .environmentObject(userManager)
             }
         }
+        
     }
 }
 
 struct SkillsView_Previews: PreviewProvider {
     static var previews: some View {
-        SkillsView()
+        SkillsView(skills: .constant([]))
     }
 }

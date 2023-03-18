@@ -41,6 +41,9 @@ class UserManager: ObservableObject {
     /// The user's job history
     @Published public var jobs: [Job] = []
     
+    /// The user's skills
+    @Published public var skills: [String] = []
+    
     @Published public var isLoading: Bool = true
     
     /**
@@ -129,13 +132,16 @@ class UserManager: ObservableObject {
     public func uploadProfilePicture(image: UIImage) async {
         do {
             print("Uploading profile picture")
+            // Create image ID and get the image data
             let imageName = UUID().uuidString
             let imageData = image.jpegData(compressionQuality: 1)!
             
+            // Upload the image
             let uploadTask = Amplify.Storage.uploadData(
                 key: imageName,
                 data: imageData
             )
+            // Track upload progress
             Task {
                 for await progress in await uploadTask.progress {
                     print("Progress: \(progress)")
@@ -144,6 +150,7 @@ class UserManager: ObservableObject {
             let value = try await uploadTask.value
             print("Completed: \(value)")
             
+            // Update the local storage
             DispatchQueue.main.async {
                 self.profile.profilePicture = value
                 Task {
@@ -273,6 +280,52 @@ class UserManager: ObservableObject {
             try await Amplify.DataStore.save(job)
         } catch let error as DataStoreError {
             print("Error saving education. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func loadUserSkills() async {
+        do {
+            // Query the DataStore for all skill IDs the user has
+            let skills = try await Amplify.DataStore.query(UserSkills.self, where: UserSkills.keys.userID == user.userId)
+            var skillNames: [String] = []
+            for skill in skills {
+                let skillName = await GlobalDataManager.fetchSkillName(id: skill.skillID)
+                if skillName != nil {
+                    skillNames.append(skillName!)
+                }
+            }
+            let result = skillNames
+            DispatchQueue.main.async {
+                self.skills = result
+                print("User education loaded")
+            }
+        } catch let error as DataStoreError {
+            print("Error fetching user jobs. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func addUserSkill(skillName: String) async {
+        do {
+            let skillID = await GlobalDataManager.fetchOrSaveSkill(name: skillName)
+            
+            if skillID == nil {
+                return
+            }
+            
+            // Update the DataStore
+            let userSkill = UserSkills(userID: user.userId, skillID: skillID!)
+            try await Amplify.DataStore.save(userSkill)
+            
+            // Update local list
+            DispatchQueue.main.async {
+                self.skills.append(skillName)
+            }
+        } catch let error as DataStoreError {
+            print("Error adding skill. \(error)")
         } catch {
             print("Unexpected error. \(error)")
         }

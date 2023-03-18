@@ -80,4 +80,45 @@ class GlobalDataManager {
             print("Unexpected error. \(error)")
         }
     }
+    
+    public static func fetchSkillName(id: String) async -> String? {
+        do {
+            let skill = try await Amplify.DataStore.query(Skill.self, where: Skill.keys.id == id)
+            
+            if !skill.isEmpty {
+                return skill[0].name
+            }
+        } catch let error as DataStoreError {
+            print("Unable to find skill. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+        return nil
+    }
+    
+    /**
+     Fetchs the skill ID from the datastore or creates a new one, having saved it to the datastore.
+     */
+    public static func fetchOrSaveSkill(name: String) async -> String? {
+        do {
+            // Check for an already-saved skill
+            let savedSkill = try await Amplify.DataStore.query(Skill.self, where: Skill.keys.name == name.lowercased())
+            
+            if !savedSkill.isEmpty {
+                return savedSkill[0].id
+            }
+            
+            // No skill found - create a new one
+            let newSkill = Skill(name: name.lowercased(), rank: 0.0)
+            try await Amplify.DataStore.save(newSkill)
+            
+            return newSkill.id
+        } catch let error as DataStoreError {
+            print("Unable to fetch skill. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+        
+        return nil
+    }
 }

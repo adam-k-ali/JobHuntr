@@ -18,24 +18,6 @@ struct SettingsView: View {
     
     var body: some View {
         List {
-            // Profile
-            Section(header: Text("Profile")) {
-                // Name and Profile Picture
-                HStack {
-                    EditableImage(width: 96.0, height: 96.0)
-                    
-                    VStack {
-                        TextField("Given Name", text: $userManager.profile.givenName)
-                        Spacer()
-                        TextField("Family Name", text: $userManager.profile.familyName)
-                    }
-                    .padding()
-                    
-                }
-                
-                TextField("Current Job Title", text: $userManager.profile.jobTitle)
-            }
-            
             // Accessibility
             Section(header: Text("Accessibility")) {
                 Toggle(isOn: $userManager.settings.colorBlind, label: {
@@ -64,7 +46,6 @@ struct SettingsView: View {
         .onDisappear {
             Task {
                 await userManager.saveUserSettings()
-                await userManager.saveUserProfile()
             }
         }
         .sheet(isPresented: $showFeedbackForm) {

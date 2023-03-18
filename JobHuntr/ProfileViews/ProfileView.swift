@@ -21,11 +21,12 @@ struct ProfileView: View {
             Divider()
         }
         List {
-//            Section(header: Text("Skills")) {
-//                SkillsView()
-//            }
-//            .listRowBackground(Color.clear)
-//            .listRowInsets(.init())
+            Section(header: Text("Skills")) {
+                SkillsView(skills: $userManager.skills)
+                    .environmentObject(userManager)
+            }
+            .listRowBackground(Color.clear)
+            .listRowInsets(.init())
             
             Section {
                 Text(userManager.profile.about)
