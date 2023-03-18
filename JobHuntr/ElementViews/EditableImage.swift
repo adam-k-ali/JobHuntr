@@ -10,7 +10,8 @@ import SwiftUI
 struct EditableImage: View {
     @State private var showPickSource = false
     @State private var showImagePicker = false
-    @State private var image: Image?
+//    @State private var image: Image?
+    @State private var image: UIImage?
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     @EnvironmentObject var userManager: UserManager
@@ -21,16 +22,26 @@ struct EditableImage: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             if image != nil {
-                image!
+//                image!
+                Image(uiImage: image!)
                     .resizable()
                     .clipShape(Circle())
                     .frame(width: width ?? 64.0, height: height ?? 64.0)
             } else {
-                Image(uiImage: userManager.profilePic)
-                    .resizable()
-                    .clipShape(Circle())
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: width ?? 64.0, height: height ?? 64.0)
+                if let profilePic = userManager.profilePic {
+                    Image(uiImage: profilePic)
+                        .resizable()
+                        .clipShape(Circle())
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: width ?? 64.0, height: height ?? 64.0)
+                } else {
+                    Image(systemName: "person.crop.circle.fill")
+                        .resizable()
+                        .clipShape(Circle())
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: width ?? 64.0, height: height ?? 64.0)
+                }
+                
                     
             }
             
@@ -62,12 +73,12 @@ struct EditableImage: View {
         .onDisappear {
             Task {
                 if let image = image {
-                    await userManager.uploadProfilePicture(image: image.asUIImage())
+                    await userManager.uploadProfilePicture(image: image)
                 }
             }
         }
         .sheet(isPresented: $showImagePicker) {
-            ImagePicker(image: $image, sourceType: $sourceType)
+            ImagePicker(uiImage: $image, sourceType: $sourceType)
         }
     }
     

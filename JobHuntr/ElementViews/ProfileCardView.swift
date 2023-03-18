@@ -13,11 +13,16 @@ struct ProfileCardView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 16.0) {
-            Image(uiImage: userManager.profilePic)
-                .resizable()
-                .clipShape(Circle())
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 128.0, height: 128.0)
+            if let profilePic = userManager.profilePic {
+                Image(uiImage: profilePic)
+                    .resizable()
+                    .clipShape(Circle())
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 128.0, height: 128.0)
+            } else {
+                Image(systemName: "person.crop.circle.fill")
+                    .frame(width: 128.0, height: 128.0)
+            }
                 
             if userManager.profile.givenName.isEmpty || userManager.profile.familyName.isEmpty {
                 Text("\(userManager.getUsername())")

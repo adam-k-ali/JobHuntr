@@ -28,7 +28,7 @@ class UserManager: ObservableObject {
     @Published public var profile: Profile = defaultProfile
     
     /// The user's profile picture
-    @Published public var profilePic: UIImage = UIImage(systemName: "person.crop.circle.fill")!
+    @Published public var profilePic: UIImage?
     
     /// The user's applications
     @Published public var applications: [Application] = []
@@ -69,6 +69,7 @@ class UserManager: ObservableObject {
         await self.loadUserApplications()
         await self.loadUserEducation()
         await self.loadUserJobs()
+        await self.loadUserSkills()
         
         DispatchQueue.main.async {
             self.getUserProfilePicture()
@@ -129,17 +130,25 @@ class UserManager: ObservableObject {
         }
     }
     
+    /**
+     Upload the profile picture to the cloud
+     */
     public func uploadProfilePicture(image: UIImage) async {
         do {
             print("Uploading profile picture")
             // Create image ID and get the image data
-            let imageName = UUID().uuidString
-            let imageData = image.jpegData(compressionQuality: 1)!
+            let imageName = UUID().uuidString + ".jpeg"
+            let imageData = image.jpegData(compressionQuality: 0.6)
             
-            // Upload the image
+            if imageData == nil {
+                print("Error getting image data.")
+                return
+            }
+            
+            // Upload the image; start upload task
             let uploadTask = Amplify.Storage.uploadData(
                 key: imageName,
-                data: imageData
+                data: imageData!
             )
             // Track upload progress
             Task {
@@ -148,7 +157,7 @@ class UserManager: ObservableObject {
                 }
             }
             let value = try await uploadTask.value
-            print("Completed: \(value)")
+            print("Upload Completed: \(value)")
             
             // Update the local storage
             DispatchQueue.main.async {
@@ -167,24 +176,31 @@ class UserManager: ObservableObject {
     
     public func downloadProfilePicture() async {
         do {
-            let fileName = self.profile.profilePicture + ".jpeg"
+            // The file name to download the image to
+            let fileName = self.profile.profilePicture
             let downloadToFileName = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(fileName)
+            
+            // Check if the file already exists locally
             if FileManager.default.fileExists(atPath: downloadToFileName.path) {
                 print("Profile picture is already saved locally.")
                 self.getUserProfilePicture()
                 return
             }
-            print("Downloading \(self.profile.profilePicture)")
             
+            // Otherwise download the image from the cloud
+            print("Downloading \(self.profile.profilePicture)")
             let downloadTask = Amplify.Storage.downloadFile(key: self.profile.profilePicture, local: downloadToFileName)
             Task {
                 for await progress in await downloadTask.progress {
                     print("Progress: \(progress)")
                 }
             }
+            
+            // Await the completion of the download task
             try await downloadTask.value
             print("Completed download.")
             
+            // Update the local image instance
             self.getUserProfilePicture()
         } catch let error as StorageError {
             print("Error downloading profile picture. \(error)")
@@ -200,12 +216,12 @@ class UserManager: ObservableObject {
             print("Using default profile picture")
             return
         }
-        let fileName = self.profile.profilePicture + ".jpeg"
+        let fileName = self.profile.profilePicture
         let imageURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(fileName)
         let savedImage = UIImage(contentsOfFile: imageURL.path)
         DispatchQueue.main.async {
-            self.profilePic = savedImage != nil ? savedImage! : defaultImage
-            print("Profile picture updated")
+            self.profilePic = savedImage
+            print("Profile picture updated. Using image: \(fileName)")
         }
     }
     
@@ -315,6 +331,7 @@ class UserManager: ObservableObject {
             if skillID == nil {
                 return
             }
+            print("Saving skill: \(skillID!)")
             
             // Update the DataStore
             let userSkill = UserSkills(userID: user.userId, skillID: skillID!)
