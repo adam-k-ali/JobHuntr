@@ -212,7 +212,9 @@ class UserManager: ObservableObject {
     public func getUserProfilePicture() {
         let defaultImage = UIImage(systemName: "person.crop.circle.fill")!
         if self.profile.profilePicture.isEmpty {
-            self.profilePic = defaultImage
+            DispatchQueue.main.async {
+                self.profilePic = defaultImage
+            }
             print("Using default profile picture")
             return
         }
