@@ -43,17 +43,18 @@ class SessionManager: ObservableObject {
         authState = .confirmReset(username: username)
     }
     
-    func fetchCurrentAuthSession() async {
-        print("Fetching Auth Session")
-        do {
-            let session = try await Amplify.Auth.fetchAuthSession()
-            print("Is user signed in - \(session.isSignedIn)")
-        } catch let error as AuthError {
-            print("Fetch session failed with error \(error)")
-        } catch {
-            print("Unexpected error: \(error)")
-        }
-    }
+//    @available(iOS, deprecated: 1)
+//    func fetchCurrentAuthSession() async {
+//        print("Fetching Auth Session")
+//        do {
+//            let session = try await Amplify.Auth.fetchAuthSession()
+//            print("Is user signed in - \(session.isSignedIn)")
+//        } catch let error as AuthError {
+//            print("Fetch session failed with error \(error)")
+//        } catch {
+//            print("Unexpected error: \(error)")
+//        }
+//    }
     
     /**
      Fetch the AuthUser.

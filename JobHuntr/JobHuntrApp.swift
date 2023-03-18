@@ -50,7 +50,7 @@ struct JobHuntrApp: App {
     
     init() {
         self.initialUpdate()
-        sessionManager.requestNotificationPermissions()
+//        sessionManager.requestNotificationPermissions()
     }
     
     func initialUpdate() {
@@ -70,7 +70,6 @@ struct JobHuntrApp: App {
     
     func setupListeners() {
         let _ = Amplify.Hub.listen(to: .dataStore) { result in
-            
             switch result.eventName {
             case HubPayload.EventName.DataStore.networkStatus:
                 guard let networkStatus = result.data as? NetworkStatusEvent else {
