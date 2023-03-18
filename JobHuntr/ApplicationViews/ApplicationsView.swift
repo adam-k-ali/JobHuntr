@@ -9,26 +9,21 @@ import Amplify
 import SwiftUI
 
 struct ApplicationsView: View {
-    @EnvironmentObject var sessionManager: SessionManager
+    @EnvironmentObject var userManager: UserManager
     
-    @State private var applications: [Application] = []
     @State private var isRefreshing = false
-    
-    let user: AuthUser
-    
+        
     @State private var isPresentingNewAppView = false
     @State private var showingDeleteAlert = false
     
     var body: some View {
         List {
-            if applications.isEmpty {
-                Text("No applications found.")
+            if userManager.applications.isEmpty {
+                Text("No Applications Found.")
             } else {
-                ForEach($applications, id: \.id) { $application in
-                    // Create link to ApplicationDetailView
-                    NavigationLink(destination: ApplicationDetailView(application: $application).environmentObject(sessionManager)) {
-                        // Display the card as the link
-                        ApplicationCardView(application: $application)
+                ForEach($userManager.applications) { $application in
+                    NavigationLink(destination: ApplicationDetailView(application: $application).environmentObject(userManager)) {
+                        ApplicationCardView(application: $application.wrappedValue)
                             .contextMenu {
                                 Button(action: {
                                     showingDeleteAlert = true
@@ -42,21 +37,16 @@ struct ApplicationsView: View {
                         ActionSheet(title: Text("Delete Application?"), message: Text("Are you sure you want to delete this application?"), buttons: [
                             .default(Text("OK"), action: {
                                 Task {
-                                    await sessionManager.deleteApplication(application: application)
-                                    refreshView()
+                                    await userManager.deleteApplication(application: application)
                                 }
                             }),
                             .cancel()
                         ])
                     }
                 }
-                .onDelete(perform: delete)
             }
         }
-        .navigationTitle("Applications (\(applications.count))")
-        .onAppear {
-            refreshView()
-        }
+        .navigationTitle("Applications")
         .toolbar {
             Button(action: {
                 isPresentingNewAppView = true
@@ -66,47 +56,19 @@ struct ApplicationsView: View {
         }
         .sheet(isPresented: $isPresentingNewAppView) {
             NavigationView {
-                NewApplicationView(user: user)
-                    .environmentObject(sessionManager)
-            }
-            .onDisappear {
-                refreshView()
+                NewApplicationView()
+                    .environmentObject(userManager)
             }
         }
     }
     
-    func refreshView() {
-        Task {
-            await refreshApplications()
-        }
-    }
-    
-    func delete(at offsets: IndexSet) {
-        let index = offsets[offsets.startIndex]
-        let application = self.applications[index]
-        print("Deleting application: \(application)")
-        Task {
-            await sessionManager.deleteApplication(application: application)
-        }
-        applications.remove(atOffsets: offsets)
-    }
-    
-    func queryApplications() async {
-        applications = await sessionManager.fetchAllApplications(user)
-    }
-    
-    func refreshApplications() async {
-        isRefreshing = true
-        await queryApplications()
-        isRefreshing = false
-    }
 }
 
-struct ApplicationsView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            ApplicationsView(user: DummyUser())
-        }
-    }
-}
+//struct ApplicationsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            ApplicationsView(user: DummyUser())
+//        }
+//    }
+//}
 

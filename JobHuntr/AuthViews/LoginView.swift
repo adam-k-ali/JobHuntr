@@ -40,11 +40,12 @@ struct LoginView: View {
     @State private var isLoading: Bool = false
     
     var body: some View {
-        VStack {
+        ZStack {
             VStack {
                 Spacer()
                 Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
                     .resizable()
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     .frame(width: 128, height: 128)
                 Spacer()
                     .frame(minHeight: 10, idealHeight: 100, maxHeight: 600)
@@ -55,8 +56,6 @@ struct LoginView: View {
                         .foregroundColor(.red)
                     TextField("Username", text: $username)
                     SecureField("Password", text: $password)
-                    
-                    
                 }
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 HStack {
@@ -87,7 +86,7 @@ struct LoginView: View {
 
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             LoginView()

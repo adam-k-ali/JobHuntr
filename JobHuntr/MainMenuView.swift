@@ -8,36 +8,52 @@
 import Amplify
 import SwiftUI
 
+/**
+ The main view for a session.
+ */
 struct MainMenuView: View {
     @EnvironmentObject var sessionManager: SessionManager
-    
-    let user: AuthUser
-    
+    @EnvironmentObject var userManager: UserManager
+        
     var body: some View {
         VStack {
             // Profile
-            ProfileCardView(user: user)
-                .environmentObject(sessionManager)
+            ProfileCardView()
+                .environmentObject(userManager)
             Divider()
+            UserStatsDashboardView()
+                .environmentObject(userManager)
+            
+            Divider()
+            
             List {
                 Section {
                     NavigationLink(destination: {
-                        ApplicationsView(user: user)
-                            .environmentObject(sessionManager)
+                        ProfileView()
+                            .environmentObject(userManager)
                     }) {
-                        Text("Your Job Applications")
+                        MenuButtonView(iconName: "person.crop.circle.fill", title: "Your Profile")
+                    }
+                    
+                    NavigationLink(destination: {
+                        ApplicationsView()
+                            .environmentObject(userManager)
+                    }) {
+                        MenuButtonView(iconName: "tray.full.fill", title: "Your Job Applications")
                     }
                 }
-                
             }
-            .listStyle(InsetGroupedListStyle())
+            .listStyle(.plain)
             Divider()
         }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 NavigationLink(destination: {
-                    SettingsView(settings: $sessionManager.userSettings)
-                        .environmentObject(sessionManager)
+                    NavigationView {
+                        SettingsView()
+                            .environmentObject(sessionManager)
+                            .environmentObject(userManager)
+                    }
                 }, label: {
                     Image(systemName: "gearshape")
                 })
@@ -47,11 +63,12 @@ struct MainMenuView: View {
     
 }
 
-//struct MainMenu_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationView {
-//            MainMenuView(user: DummyUser())
-//                .environmentObject(DummySessionManager())
-//        }
-//    }
-//}
+struct MainMenu_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            MainMenuView()
+                .environmentObject(SessionManager())
+                .environmentObject(UserManager(user: DummyUser()))
+        }
+    }
+}

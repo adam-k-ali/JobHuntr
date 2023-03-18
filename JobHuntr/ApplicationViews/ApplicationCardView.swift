@@ -9,62 +9,48 @@ import Amplify
 import SwiftUI
 
 struct ApplicationCardView: View {
-    @EnvironmentObject var sessionManager: SessionManager
-
-    @Binding var application: Application
+    /// The application being visualised
+    var application: Application
     
-    @State private var company: Company?
+    /// The company of the application being visualised.
+    @State var company: Company?
+    
+    init(application: Application) {
+        self.application = application
+    }
     
     var body: some View {
-        ZStack {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        if let company = company {
-                            Text(company.name)
-                                .font(.headline)
-                        } else {
-                            Text("Unknown Company")
-                                .font(.headline)
-                        }
-                        Spacer()
-                        if let dateApplied = application.dateApplied {
-                            let dateStr = formatDateString(from: dateApplied.foundationDate)
-                            
-                            HStack {
-                                Text(dateStr)
-                                    .font(.headline)
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                    }
-                    if let jobTitle = application.jobTitle {
-                        Text(jobTitle)
-                    }
-                    
+                if let company = company {
+                    Text(company.name)
+                        .font(.headline)
+                } else {
+                    Text("Unknown Company")
+                        .font(.headline)
+                }
+                Spacer()
+                if let dateApplied = application.dateApplied {
+                    let dateStr = formatDateString(from: dateApplied.foundationDate)
                     
                     HStack {
-                        ZStack {
-                            Capsule()
-                                .fill(application.currentStage!.color)
-//                                .fill(Color(uiColor: .systemGray))
-                                .frame(width: 128, height: 32)
-                            Text(application.currentStage!.name)
-                        }
-                        
+                        Text(dateStr)
+                            .font(.headline)
+                            .foregroundColor(.gray)
                     }
                 }
+            }
+            
+            if let currentStage = application.currentStage {
+                CategoryCapsuleView(title: currentStage.name, color: currentStage.color)
             }
         }
         .onAppear {
             Task {
-                if let companyID = application.companyID {
-                    company = await sessionManager.fetchCompany(companyID)
-                } else {
-                    company = Company(name: "Unknown Company", website: "", email: "", phone: "")
-                }
+                self.company = await GlobalDataManager.fetchCompany(id: application.companyID!)
             }
         }
+        .padding(.bottom)
     }
     
     func formatDateString(from date: Date) -> String {
@@ -78,7 +64,8 @@ struct ApplicationCardView: View {
 
 struct ApplicationCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ApplicationCardView(application: .constant(Application.sampleApplication))
+        ApplicationCardView(application: Application.sampleApplication)
+            .environmentObject(SessionManager())
     }
 }
 

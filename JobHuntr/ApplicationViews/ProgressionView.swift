@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProgressionView: View {
-    @Binding var applicationStage: ApplicationStage
+    var applicationStage: ApplicationStage
     
     var body: some View {
         VStack {
@@ -74,6 +74,6 @@ struct ProgressionView: View {
 
 struct ProgressionView_Previews: PreviewProvider {
     static var previews: some View {
-        ProgressionView(applicationStage: .constant(.accepted))
+        ProgressionView(applicationStage: .accepted)
     }
 }

@@ -9,41 +9,61 @@ import SwiftUI
 import Amplify
 
 struct SettingsView: View {
-    @Binding var settings: UserSettings
+//    @State private var settings: UserSettings
     
     @EnvironmentObject var sessionManager: SessionManager
+    @EnvironmentObject var userManager: UserManager
+    
+    @State var showFeedbackForm: Bool = false
     
     var body: some View {
-        VStack {
-            List {
-                // Accessibility
-                Section(header: Text("Accessibility")) {
-                    Toggle(isOn: $settings.colorBlind, label: {
-                        Text("Colour Blindness")
-                    })
-                }
-                
-                // Account
-                Section(header: Text("Account Management")) {
-                    Button("Sign Out") {
-                        Task {
-                            await sessionManager.signOut()
-                        }
+        List {
+            // Accessibility
+            Section(header: Text("Accessibility")) {
+                Toggle(isOn: $userManager.settings.colorBlind, label: {
+                    Text("Colour Blindness")
+                })
+            }
+            
+            // Account
+            Section(header: Text("Account Management")) {
+                Button("Sign Out") {
+                    Task {
+                        await sessionManager.signOut()
                     }
                 }
             }
-        }
-        .padding()
-        .onDisappear {
-            Task {
-                await sessionManager.saveSettings()
+            
+            // Other
+            Section(header: Text("Other")) {
+                Button {
+                    showFeedbackForm = true
+                } label: {
+                    Text("Send Feedback")
+                }
             }
         }
+        .onDisappear {
+            Task {
+                await userManager.saveUserSettings()
+            }
+        }
+        .sheet(isPresented: $showFeedbackForm) {
+            NavigationView {
+                FeedbackView()
+                    .environmentObject(userManager)
+            }
+        }
+        .navigationTitle("Settings")
     }
 }
 
-//struct SettingsViewq_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SettingsView()
-//    }
-//}
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            SettingsView()
+                .environmentObject(SessionManager())
+                .environmentObject(UserManager(user: DummyUser()))
+        }
+    }
+}

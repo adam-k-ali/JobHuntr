@@ -9,8 +9,6 @@ import Amplify
 import SwiftUI
 
 struct NewApplicationView: View {
-    let user: AuthUser
-    
     @State private var companyName = ""
     @State private var companyWebsite = ""
     @State private var companyEmail = ""
@@ -22,7 +20,7 @@ struct NewApplicationView: View {
     @State private var error = ""
     
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var sessionManager: SessionManager
+    @EnvironmentObject var userManager: UserManager
     
     var body: some View {
         NavigationView {
@@ -68,31 +66,18 @@ struct NewApplicationView: View {
     }
     
     func saveApplication() async {
-        do {
-            var companyID = ""
-            if let company = await sessionManager.findCompanyByName(companyName) {
-                companyID = company.id
-            } else {
-                // Save new company
-                let company = Company(name: companyName, website: companyWebsite, email: companyEmail, phone: companyPhone)
-                companyID = company.id
-                try await Amplify.DataStore.save(company)
-            }
-            
-            // Save application
-            let application = Application(dateApplied: Temporal.Date(dateApplied), currentStage: .applied, userID: user.userId, jobTitle: jobTitle, companyID: companyID)
-            try await Amplify.DataStore.save(application)
-        } catch let error as DataStoreError {
-            print("Unable to save company and application \(error)")
-        } catch {
-            print("Unexpected error \(error)")
-        }
+        let company = Company(name: companyName, website: companyWebsite, email: companyEmail, phone: companyPhone)
+        
+        let application = Application(dateApplied: Temporal.Date(dateApplied), currentStage: .applied, userID: userManager.getUserId(), jobTitle: jobTitle, companyID: company.id)
+        
+        await userManager.saveOrUpdateApplication(application: application, company: company)
     }
 }
 
 struct NewApplicationView_Previews: PreviewProvider {
     
     static var previews: some View {
-        NewApplicationView(user: DummyUser())
+        NewApplicationView()
+//            .environmentObject(SessionManager())
     }
 }

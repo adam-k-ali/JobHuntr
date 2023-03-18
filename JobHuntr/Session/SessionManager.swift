@@ -20,59 +20,9 @@ enum AuthState {
 }
 
 class SessionManager: ObservableObject {
+    // The session's state
     @Published var authState: AuthState = .login
-    @Published var userSettings: UserSettings = UserSettings(userID: "", colorBlind: false)
-    
-    func fetchCurrentAuthSession() async {
-        print("Fetching Auth Session")
-        do {
-            let session = try await Amplify.Auth.fetchAuthSession()
-            print("Is user signed in - \(session.isSignedIn)")
-        } catch let error as AuthError {
-            print("Fetch session failed with error \(error)")
-        } catch {
-            print("Unexpected error: \(error)")
-        }
-    }
-    
-    func fetchUserSettings(user: AuthUser) async {
-        do {
-            let settings = try await Amplify.DataStore.query(UserSettings.self, where: UserSettings.keys.userID == user.userId)
-            if settings.isEmpty {
-                print("No settings found. Using defaults.")
-                DispatchQueue.main.async {
-                    self.userSettings = UserSettings(userID: user.userId, colorBlind: false)
-                }
-                return
-            }
-            DispatchQueue.main.async {
-                self.userSettings = settings[0]
-            }
-        } catch let error as DataStoreError {
-            print("Error fetching user settings - \(error)")
-        } catch {
-            print("Unexpected error - \(error)")
-        }
-    }
-    
-    func getCurrentAuthUser() async {
-        print("Fetching Auth User")
         
-        do {
-            let user = try await Amplify.Auth.getCurrentUser()
-            await self.fetchUserSettings(user: user)
-            DispatchQueue.main.async {
-                // Update auth state
-                self.authState = .session(user: user)
-            }
-        } catch {
-            print(error)
-            DispatchQueue.main.async {
-                self.authState = .login
-            }
-        }
-    }
-    
     func showSignUp() {
         authState = .signUp
     }
@@ -91,6 +41,41 @@ class SessionManager: ObservableObject {
     
     func showConfirmReset(username: String) {
         authState = .confirmReset(username: username)
+    }
+    
+//    @available(iOS, deprecated: 1)
+//    func fetchCurrentAuthSession() async {
+//        print("Fetching Auth Session")
+//        do {
+//            let session = try await Amplify.Auth.fetchAuthSession()
+//            print("Is user signed in - \(session.isSignedIn)")
+//        } catch let error as AuthError {
+//            print("Fetch session failed with error \(error)")
+//        } catch {
+//            print("Unexpected error: \(error)")
+//        }
+//    }
+    
+    /**
+     Fetch the AuthUser.
+     Called when the user signs in.
+     */
+    func getCurrentAuthUser() async {
+        print("Fetching Auth User")
+        
+        do {
+            let user = try await Amplify.Auth.getCurrentUser()
+            
+            DispatchQueue.main.async {
+                // Update auth state
+                self.authState = .session(user: user)
+            }
+        } catch {
+            print(error)
+            DispatchQueue.main.async {
+                self.authState = .login
+            }
+        }
     }
     
     func confirmResetPassword(username: String, newPassword: String, confirmationCode: String, errorMsg: Binding<String>) async {
@@ -216,114 +201,10 @@ class SessionManager: ObservableObject {
             print("Unexpected error \(error)")
         }
     }
-    
-    func fetchApplication(id: String) async -> Application? {
-        print("Fetching Application: \(id)")
-        do {
-            let application = try await Amplify.DataStore.query(Application.self, byId: id)
-            return application
-        } catch let error as DataStoreError {
-            print("Error querying DataStore for application \(error)")
-        } catch {
-            print("Unexpected error \(error)")
-        }
-        return nil
-    }
-    
-    func fetchAllApplications(_ user: AuthUser) async -> [Application] {
-        print("Fetching user applications. UserID: \(user.userId)")
-        let k = Application.keys
-        do {
-            let applications = try await Amplify.DataStore.query(Application.self, where: k.userID == user.userId, sort: .ascending(k.currentStage))
-            print("\(applications.count) applications found.")
-            return applications
-        } catch let error as DataStoreError {
-            print("Error fetching user's applications \(error)")
-        } catch {
-            print("Unexpected error \(error)")
-        }
-        return []
-    }
-    
-    func fetchApplicationsByDate(user: AuthUser) async -> [Application] {
-        let keys = Application.keys
-        do {
-            let applications = try await Amplify.DataStore.query(Application.self, where: keys.userID == user.userId, sort: .descending(keys.dateApplied))
-            print("\(applications.count) applications found.")
-            return applications
-        } catch let error as DataStoreError {
-            print("Error fetching user's applications \(error)")
-        } catch {
-            print("Unexpected error \(error)")
-        }
-        return []
-    }
-    
-    func fetchCompany(_ companyID: String) async -> Company? {
-        let companyKeys = Company.keys
-        do {
-            
-            let company = try await Amplify.DataStore.query(Company.self, where: companyKeys.id == companyID)
-            if company.isEmpty {
-                return nil
-            }
-            return company[0]
-        } catch let error as DataStoreError {
-            print("Error finding company \(error)")
-        } catch {
-            print("Unexpected Error \(error)")
-        }
-        return nil
-    }
-    
-    func findCompanyByName(_ companyName: String) async -> Company? {
-        let companyKeys = Company.keys
-        do {
-            let company = try await Amplify.DataStore.query(Company.self, where: companyKeys.name == companyName)
-            if company.isEmpty {
-                return nil
-            }
-            return company[0]
-        } catch let error as DataStoreError {
-            print("Error finding company by name \(error)")
-        } catch {
-            print("Unexpected Error \(error)")
-        }
-        return nil
-    }
-    
-    func saveApplication(application: Binding<Application>, company: Company) async {
-        do {
-            print("Saving application - \(application.wrappedValue)")
-            
-            // Check if there exists a company with the same name already.
-            if let company = await findCompanyByName(company.name) {
-                application.wrappedValue.companyID = company.id
-            } else {
-                // Save the company
-                try await Amplify.DataStore.save(company)
-                application.wrappedValue.companyID = company.id
-            }
-            
-            // Save the application
-            try await Amplify.DataStore.save(application.wrappedValue)
-        } catch let error as DataStoreError {
-            print("Error Saving Application \(error)")
-        } catch {
-            print("Unexpected Error \(error)")
-        }
-    }
-    
-    func deleteApplication(application: Application) async {
-        do {
-            try await Amplify.DataStore.delete(application)
-        } catch let error as DataStoreError {
-            print("Error Deleting Application \(error)")
-        } catch {
-            print("Unexpected Error \(error)")
-        }
-    }
-    
+
+    /**
+        Starts the DataStore instance
+     */
     func startDataStore() async {
         do {
             try await Amplify.DataStore.stop()
@@ -336,16 +217,9 @@ class SessionManager: ObservableObject {
         }
     }
     
-    func saveSettings() async {
-        do {
-            try await Amplify.DataStore.save(userSettings)
-        } catch let error as DataStoreError {
-            print("Saving settings failed - \(error)")
-        } catch {
-            print("Unexppected Error \(error)")
-        }
-    }
-    
+    /**
+        Requests permissions to send push-notifications to the user.
+     */
     func requestNotificationPermissions() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
             if success {
@@ -357,6 +231,9 @@ class SessionManager: ObservableObject {
         }
     }
     
+    /**
+        Schedules notifications to send to the user.
+     */
     func scheduleNotification() {
         // Create notification content
         let content = UNMutableNotificationContent()
