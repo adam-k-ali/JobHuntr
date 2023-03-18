@@ -19,11 +19,11 @@ struct ProfileCardView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 128.0, height: 128.0)
                 
-            if userManager.profile.givenName.isEmpty || userManager.profile.lastName.isEmpty {
+            if userManager.profile.givenName.isEmpty || userManager.profile.familyName.isEmpty {
                 Text("\(userManager.getUsername())")
                     .font(.headline)
             } else {
-                Text("\(userManager.profile.givenName) \(userManager.profile.lastName)")
+                Text("\(userManager.profile.givenName) \(userManager.profile.familyName)")
                     .font(.headline)
             }
             
@@ -31,14 +31,6 @@ struct ProfileCardView: View {
                 Text("\(userManager.profile.jobTitle)")
             }
             
-            Divider()
-            HStack {
-                Spacer()
-                StatCardView(iconName: "flame.fill", title: "Day streak", value: $userManager.streak)
-                Spacer()
-                StatCardView(iconName: "tray.full.fill", title: "Applications", value: $userManager.numApplications)
-                Spacer()
-            }
         }
     }
     

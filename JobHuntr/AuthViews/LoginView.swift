@@ -56,8 +56,6 @@ struct LoginView: View {
                         .foregroundColor(.red)
                     TextField("Username", text: $username)
                     SecureField("Password", text: $password)
-                    
-                    
                 }
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 HStack {

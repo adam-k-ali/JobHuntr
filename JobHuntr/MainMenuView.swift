@@ -20,11 +20,21 @@ struct MainMenuView: View {
             // Profile
             ProfileCardView()
                 .environmentObject(userManager)
+            Divider()
+            UserStatsDashboardView()
+                .environmentObject(userManager)
             
             Divider()
             
             List {
                 Section {
+                    NavigationLink(destination: {
+                        ProfileView()
+                            .environmentObject(userManager)
+                    }) {
+                        MenuButtonView(iconName: "person.crop.circle.fill", title: "Your Profile")
+                    }
+                    
                     NavigationLink(destination: {
                         ApplicationsView()
                             .environmentObject(userManager)

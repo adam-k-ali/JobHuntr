@@ -17,7 +17,7 @@ class UserManager: ObservableObject {
      */
     static let defaultSettings: UserSettings = UserSettings(userID: "", colorBlind: false)
     
-    static let defaultProfile: UserProfile = UserProfile(userID: "", givenName: "", lastName: "", profilePicture: "", jobTitle: "")
+    static let defaultProfile: Profile = Profile(userID: "", givenName: "", familyName: "", profilePicture: "", jobTitle: "", about: "")
     
     private var user: AuthUser
     
@@ -25,7 +25,7 @@ class UserManager: ObservableObject {
     @Published public var settings: UserSettings = defaultSettings
     
     /// The user's profile
-    @Published public var profile: UserProfile = defaultProfile
+    @Published public var profile: Profile = defaultProfile
     
     /// The user's profile picture
     @Published public var profilePic: UIImage = UIImage(systemName: "person.crop.circle.fill")!
@@ -34,6 +34,12 @@ class UserManager: ObservableObject {
     @Published public var applications: [Application] = []
     @Published public var streak: Int = 0
     @Published public var numApplications: Int = 0
+    
+    /// The user's education history
+    @Published public var education: [Education] = []
+    
+    /// The user's job history
+    @Published public var jobs: [Job] = []
     
     @Published public var isLoading: Bool = true
     
@@ -56,8 +62,11 @@ class UserManager: ObservableObject {
     
     private func downloadUserData(completion: @escaping() -> ()) async {
         await self.downloadProfilePicture()
-        await self.loadUserApplications()
         await self.loadUserSettings()
+        await self.loadUserApplications()
+        await self.loadUserEducation()
+        await self.loadUserJobs()
+        
         DispatchQueue.main.async {
             self.getUserProfilePicture()
             completion()
@@ -82,7 +91,7 @@ class UserManager: ObservableObject {
     private func loadUserProfile(completion: @escaping() -> ()) async {
         do {
             // Query the DataStore
-            let profile = try await Amplify.DataStore.query(UserProfile.self, where: UserProfile.keys.userID == user.userId)
+            let profile = try await Amplify.DataStore.query(Profile.self, where: Profile.keys.userID == user.userId)
             
             DispatchQueue.main.async {
                 if !profile.isEmpty {
@@ -190,6 +199,82 @@ class UserManager: ObservableObject {
         DispatchQueue.main.async {
             self.profilePic = savedImage != nil ? savedImage! : defaultImage
             print("Profile picture updated")
+        }
+    }
+    
+    public func loadUserEducation() async {
+        do {
+            // Query the DataStore
+            let education = try await Amplify.DataStore.query(Education.self, where: Education.keys.userID == user.userId)
+            
+            DispatchQueue.main.async {
+                self.education = education
+                print("User education loaded")
+            }
+        } catch let error as DataStoreError {
+            print("Error fetching user education. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func loadUserJobs() async {
+        do {
+            // Query the DataStore
+            let jobs = try await Amplify.DataStore.query(Job.self, where: Job.keys.userID == user.userId)
+            
+            DispatchQueue.main.async {
+                self.jobs = jobs
+                print("User education loaded")
+            }
+        } catch let error as DataStoreError {
+            print("Error fetching user jobs. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func saveEducation(companyName: String, courseName: String, startDate: Date, endDate: Date) async {
+        let company = Company(name: companyName, website: "", email: "", phone: "")
+        let companyID = await GlobalDataManager.saveOrFetchCompany(company: company)
+        
+        let start = Temporal.Date(startDate)
+        let end = Temporal.Date(endDate)
+        
+        let education = Education(userID: getUserId(), companyID: companyID, startDate: start, endDate: end, roleName: courseName)
+        
+        DispatchQueue.main.async {
+            self.education.append(education)
+        }
+        
+        do {
+            try await Amplify.DataStore.save(education)
+        } catch let error as DataStoreError {
+            print("Error saving education. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func saveJob(companyName: String, jobTitle: String, description: String, startDate: Date, endDate: Date?) async {
+        let company = Company(name: companyName, website: "", email: "", phone: "")
+        let companyID = await GlobalDataManager.saveOrFetchCompany(company: company)
+        
+        let start = Temporal.Date(startDate)
+        let end = endDate != nil ? Temporal.Date(endDate!) : nil
+        
+        let job = Job(userID: getUserId(), companyID: companyID, jobTitle: jobTitle, jobDescription: description, endDate: end, startDate: start)
+        
+        DispatchQueue.main.async {
+            self.jobs.append(job)
+        }
+        
+        do {
+            try await Amplify.DataStore.save(job)
+        } catch let error as DataStoreError {
+            print("Error saving education. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
         }
     }
     

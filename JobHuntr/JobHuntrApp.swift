@@ -69,13 +69,23 @@ struct JobHuntrApp: App {
     }
     
     func setupListeners() {
-        let _ = Amplify.Hub.listen(to: .dataStore) { event in
-            if event.eventName == HubPayload.EventName.DataStore.networkStatus {
-                guard let networkStatus = event.data as? NetworkStatusEvent else {
+        let _ = Amplify.Hub.listen(to: .dataStore) { result in
+            
+            switch result.eventName {
+            case HubPayload.EventName.DataStore.networkStatus:
+                guard let networkStatus = result.data as? NetworkStatusEvent else {
                     print("Failed to cast data as NetworkStatusEvent")
                     return
                 }
                 print("User receives a network connection status: \(networkStatus.active)")
+            case HubPayload.EventName.DataStore.syncStarted:
+                print("Sync started")
+            case HubPayload.EventName.DataStore.syncReceived:
+                print("Sync received")
+            case HubPayload.EventName.DataStore.modelSynced:
+                print("Model synced")
+            default:
+                break
             }
         }
     }

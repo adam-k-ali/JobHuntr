@@ -14,6 +14,18 @@ import SwiftUI
 extension Application: Identifiable {
 }
 
+/**
+ Make the Education model conform to Identifiable
+ */
+extension Education: Identifiable {
+}
+
+/**
+ Make the Job model conform to Identifiable
+ */
+extension Job: Identifiable {
+}
+
 extension UserSettings {
     var defaults: UserSettings { return UserSettings(userID: "", colorBlind: false) }
 }
@@ -125,6 +137,19 @@ extension Date {
         return Date()
     }
     
+    func format(date: DateFormatter.Style, time: DateFormatter.Style) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = date
+        dateFormatter.timeStyle = time
+        
+        return dateFormatter.string(from: self)
+    }
+    
+    func format(formatString: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = formatString
+        return dateFormatter.string(from: self)
+    }
 }
 
 extension Calendar {
