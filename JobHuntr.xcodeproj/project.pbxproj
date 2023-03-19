@@ -64,6 +64,7 @@
 		72ED1E41299B9DD400EC3B14 /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED1E40299B9DD400EC3B14 /* ConfirmationView.swift */; };
 		72EE1C5F29C6883100791160 /* TextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72EE1C5E29C6883100791160 /* TextFieldStyle.swift */; };
 		72EE1C6129C68A3500791160 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72EE1C6029C68A3500791160 /* ButtonStyles.swift */; };
+		72EE1C6329C6A9F800791160 /* ProgressCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72EE1C6229C6A9F800791160 /* ProgressCircle.swift */; };
 		72FD4A1B29C49E6E00A6F310 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A1A29C49E6E00A6F310 /* LoadingView.swift */; };
 		72FD4A1D29C4A15400A6F310 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A1C29C4A15400A6F310 /* ProgressBar.swift */; };
 		72FD4A1F29C4A29800A6F310 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FD4A1E29C4A29800A6F310 /* ContentView.swift */; };
@@ -148,6 +149,7 @@
 		72ED1E40299B9DD400EC3B14 /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
 		72EE1C5E29C6883100791160 /* TextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldStyle.swift; sourceTree = "<group>"; };
 		72EE1C6029C68A3500791160 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
+		72EE1C6229C6A9F800791160 /* ProgressCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCircle.swift; sourceTree = "<group>"; };
 		72FD4A1A29C49E6E00A6F310 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		72FD4A1C29C4A15400A6F310 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		72FD4A1E29C4A29800A6F310 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 				72FD4A2E29C4CA9A00A6F310 /* ProjectCard.swift */,
 				72833E0529C61DCB00A023AE /* LongPressButton.swift */,
 				7217E74229C640A500017A82 /* SkillCardView.swift */,
+				72EE1C6229C6A9F800791160 /* ProgressCircle.swift */,
 			);
 			path = ElementViews;
 			sourceTree = "<group>";
@@ -473,6 +476,7 @@
 				7217E73B29C6312900017A82 /* UserSettings.swift in Sources */,
 				72921F92299AA63D00165D38 /* ApplicationCardView.swift in Sources */,
 				7217E72B29C6312900017A82 /* Course+Schema.swift in Sources */,
+				72EE1C6329C6A9F800791160 /* ProgressCircle.swift in Sources */,
 				72FD4A1D29C4A15400A6F310 /* ProgressBar.swift in Sources */,
 				72921F9B299ABE9500165D38 /* CompanyCardView.swift in Sources */,
 				723B703D29C650B7003587D2 /* UserSkills+Schema.swift in Sources */,
