@@ -51,8 +51,8 @@ struct NewJobView: View {
     }
 }
 
-struct NewJobView_Previews: PreviewProvider {
-    static var previews: some View {
-        NewJobView()
-    }
-}
+//struct NewJobView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NewJobView()
+//    }
+//}

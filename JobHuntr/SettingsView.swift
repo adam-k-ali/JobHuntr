@@ -58,12 +58,12 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            SettingsView()
-                .environmentObject(SessionManager())
-                .environmentObject(UserManager(user: DummyUser()))
-        }
-    }
-}
+//struct SettingsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            SettingsView()
+//                .environmentObject(SessionManager())
+//                .environmentObject(UserManager(user: DummyUser()))
+//        }
+//    }
+//}

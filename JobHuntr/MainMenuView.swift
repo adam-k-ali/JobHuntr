@@ -62,13 +62,13 @@ struct MainMenuView: View {
     }
     
 }
-
-struct MainMenu_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            MainMenuView()
-                .environmentObject(SessionManager())
-                .environmentObject(UserManager(user: DummyUser()))
-        }
-    }
-}
+//
+//struct MainMenu_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            MainMenuView()
+//                .environmentObject(SessionManager())
+//                .environmentObject(UserManager(user: DummyUser()))
+//        }
+//    }
+//}

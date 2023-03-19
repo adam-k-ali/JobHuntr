@@ -11,7 +11,7 @@ import SwiftUI
 import AWSCognitoAuthPlugin
 
 struct DummyUser: AuthUser {
-    let userId: String = "1"
+    let userId: String = ""
     let username: String = "dummy"
 }
 

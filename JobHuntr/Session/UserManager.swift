@@ -52,6 +52,9 @@ class UserManager: ObservableObject {
      */
     init(user: AuthUser) {
         self.user = user
+        if user.userId.isEmpty {
+            return
+        }
         Task {
             await self.loadUserProfile {
                 Task {

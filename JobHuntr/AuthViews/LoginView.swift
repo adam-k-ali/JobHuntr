@@ -41,7 +41,7 @@ struct LoginView: View {
     
     var body: some View {
         ZStack {
-            VStack {
+            VStack(spacing: 24) {
                 Spacer()
                 Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
                     .resizable()
@@ -55,22 +55,30 @@ struct LoginView: View {
                         .font(.headline)
                         .foregroundColor(.red)
                     TextField("Username", text: $username)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "person"))
                     SecureField("Password", text: $password)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
                 }
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                HStack {
-                    Button("Forgotton Password", action: {
-                        sessionManager.showResetPassword()
-                    })
-                    Spacer()
-                    Button("Sign In", action: {
-                        isLoading = true
-                        Task {
-                            await sessionManager.signIn(username: username, password: password, errorMsg: $error)
-                        }
-                        isLoading = false
-                    })
-                }
+                
+                
+                Button(action: {
+                    isLoading = true
+                    Task {
+                        await sessionManager.signIn(username: username, password: password, errorMsg: $error)
+                    }
+                    isLoading = false
+                }, label: {
+                    Text("Login")
+                })
+                .buttonStyle(PrimaryButtonStyle())
+                
+                Button(action: {
+                    sessionManager.showResetPassword()
+                }, label: {
+                    Text("Forgotten Password")
+                })
+                .buttonStyle(SecondaryButtonStyle())
+                
                 if isLoading {
                     ProgressView()
                 }

@@ -44,9 +44,9 @@ struct FeedbackView: View {
     }
 }
 
-struct FeedbackView_Previews: PreviewProvider {
-    static var previews: some View {
-        FeedbackView()
-            .environmentObject(UserManager(user: DummyUser()))
-    }
-}
+//struct FeedbackView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FeedbackView()
+//            .environmentObject(UserManager(user: DummyUser()))
+//    }
+//}

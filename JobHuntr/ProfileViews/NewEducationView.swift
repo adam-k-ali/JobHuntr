@@ -42,8 +42,8 @@ struct NewEducationView: View {
     }
 }
 
-struct NewEducationView_Previews: PreviewProvider {
-    static var previews: some View {
-        NewEducationView()
-    }
-}
+//struct NewEducationView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NewEducationView()
+//    }
+//}
