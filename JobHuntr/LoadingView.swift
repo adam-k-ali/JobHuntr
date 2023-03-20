@@ -10,8 +10,7 @@ import SwiftUI
 struct LoadingView: View {
     var body: some View {
         ZStack {
-            Color("AppBackground")
-                .ignoresSafeArea()
+            AppColors.background.ignoresSafeArea()
             VStack {
                 Spacer()
                 Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())

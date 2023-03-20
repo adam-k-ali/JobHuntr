@@ -12,30 +12,42 @@ struct ProfileCardView: View {
     @EnvironmentObject var userManager: UserManager
     
     var body: some View {
-        VStack(alignment: .center, spacing: 16.0) {
-            if let profilePic = userManager.profilePic {
-                Image(uiImage: profilePic)
-                    .resizable()
-                    .clipShape(Circle())
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 128.0, height: 128.0)
-            } else {
-                Image(systemName: "person.crop.circle.fill")
-                    .frame(width: 128.0, height: 128.0)
-            }
+        ZStack {
+            AppColors.background
+                .ignoresSafeArea()
+            VStack(alignment: .center, spacing: 12) {
+                ZStack {
+                    if let profilePic = userManager.profilePic {
+                        Image(uiImage: profilePic)
+                            .resizable()
+                            .clipShape(Circle())
+                            .frame(width: 128.0, height: 128.0)
+                            .aspectRatio(contentMode: .fill)
+                    } else {
+                        Image(systemName: "person.crop.circle.fill")
+                            .resizable()
+                            .frame(width: 128.0, height: 128.0)
+                            .foregroundColor(AppColors.fontColor)
+                    }
+                }
+                .shadow(color: .black.opacity(0.7), radius: 2, x: 0, y: -2)
                 
-            if userManager.profile.givenName.isEmpty || userManager.profile.familyName.isEmpty {
-                Text("\(userManager.getUsername())")
-                    .font(.headline)
-            } else {
-                Text("\(userManager.profile.givenName) \(userManager.profile.familyName)")
-                    .font(.headline)
+                if userManager.profile.givenName.isEmpty || userManager.profile.familyName.isEmpty {
+                    Text("\(userManager.getUsername())")
+                        .font(.headline)
+                        .foregroundColor(AppColors.fontColor)
+                } else {
+                    Text("\(userManager.profile.givenName) \(userManager.profile.familyName)")
+                        .font(.headline)
+                        .foregroundColor(AppColors.fontColor)
+                }
+                
+                if !userManager.profile.jobTitle.isEmpty {
+                    Text("\(userManager.profile.jobTitle)")
+                        .foregroundColor(AppColors.fontColor)
+                }
             }
-            
-            if !userManager.profile.jobTitle.isEmpty {
-                Text("\(userManager.profile.jobTitle)")
-            }
-            
+            .padding(0)
         }
     }
     

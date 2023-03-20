@@ -22,6 +22,7 @@ struct SettingsView: View {
             Section(header: Text("Accessibility")) {
                 Toggle(isOn: $userManager.settings.colorBlind, label: {
                     Text("Colour Blindness")
+                        
                 })
             }
             
@@ -32,6 +33,7 @@ struct SettingsView: View {
                         await sessionManager.signOut()
                     }
                 }
+                
             }
             
             // Other
@@ -58,12 +60,12 @@ struct SettingsView: View {
     }
 }
 
-//struct SettingsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationView {
-//            SettingsView()
-//                .environmentObject(SessionManager())
-//                .environmentObject(UserManager(user: DummyUser()))
-//        }
-//    }
-//}
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            SettingsView()
+                .environmentObject(SessionManager())
+                .environmentObject(UserManager(user: DummyUser()))
+        }
+    }
+}
