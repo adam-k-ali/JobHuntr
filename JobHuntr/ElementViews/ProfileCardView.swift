@@ -13,7 +13,10 @@ struct ProfileCardView: View {
     
     var body: some View {
         ZStack {
-            AppColors.background
+//            AppColors.background
+//                .ignoresSafeArea()
+            RoundedRectangle(cornerRadius: 8)
+                .foregroundColor(AppColors.background)
                 .ignoresSafeArea()
             VStack(alignment: .center, spacing: 12) {
                 ZStack {

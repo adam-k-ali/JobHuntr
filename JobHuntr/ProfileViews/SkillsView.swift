@@ -26,6 +26,7 @@ struct SkillsView: View {
                     Image(systemName: "plus")
                 })
                 .buttonStyle(.plain)
+                .foregroundColor(AppColors.fontColor)
             }
             
         }

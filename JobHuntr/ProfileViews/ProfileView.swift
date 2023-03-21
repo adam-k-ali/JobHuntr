@@ -16,82 +16,118 @@ struct ProfileView: View {
     @State var showingEditProfile: Bool = false
     
     var body: some View {
-        VStack() {
-            ProfileCardView()
-            Divider()
-        }
-        List {
-            Section(header: Text("Skills")) {
-                SkillsView(skills: $userManager.skills)
-                    .environmentObject(userManager)
-            }
-            .listRowBackground(Color.clear)
-            .listRowInsets(.init())
-            
-            Section {
-                Text(userManager.profile.about)
-            } header: {
-                Text("About Me")
-            }
-            
-            Section {
-                ForEach($userManager.education) { $education in
-                    let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
-                    let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
-                    InstitutionCard(type: .education,
-                                    companyID: education.companyID,
-                                    title: education.roleName,
-                                    subheading: "\(startDate) - \(endDate)"
-                    )
-                }
-                Button(action: {
-                    showingNewEducation = true
-                }) {
-                    HStack {
-                        Spacer()
-                        Text("Add Education")
-                        Spacer()
+        ZStack(alignment: .top) {
+            AppColors.primary.ignoresSafeArea()
+            ScrollView {
+                VStack (alignment: .leading, spacing: 16) {
+                    Section(
+                        header: Text("Skills")
+                            .font(.callout)
+                            .foregroundColor(AppColors.fontColor)
+                    ) {
+                        SkillsView(skills: $userManager.skills)
+                            .environmentObject(userManager)
+                            .padding(.horizontal)
                     }
-                }
-            } header: {
-                Text("Education")
-            }
-            Section {
-                ForEach($userManager.jobs) { $job in
-                    let startDate = job.startDate.foundationDate.format(formatString: "MMM yyyy")
-                    if job.endDate != nil {
-                        let endDate = job.endDate!.foundationDate.format(formatString: "MMM yyyy")
-                        InstitutionCard(type: .placeOfWork,
-                                        companyID: job.companyID,
-                                        title: job.jobTitle,
-                                        subheading: "\(startDate) - \(endDate)")
-                    } else {
-                        InstitutionCard(type: .placeOfWork,
-                                        companyID: job.companyID,
-                                        title: job.jobTitle,
-                                        subheading: "\(startDate) - Present")
+                    
+                    Section(
+                        header: Text("About Me")
+                            .font(.callout)
+                            .foregroundColor(AppColors.fontColor)
+                    ) {
+                        ListCard {
+                            Text(userManager.profile.about)
+                                .foregroundColor(AppColors.fontColor)
+                                .padding()
+                        }
+                    }
+                    
+                    Section (
+                        header: Text("Education")
+                            .font(.callout)
+                            .foregroundColor(AppColors.fontColor)
+                    ) {
+                        ForEach($userManager.education) { $education in
+                            let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
+                            let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
+                            ListCard {
+                                InstitutionCard(type: .education,
+                                                companyID: education.companyID,
+                                                title: education.roleName,
+                                                subheading: "\(startDate) - \(endDate)"
+                                )
+                            }
+                        }
+                        ListCard {
+                            Button(action: {
+                                showingNewEducation = true
+                            }) {
+                                HStack {
+                                    Spacer()
+                                    Text("Add Education")
+                                    Spacer()
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundColor(AppColors.fontColor)
+                        }
+                    }
+                    
+                    Section(
+                        header: Text("Experience")
+                            .font(.callout)
+                            .foregroundColor(AppColors.fontColor)
+                    ) {
+                        ForEach($userManager.jobs) { $job in
+                            let startDate = job.startDate.foundationDate.format(formatString: "MMM yyyy")
+                            if job.endDate != nil {
+                                let endDate = job.endDate!.foundationDate.format(formatString: "MMM yyyy")
+                                InstitutionCard(type: .placeOfWork,
+                                                companyID: job.companyID,
+                                                title: job.jobTitle,
+                                                subheading: "\(startDate) - \(endDate)")
+                            } else {
+                                ListCard {
+                                    InstitutionCard(type: .placeOfWork,
+                                                    companyID: job.companyID,
+                                                    title: job.jobTitle,
+                                                    subheading: "\(startDate) - Present")
+                                }
+                            }
+                            
+                        }
+                        ListCard {
+                            Button(action: {
+                                showingNewJob = true
+                            }) {
+                                HStack {
+                                    Spacer()
+                                    Text("Add Experience")
+                                    Spacer()
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundColor(AppColors.fontColor)
+                        }
                     }
                     
                 }
-                Button(action: {
-                    showingNewJob = true
-                }) {
-                    HStack {
-                        Spacer()
-                        Text("Add Experience")
-                        Spacer()
-                    }
-                }
-            } header: {
-                Text("Experience")
             }
+            
+            .padding()
+            .background(AppColors.primary.ignoresSafeArea())
+            .padding(.top, 256)
+            
+            ProfileCardView()
+                .shadow(radius: 2)
+                .frame(height: 256)
         }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button(action: {
                     showingEditProfile = true
                 }, label: {
-                    Image(systemName: "pencil.circle")
+                    Image(systemName: "pencil")
                 })
             }
 
@@ -118,11 +154,11 @@ struct ProfileView: View {
 }
 
 
-//struct ProfileView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationView {
-//            ProfileView()
-//                .environmentObject(UserManager(user: DummyUser()))
-//        }
-//    }
-//}
+struct ProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            ProfileView()
+                .environmentObject(UserManager(user: DummyUser()))
+        }
+    }
+}
