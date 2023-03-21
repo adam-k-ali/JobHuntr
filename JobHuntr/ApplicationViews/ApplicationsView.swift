@@ -77,7 +77,7 @@ struct ApplicationsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ApplicationsView()
-                .environmentObject(UserManager(user: DummyUser()))
+                .environmentObject(UserManager(username: "Dummy", userId: ""))
         }
     }
 }

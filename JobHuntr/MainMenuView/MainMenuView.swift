@@ -71,7 +71,7 @@ struct MainMenu_Previews: PreviewProvider {
         NavigationView {
             MainMenuView()
                 .environmentObject(SessionManager())
-                .environmentObject(UserManager(user: DummyUser()))
+                .environmentObject(UserManager(username: "Dummy", userId: ""))
         }
     }
 }

@@ -73,7 +73,6 @@ struct ApplicationCardView_Previews: PreviewProvider {
         ZStack {
             AppColors.secondary.ignoresSafeArea()
             ApplicationCardView(application: Application.sampleApplication)
-                .environmentObject(SessionManager())
         }
     }
 }

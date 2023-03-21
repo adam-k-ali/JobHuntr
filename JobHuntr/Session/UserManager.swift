@@ -19,7 +19,8 @@ class UserManager: ObservableObject {
     
     static let defaultProfile: Profile = Profile(userID: "", givenName: "", familyName: "", profilePicture: "", jobTitle: "", about: "")
     
-    private var user: AuthUser
+    private var username: String
+    private var userId: String
     
     /// The user's settings
     @Published public var settings: UserSettings = defaultSettings
@@ -50,9 +51,10 @@ class UserManager: ObservableObject {
      Initialize management of a given user.
      - parameter user: The AuthUser to manage.
      */
-    init(user: AuthUser) {
-        self.user = user
-        if user.userId.isEmpty {
+    init(username: String, userId: String) {
+        self.username = username
+        self.userId = userId
+        if userId.isEmpty {
             return
         }
         Task {
@@ -81,11 +83,11 @@ class UserManager: ObservableObject {
     }
     
     public func getUserId() -> String {
-        return user.userId
+        return self.userId
     }
     
     public func getUsername() -> String {
-        return user.username
+        return self.username
     }
     
     // ======================================================
@@ -98,14 +100,14 @@ class UserManager: ObservableObject {
     private func loadUserProfile(completion: @escaping() -> ()) async {
         do {
             // Query the DataStore
-            let profile = try await Amplify.DataStore.query(Profile.self, where: Profile.keys.userID == user.userId)
+            let profile = try await Amplify.DataStore.query(Profile.self, where: Profile.keys.userID == self.userId)
             
             DispatchQueue.main.async {
                 if !profile.isEmpty {
                         self.profile = profile[0]
                 } else {
                     var profile = UserManager.defaultProfile
-                    profile.userID = self.user.userId
+                    profile.userID = self.userId
                     self.profile = profile
                 }
                 print("User profile loaded. \(self.profile)")
@@ -233,7 +235,7 @@ class UserManager: ObservableObject {
     public func loadUserEducation() async {
         do {
             // Query the DataStore
-            let education = try await Amplify.DataStore.query(Education.self, where: Education.keys.userID == user.userId)
+            let education = try await Amplify.DataStore.query(Education.self, where: Education.keys.userID == self.userId)
             
             DispatchQueue.main.async {
                 self.education = education
@@ -249,7 +251,7 @@ class UserManager: ObservableObject {
     public func loadUserJobs() async {
         do {
             // Query the DataStore
-            let jobs = try await Amplify.DataStore.query(Job.self, where: Job.keys.userID == user.userId)
+            let jobs = try await Amplify.DataStore.query(Job.self, where: Job.keys.userID == self.userId)
             
             DispatchQueue.main.async {
                 self.jobs = jobs
@@ -309,7 +311,7 @@ class UserManager: ObservableObject {
     public func loadUserSkills() async {
         do {
             // Query the DataStore for all skill IDs the user has
-            let skills = try await Amplify.DataStore.query(UserSkills.self, where: UserSkills.keys.userID == user.userId)
+            let skills = try await Amplify.DataStore.query(UserSkills.self, where: UserSkills.keys.userID == self.userId)
             var skillNames: [String] = []
             for skill in skills {
                 let skillName = await GlobalDataManager.fetchSkillName(id: skill.skillID)
@@ -339,7 +341,7 @@ class UserManager: ObservableObject {
             print("Saving skill: \(skillID!)")
             
             // Update the DataStore
-            let userSkill = UserSkills(userID: user.userId, skillID: skillID!)
+            let userSkill = UserSkills(userID: self.userId, skillID: skillID!)
             try await Amplify.DataStore.save(userSkill)
             
             // Update local list
@@ -363,7 +365,7 @@ class UserManager: ObservableObject {
     private func loadUserSettings() async {
         do {
             // Query the DataStore
-            let settings = try await Amplify.DataStore.query(UserSettings.self, where: UserSettings.keys.userID == user.userId)
+            let settings = try await Amplify.DataStore.query(UserSettings.self, where: UserSettings.keys.userID == self.userId)
 
             if !settings.isEmpty {
                 DispatchQueue.main.async {
@@ -400,7 +402,7 @@ class UserManager: ObservableObject {
     private func loadUserApplications() async {
         do {
             // Query the DataStore
-            let applications = try await Amplify.DataStore.query(Application.self, where: Application.keys.userID == self.user.userId, sort: .ascending(Application.keys.currentStage))
+            let applications = try await Amplify.DataStore.query(Application.self, where: Application.keys.userID == self.userId, sort: .ascending(Application.keys.currentStage))
             
             DispatchQueue.main.async {
                 self.applications = applications
