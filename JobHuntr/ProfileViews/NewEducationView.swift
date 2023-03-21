@@ -17,11 +17,41 @@ struct NewEducationView: View {
     @State var end: Date = Date()
     
     var body: some View {
-        Form {
-            TextField("Institution", text: $institution)
-            TextField("Name of Course", text: $courseName)
-            DatePicker("Start Date", selection: $start, displayedComponents: [.date])
-            DatePicker("End Date", selection: $end, displayedComponents: [.date])
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack(alignment: .leading) {
+                TextField("Institution", text: $institution)
+                    .textFieldStyle(FormTextFieldStyle())
+                    .colorScheme(.dark)
+                    .padding()
+                
+                TextField("Name of Course", text: $courseName)
+                    .textFieldStyle(FormTextFieldStyle())
+                    .colorScheme(.dark)
+                    .padding(.horizontal)
+                
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(AppColors.primary)
+                        .frame(height: 64)
+                    DatePicker("Start Date", selection: $start, displayedComponents: [.date])
+                        .padding(.horizontal)
+                        .colorScheme(.dark)
+                }
+                .padding([.top, .horizontal])
+                
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(AppColors.primary)
+                        .frame(height: 64)
+                    DatePicker("End Date", selection: $end, displayedComponents: [.date])
+                        .padding(.horizontal)
+                        .colorScheme(.dark)
+                }
+                .padding()
+                
+            }
+            .padding()
         }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -42,8 +72,9 @@ struct NewEducationView: View {
     }
 }
 
-//struct NewEducationView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NewEducationView()
-//    }
-//}
+struct NewEducationView_Previews: PreviewProvider {
+    static var previews: some View {
+        NewEducationView()
+            .environmentObject(UserManager(username: "", userId: ""))
+    }
+}

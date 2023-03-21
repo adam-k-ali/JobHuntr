@@ -35,3 +35,25 @@ struct GradientTextFieldBackground: TextFieldStyle {
        }
    }
 }
+
+struct FormTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 8.0)
+                .foregroundColor(AppColors.primary)
+                .frame(height: 48)
+//            RoundedRectangle(cornerRadius: 8.0)
+//                .stroke(.black)
+//                .frame(height: 48)
+            
+            HStack {
+                // Reference the TextField here
+                configuration
+                    .foregroundColor(AppColors.fontColor)
+                
+            }
+            .padding(.leading)
+            .foregroundColor(.gray)
+        }
+    }
+}

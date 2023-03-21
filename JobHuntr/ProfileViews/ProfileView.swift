@@ -50,13 +50,14 @@ struct ProfileView: View {
                         ForEach($userManager.education) { $education in
                             let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
                             let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
-                            ListCard {
+                            ListCard(isChangeable: true) {
                                 InstitutionCard(type: .education,
                                                 companyID: education.companyID,
                                                 title: education.roleName,
                                                 subheading: "\(startDate) - \(endDate)"
                                 )
                             }
+                            
                         }
                         ListCard {
                             Button(action: {
