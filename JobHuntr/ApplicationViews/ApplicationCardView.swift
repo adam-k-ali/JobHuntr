@@ -25,9 +25,11 @@ struct ApplicationCardView: View {
                 if let company = company {
                     Text(company.name)
                         .font(.headline)
+                        .foregroundColor(AppColors.fontColor)
                 } else {
                     Text("Unknown Company")
                         .font(.headline)
+                        .foregroundColor(AppColors.fontColor)
                 }
                 Spacer()
                 if let dateApplied = application.dateApplied {
@@ -36,10 +38,14 @@ struct ApplicationCardView: View {
                     HStack {
                         Text(dateStr)
                             .font(.headline)
-                            .foregroundColor(.gray)
+                            .foregroundColor(AppColors.fontColor.opacity(0.8))
                     }
                 }
             }
+            
+            Text(application.jobTitle!)
+                .font(.subheadline)
+                .foregroundColor(AppColors.fontColor)
             
             if let currentStage = application.currentStage {
                 CategoryCapsuleView(title: currentStage.name, color: currentStage.color)
@@ -64,8 +70,11 @@ struct ApplicationCardView: View {
 
 struct ApplicationCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ApplicationCardView(application: Application.sampleApplication)
-            .environmentObject(SessionManager())
+        ZStack {
+            AppColors.secondary.ignoresSafeArea()
+            ApplicationCardView(application: Application.sampleApplication)
+                .environmentObject(SessionManager())
+        }
     }
 }
 
