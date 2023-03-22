@@ -264,14 +264,14 @@ class UserManager: ObservableObject {
         }
     }
     
-    public func saveEducation(companyName: String, courseName: String, startDate: Date, endDate: Date) async {
+    public func saveEducation(id: String = UUID().uuidString, companyName: String, courseName: String, startDate: Date, endDate: Date) async {
         let company = Company(name: companyName, website: "", email: "", phone: "")
         let companyID = await GlobalDataManager.saveOrFetchCompany(company: company)
         
         let start = Temporal.Date(startDate)
         let end = Temporal.Date(endDate)
         
-        let education = Education(userID: getUserId(), companyID: companyID, startDate: start, endDate: end, roleName: courseName)
+        let education = Education(id: id, userID: getUserId(), companyID: companyID, startDate: start, endDate: end, roleName: courseName)
         
         DispatchQueue.main.async {
             self.education.append(education)
@@ -281,6 +281,22 @@ class UserManager: ObservableObject {
             try await Amplify.DataStore.save(education)
         } catch let error as DataStoreError {
             print("Error saving education. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func deleteEducation(education: Education) async {
+        // Delete locally
+        DispatchQueue.main.async {
+            self.education.removeAll(where: {$0.id == education.id})
+        }
+        
+        // Delete from cloud and DataStore
+        do {
+            try await Amplify.DataStore.delete(Education.self, where: Education.keys.id == education.id)
+        } catch let error as DataStoreError {
+            print("Error deleting education from DataStore. \(error)")
         } catch {
             print("Unexpected error. \(error)")
         }
@@ -303,6 +319,22 @@ class UserManager: ObservableObject {
             try await Amplify.DataStore.save(job)
         } catch let error as DataStoreError {
             print("Error saving education. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func deleteJob(job: Job) async {
+        // Delete locally
+        DispatchQueue.main.async {
+            self.jobs.removeAll(where: {$0.id == job.id})
+        }
+        
+        // Delete from cloud and DataStore
+        do {
+            try await Amplify.DataStore.delete(Job.self, where: Job.keys.id == job.id)
+        } catch let error as DataStoreError {
+            print("Error deleting education from DataStore. \(error)")
         } catch {
             print("Unexpected error. \(error)")
         }

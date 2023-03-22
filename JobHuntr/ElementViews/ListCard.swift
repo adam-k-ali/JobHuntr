@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ListCard<Content>: View where Content: View {
     var isChangeable: Bool = false
+    var onDelete: () -> Void = {}
+    var onEdit: () -> Void = {}
     let content: () -> Content
-    let onDelete: () -> Void = {}
-    let onEdit: () -> Void = {}
     
     var body: some View {
         if isChangeable {
@@ -35,10 +35,10 @@ struct ListCard<Content>: View where Content: View {
     
     var menu: some View {
         Group {
-            Button(action: onEdit, label: {
-                Image(systemName: "pencil")
-                Text("Edit")
-            })
+//            Button(action: onEdit, label: {
+//                Image(systemName: "pencil")
+//                Text("Edit")
+//            })
             Button(action: onDelete, label: {
                 Image(systemName: "trash")
                 Text("Delete")

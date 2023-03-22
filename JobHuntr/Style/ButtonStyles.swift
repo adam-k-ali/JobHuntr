@@ -12,7 +12,7 @@ struct PrimaryButtonStyle: ButtonStyle {
         configuration.label
             .padding()
             .frame(width: 300)
-            .background(Color.accentColor)
+            .background(AppColors.primary)
             .foregroundColor(Color.white)
             .cornerRadius(8)
     }

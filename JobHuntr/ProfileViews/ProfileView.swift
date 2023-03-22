@@ -15,6 +15,9 @@ struct ProfileView: View {
     @State var showingNewJob: Bool = false
     @State var showingEditProfile: Bool = false
     
+    @State var showingEditEducation: Bool = false
+    @State var selectedEducation: Education?
+    
     var body: some View {
         ZStack(alignment: .top) {
             AppColors.primary.ignoresSafeArea()
@@ -50,7 +53,10 @@ struct ProfileView: View {
                         ForEach($userManager.education) { $education in
                             let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
                             let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
-                            ListCard(isChangeable: true) {
+                            
+                            ListCard(isChangeable: true, onDelete: {
+                                deleteEducation(education: education)
+                            }) {
                                 InstitutionCard(type: .education,
                                                 companyID: education.companyID,
                                                 title: education.roleName,
@@ -83,12 +89,18 @@ struct ProfileView: View {
                             let startDate = job.startDate.foundationDate.format(formatString: "MMM yyyy")
                             if job.endDate != nil {
                                 let endDate = job.endDate!.foundationDate.format(formatString: "MMM yyyy")
-                                InstitutionCard(type: .placeOfWork,
-                                                companyID: job.companyID,
-                                                title: job.jobTitle,
-                                                subheading: "\(startDate) - \(endDate)")
+                                ListCard(isChangeable: true, onDelete: {
+                                    deleteJob(job: job)
+                                }) {
+                                    InstitutionCard(type: .placeOfWork,
+                                                    companyID: job.companyID,
+                                                    title: job.jobTitle,
+                                                    subheading: "\(startDate) - \(endDate)")
+                                }
                             } else {
-                                ListCard {
+                                ListCard(isChangeable: true, onDelete: {
+                                    deleteJob(job: job)
+                                }) {
                                     InstitutionCard(type: .placeOfWork,
                                                     companyID: job.companyID,
                                                     title: job.jobTitle,
@@ -150,6 +162,28 @@ struct ProfileView: View {
                 EditProfileView()
                     .environmentObject(userManager)
             }
+        }
+        .sheet(isPresented: $showingEditEducation) {
+            if let education = self.selectedEducation {
+                NavigationView {
+                    EditEducationView(education: education)
+                        .environmentObject(userManager)
+                }
+            } else {
+                Text("Error")
+            }
+        }
+    }
+    
+    func deleteEducation(education: Education) {
+        Task {
+            await userManager.deleteEducation(education: education)
+        }
+    }
+    
+    func deleteJob(job: Job) {
+        Task {
+            await userManager.deleteJob(job: job)
         }
     }
 }

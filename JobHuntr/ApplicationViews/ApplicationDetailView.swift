@@ -16,26 +16,35 @@ struct ApplicationDetailView: View {
     @State private var company: Company?
     
     var body: some View {
-        VStack(alignment: .leading) {
-            // Company Card View
-            if let companyUnwrapped = company {
-                CompanyCardView(company: companyUnwrapped)
-            }
-            VStack {
-                // Progression View
-                let dateStr = formatDateString(from: application.dateApplied!.foundationDate)
-                Text("Applied on \(dateStr)")
-                ProgressionView(applicationStage: application.currentStage!)
-                Divider()
-                Button(action: {
-                    showUpdateView = true
-                }) {
-                    Text("Update")
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack(alignment: .leading) {
+                // Company Card View
+                if let companyUnwrapped = company {
+                    CompanyCardView(company: companyUnwrapped)
                 }
+                VStack {
+                    // Progression View
+                    let dateStr = application.dateApplied!.foundationDate.format(date: .short, time: .none)
+                    
+                        Text("Applied on \(dateStr)")
+                            .foregroundColor(AppColors.fontColor)
+                    ProgressionView(applicationStage: application.currentStage!)
+                        .colorScheme(.dark)
+                    
+                    Spacer()
+                    Button(action: {
+                        showUpdateView = true
+                    }) {
+                        Text("Update")
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .colorScheme(.dark)
+                }
+                Spacer()
             }
-            Spacer()
+            .padding()
         }
-        .padding()
         .navigationTitle(application.jobTitle ?? "Unknown Job")
         .sheet(isPresented: $showUpdateView) {
             NavigationView {
@@ -46,21 +55,13 @@ struct ApplicationDetailView: View {
         
     }
     
-    func formatDateString(from date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .short
-        dateFormatter.timeStyle = .none
-        
-        return dateFormatter.string(from: date)
-    }
-    
 }
 
-//struct ApplicationDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationView {
-//            ApplicationDetailView(application: .constant(Application.sampleApplication))
-//                .environmentObject(SessionManager())
-//        }
-//    }
-//}
+struct ApplicationDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            ApplicationDetailView(application: .constant(Application.sampleApplication))
+                .environmentObject(UserManager(username: "", userId: ""))
+        }
+    }
+}

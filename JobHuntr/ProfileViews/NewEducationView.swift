@@ -58,6 +58,7 @@ struct NewEducationView: View {
                 Button("Dismiss") {
                     presentationMode.wrappedValue.dismiss()
                 }
+                .colorScheme(.dark)
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
@@ -66,6 +67,7 @@ struct NewEducationView: View {
                     }
                     presentationMode.wrappedValue.dismiss()
                 }
+                .colorScheme(.dark)
                 .disabled(institution.isEmpty || courseName.isEmpty)
             }
         }
@@ -74,7 +76,9 @@ struct NewEducationView: View {
 
 struct NewEducationView_Previews: PreviewProvider {
     static var previews: some View {
-        NewEducationView()
-            .environmentObject(UserManager(username: "", userId: ""))
+        NavigationView {
+            NewEducationView()
+                .environmentObject(UserManager(username: "", userId: ""))
+        }
     }
 }
