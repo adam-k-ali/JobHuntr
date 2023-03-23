@@ -530,8 +530,15 @@ class UserManager: ObservableObject {
      */
     private func calculateStreak(applications: [Application]) -> Int {
         var streak = 0
+        var lastDate = Date()
         for application in applications {
+            if lastDate == application.dateApplied!.foundationDate {
+                continue
+            }
+            lastDate = application.dateApplied!.foundationDate
+            // Calculate days between the application date and the current date
             let daysSince = Calendar.current.daysSince(date: application.dateApplied!.foundationDate)
+            // If there is a missed day, break out of the loop
             if daysSince - streak > 1 {
                 break
             }
