@@ -25,7 +25,6 @@ struct MainMenuView: View {
                     .foregroundColor(AppColors.primary)
                     .ignoresSafeArea()
                 
-                
                 VStack {
                     UserStatsDashboardView()
                         .environmentObject(userManager)
