@@ -62,6 +62,7 @@ struct ProfileView: View {
                                                 title: education.roleName,
                                                 subheading: "\(startDate) - \(endDate)"
                                 )
+                                .colorScheme(.dark)
                             }
                             
                         }
@@ -96,6 +97,7 @@ struct ProfileView: View {
                                                     companyID: job.companyID,
                                                     title: job.jobTitle,
                                                     subheading: "\(startDate) - \(endDate)")
+                                    .colorScheme(.dark)
                                 }
                             } else {
                                 ListCard(isChangeable: true, onDelete: {
@@ -105,6 +107,7 @@ struct ProfileView: View {
                                                     companyID: job.companyID,
                                                     title: job.jobTitle,
                                                     subheading: "\(startDate) - Present")
+                                    .colorScheme(.dark)
                                 }
                             }
                             

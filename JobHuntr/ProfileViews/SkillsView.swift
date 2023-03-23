@@ -17,7 +17,10 @@ struct SkillsView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
                 ForEach(skills, id: \.self) { skill in
-                    SkillCardView(content: {Text(skill)})
+                    SkillCardView(content: {
+                        Text(skill)
+                            .foregroundColor(AppColors.fontColor)
+                    })
                 }
                 Button(action: {
                     showingNewSkill = true
@@ -40,8 +43,8 @@ struct SkillsView: View {
     }
 }
 
-//struct SkillsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SkillsView(skills: .constant([]))
-//    }
-//}
+struct SkillsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SkillsView(skills: .constant(["UI Design", "Recruitment", "Testing", "Project Leader"]))
+    }
+}
