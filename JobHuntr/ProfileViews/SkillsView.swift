@@ -20,6 +20,10 @@ struct SkillsView: View {
                     SkillCardView(content: {
                         Text(skill)
                             .foregroundColor(AppColors.fontColor)
+                    }, onDelete: {
+                        Task {
+                            await userManager.removeUserSkill(skillName: skill)
+                        }
                     })
                 }
                 Button(action: {

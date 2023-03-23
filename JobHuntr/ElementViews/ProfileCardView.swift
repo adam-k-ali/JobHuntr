@@ -23,9 +23,10 @@ struct ProfileCardView: View {
                     if let profilePic = userManager.profilePic {
                         Image(uiImage: profilePic)
                             .resizable()
+                            .aspectRatio(contentMode: .fill)
                             .clipShape(Circle())
                             .frame(width: 128.0, height: 128.0)
-                            .aspectRatio(contentMode: .fill)
+                            
                     } else {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()

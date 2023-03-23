@@ -387,6 +387,26 @@ class UserManager: ObservableObject {
         }
     }
     
+    public func removeUserSkill(skillName: String) async {
+        let skillID = await GlobalDataManager.fetchOrSaveSkill(name: skillName)
+        
+        // Remove locally
+        DispatchQueue.main.async {
+            self.skills.removeAll(where: {
+                $0.lowercased() == skillName.lowercased()
+            })
+        }
+
+        // Remove from DataStore.
+        do {
+            try await Amplify.DataStore.delete(UserSkills.self, where: UserSkills.keys.userID == self.userId && UserSkills.keys.skillID == skillID)
+        } catch let error as DataStoreError {
+            print("Error removing skill. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
     // ======================================================
     // Settings Management
     // ======================================================
