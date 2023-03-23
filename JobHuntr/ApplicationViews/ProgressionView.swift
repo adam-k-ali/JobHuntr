@@ -11,46 +11,46 @@ struct ProgressionView: View {
     var applicationStage: ApplicationStage
     
     var body: some View {
-        VStack {
-            ZStack {
-                let currentStage = enumerateStage(applicationStage)
-                HStack {
-                    VStack(alignment: .leading) {
-                        Circle()
-                            .frame(width: 24, height: 24)
-                            .padding(.horizontal)
-                            .foregroundColor(
-                                currentStage >= enumerateStage(.applied) ? ApplicationStage.applied.color : Color(uiColor: .systemGray3))
-                        Text("Applied")
-                    }
-                    VStack {
-                        Circle()
-                            .frame(width: 24, height: 24)
-                            .padding(.horizontal)
-                            .foregroundColor(currentStage >= enumerateStage(.preInterview) ? ApplicationStage.preInterview.color : Color(uiColor: .systemGray3))
-                        Text("Pre-Interview")
-                    }
-                    VStack {
-                        Circle()
-                            .frame(width: 24, height: 24)
-                            .padding(.horizontal)
-                            .foregroundColor(currentStage >= enumerateStage(.interviewing) ? ApplicationStage.interviewing.color : Color(uiColor: .systemGray3))
-                        Text("Interview")
-                    }
-                    
-                    VStack {
-                        Circle()
-                            .frame(width: 24, height: 24)
-                            .padding(.horizontal)
-                            .foregroundColor(currentStage >= enumerateStage(.offer) ? applicationStage.color : Color(uiColor: .systemGray3)
-                            )
-                        Text("Offer")
-                    }
+        ZStack {
+            RoundedRectangle(cornerRadius: 8)
+                .foregroundColor(AppColors.primary)
+                .frame(height: 128)
+            let currentStage = enumerateStage(applicationStage)
+            HStack {
+                VStack(alignment: .leading) {
+                    Circle()
+                        .frame(width: 24, height: 24)
+                        .padding(.horizontal)
+                        .foregroundColor(
+                            currentStage >= enumerateStage(.applied) ? ApplicationStage.applied.color : Color(uiColor: .systemGray3))
+                    Text("Applied")
+                }
+                VStack {
+                    Circle()
+                        .frame(width: 24, height: 24)
+                        .padding(.horizontal)
+                        .foregroundColor(currentStage >= enumerateStage(.preInterview) ? ApplicationStage.preInterview.color : Color(uiColor: .systemGray3))
+                    Text("Pre-Interview")
+                }
+                VStack {
+                    Circle()
+                        .frame(width: 24, height: 24)
+                        .padding(.horizontal)
+                        .foregroundColor(currentStage >= enumerateStage(.interviewing) ? ApplicationStage.interviewing.color : Color(uiColor: .systemGray3))
+                    Text("Interview")
+                }
+                
+                VStack {
+                    Circle()
+                        .frame(width: 24, height: 24)
+                        .padding(.horizontal)
+                        .foregroundColor(currentStage >= enumerateStage(.offer) ? applicationStage.color : Color(uiColor: .systemGray3)
+                        )
+                    Text("Offer")
                 }
             }
-            
         }
-        .padding()
+//        .padding()
 
     }
     

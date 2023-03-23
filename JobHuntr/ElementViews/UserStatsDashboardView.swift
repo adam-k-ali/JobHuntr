@@ -13,9 +13,15 @@ struct UserStatsDashboardView: View {
     var body: some View {
         HStack {
             Spacer()
-            StatCardView(iconName: "flame.fill", title: "Day streak", value: $userManager.streak)
+            StatCardView(title: "Day streak", value: $userManager.streak) {
+                Image(systemName: "flame.fill")
+                    .foregroundColor(Color(uiColor: .systemOrange))
+            }
             Spacer()
-            StatCardView(iconName: "tray.full.fill", title: "Applications", value: $userManager.numApplications)
+            StatCardView(title: "Applications", value: $userManager.numApplications) {
+                Image(systemName: "tray.full.fill")
+                    .foregroundColor(AppColors.fontColor)
+            }
             Spacer()
         }
     }
@@ -24,6 +30,6 @@ struct UserStatsDashboardView: View {
 struct UserStatsDashboardView_Previews: PreviewProvider {
     static var previews: some View {
         UserStatsDashboardView()
-            .environmentObject(UserManager(user: DummyUser()))
+            .environmentObject(UserManager(username: "Dummy", userId: ""))
     }
 }

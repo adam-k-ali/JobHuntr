@@ -14,16 +14,20 @@ struct MenuButtonView: View {
     
     var body: some View {
         ZStack {
-//            RoundedRectangle(cornerRadius: 6)
-//                .foregroundColor(.gray)
-//                .frame(width: .infinity, height: 50)
+            RoundedRectangle(cornerRadius: 6)
+                .foregroundColor(AppColors.secondary)
+                .frame(height: 64)
             HStack {
                 Image(systemName: iconName)
+                    .foregroundColor(AppColors.fontColor)
                 Text(title)
                     .font(.body)
+                    .foregroundColor(AppColors.fontColor)
                 Spacer()
-            }.padding()
+            }
+            .padding()
         }
+        .padding(.vertical, 8)
     }
 }
 

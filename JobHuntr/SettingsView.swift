@@ -19,12 +19,13 @@ struct SettingsView: View {
     var body: some View {
         List {
             // Accessibility
-            Section(header: Text("Accessibility")) {
-                Toggle(isOn: $userManager.settings.colorBlind, label: {
-                    Text("Colour Blindness")
-                })
-            }
-            
+//            Section(header: Text("Accessibility")) {
+//                Toggle(isOn: $userManager.settings.colorBlind, label: {
+//                    Text("Colour Blindness")
+//                        
+//                })
+//            }
+//            
             // Account
             Section(header: Text("Account Management")) {
                 Button("Sign Out") {
@@ -32,6 +33,7 @@ struct SettingsView: View {
                         await sessionManager.signOut()
                     }
                 }
+                
             }
             
             // Other
@@ -63,7 +65,7 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView()
                 .environmentObject(SessionManager())
-                .environmentObject(UserManager(user: DummyUser()))
+                .environmentObject(UserManager(username: "Dummy", userId: ""))
         }
     }
 }

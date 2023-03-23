@@ -26,6 +26,7 @@ struct SkillsView: View {
                     Image(systemName: "plus")
                 })
                 .buttonStyle(.plain)
+                .foregroundColor(AppColors.fontColor)
             }
             
         }
@@ -39,8 +40,8 @@ struct SkillsView: View {
     }
 }
 
-struct SkillsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SkillsView(skills: .constant([]))
-    }
-}
+//struct SkillsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SkillsView(skills: .constant([]))
+//    }
+//}

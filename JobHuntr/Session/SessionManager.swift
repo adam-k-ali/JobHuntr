@@ -9,14 +9,15 @@ import Amplify
 import Foundation
 import SwiftUI
 import AWSCognitoAuthPlugin
+import AWSPluginsCore
 
 struct DummyUser: AuthUser {
-    let userId: String = "1"
+    let userId: String = ""
     let username: String = "dummy"
 }
 
 enum AuthState {
-    case signUp, login, confirmCode(username: String), session(user: AuthUser), confirmReset(username: String), resetPassword
+    case signUp, login, confirmCode(username: String), session(username: String, userId: String), confirmReset(username: String), resetPassword
 }
 
 class SessionManager: ObservableObject {
@@ -42,20 +43,46 @@ class SessionManager: ObservableObject {
     func showConfirmReset(username: String) {
         authState = .confirmReset(username: username)
     }
-    
-//    @available(iOS, deprecated: 1)
-//    func fetchCurrentAuthSession() async {
-//        print("Fetching Auth Session")
-//        do {
-//            let session = try await Amplify.Auth.fetchAuthSession()
+
+    /**
+     Fetches the current session's user id.
+        - returns the user id, or nil if there is no user signed in.
+     */
+    func fetchCurrentAuthSession() async -> String? {
+        print("Fetching Auth Session")
+        do {
+            let session = try await Amplify.Auth.fetchAuthSession()
+            
+            // Get user sub or identity id
+            if let identityProvider = session as? AuthCognitoIdentityProvider {
+                let usersub = try identityProvider.getUserSub().get()
+                let identityId = try identityProvider.getIdentityId().get()
+                
+                print("User sub - \(usersub) and identity id \(identityId)")
+                return usersub
+            }
+//
+//            // Get AWS credentials
+//            if let awsCredentialsProvider = session as? AuthAWSCredentialsProvider {
+//                let credentials = try awsCredentialsProvider.getAWSCredentials().get()
+//                // Do something with the credentials
+//
+//            }
+//
+//            // Get cognito user pool token
+//            if let cognitoTokenProvider = session as? AuthCognitoTokensProvider {
+//                let tokens = try cognitoTokenProvider.getCognitoTokens().get()
+//                // Do something with the JWT tokens
+//            }
 //            print("Is user signed in - \(session.isSignedIn)")
-//        } catch let error as AuthError {
-//            print("Fetch session failed with error \(error)")
-//        } catch {
-//            print("Unexpected error: \(error)")
-//        }
-//    }
-    
+        } catch let error as AuthError {
+            print("Fetch session failed with error \(error)")
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        return nil
+    }
+
     /**
      Fetch the AuthUser.
      Called when the user signs in.
@@ -66,10 +93,13 @@ class SessionManager: ObservableObject {
         do {
             let user = try await Amplify.Auth.getCurrentUser()
             
+            let userId = await self.fetchCurrentAuthSession()
+            
             DispatchQueue.main.async {
                 // Update auth state
-                self.authState = .session(user: user)
+                self.authState = .session(username: user.username, userId: userId ?? user.userId)
             }
+            print("User fetched")
         } catch {
             print(error)
             DispatchQueue.main.async {
@@ -188,7 +218,7 @@ class SessionManager: ObservableObject {
         await self.getCurrentAuthUser()
         
         // Clear DataStore
-        await self.clearDataStore()
+//        await self.clearDataStore()
     }
     
     func clearDataStore() async {

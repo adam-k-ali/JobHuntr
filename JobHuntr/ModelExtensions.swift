@@ -132,6 +132,13 @@ extension Color {
         }
 }
 
+struct AppColors {
+    public static var background: Color = Color("AppBackground")
+    public static var secondary: Color = Color("Secondary")
+    public static var primary: Color = Color("Primary")
+    public static var fontColor: Color = Color.white.opacity(0.9)
+}
+
 extension Date {
     func now() -> Date {
         return Date()
@@ -156,4 +163,16 @@ extension Calendar {
     public func daysSince(date: Date) -> Int {
         return self.dateComponents([.day], from: date, to: Date()).day!
     }
+}
+
+extension View {
+    func placeholder<Content: View>(
+        when shouldShow: Bool,
+        alignment: Alignment = .leading,
+        @ViewBuilder placeholder: () -> Content) -> some View {
+            ZStack(alignment: alignment) {
+                placeholder().opacity(shouldShow ? 1 : 0)
+                self
+            }
+        }
 }

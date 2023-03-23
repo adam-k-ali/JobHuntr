@@ -36,8 +36,8 @@ struct NewSkillView: View {
     }
 }
 
-struct NewSkillView_Previews: PreviewProvider {
-    static var previews: some View {
-        NewSkillView()
-    }
-}
+//struct NewSkillView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NewSkillView()
+//    }
+//}

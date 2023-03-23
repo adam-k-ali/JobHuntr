@@ -7,24 +7,27 @@
 
 import SwiftUI
 
-struct StatCardView: View {
-    var iconName: String
+struct StatCardView<Content>: View where Content: View {
     var title: String
     @Binding var value: Int
+    
+    let icon: () -> Content
     
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 8.0)
                 .frame(width: 150, height: 64)
-                .foregroundColor(Color(uiColor: .systemGray5))
+                .foregroundColor(AppColors.secondary)
                 .shadow(radius: 2.0, x: 1, y: 2)
-            HStack {
-                Image(systemName: iconName)
+            HStack(spacing: 16) {
+                icon()
                 VStack(alignment: .leading) {
                     Text("\(value)")
                         .font(.headline)
+                        .foregroundColor(AppColors.fontColor)
                     Text(title)
                         .font(.caption)
+                        .foregroundColor(AppColors.fontColor)
                 }
             }
         }
@@ -34,6 +37,9 @@ struct StatCardView: View {
 
 struct StatCardView_Previews: PreviewProvider {
     static var previews: some View {
-        StatCardView(iconName: "tray.full.fill", title: "Applications", value: .constant(14))
+        StatCardView(title: "Applications", value: .constant(14)) {
+            Image(systemName: "tray.full.fill")
+                .foregroundColor(AppColors.fontColor)
+        }
     }
 }

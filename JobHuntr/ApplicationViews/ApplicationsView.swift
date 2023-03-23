@@ -17,34 +17,43 @@ struct ApplicationsView: View {
     @State private var showingDeleteAlert = false
     
     var body: some View {
-        List {
-            if userManager.applications.isEmpty {
-                Text("No Applications Found.")
-            } else {
-                ForEach($userManager.applications) { $application in
-                    NavigationLink(destination: ApplicationDetailView(application: $application).environmentObject(userManager)) {
-                        ApplicationCardView(application: $application.wrappedValue)
-                            .contextMenu {
-                                Button(action: {
-                                    showingDeleteAlert = true
-                                }) {
-                                    Label("Delete", systemImage: "trash.fill")
-                                }
-                            }
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            ScrollView {
+                if userManager.applications.isEmpty {
+                    ListCard {
+                        Text("No Applications Found.")
+                            .foregroundColor(AppColors.fontColor)
                     }
-                    .actionSheet(isPresented: $showingDeleteAlert) {
-                        // Confirmation of deletion
-                        ActionSheet(title: Text("Delete Application?"), message: Text("Are you sure you want to delete this application?"), buttons: [
-                            .default(Text("OK"), action: {
-                                Task {
-                                    await userManager.deleteApplication(application: application)
-                                }
-                            }),
-                            .cancel()
-                        ])
+                } else {
+                    ForEach($userManager.applications) { $application in
+                        NavigationLink(destination: ApplicationDetailView(application: $application).environmentObject(userManager)) {
+                            ListCard {
+                                ApplicationCardView(application: $application.wrappedValue)
+                                    .contextMenu {
+                                        Button(action: {
+                                            showingDeleteAlert = true
+                                        }) {
+                                            Label("Delete", systemImage: "trash.fill")
+                                        }
+                                    }
+                            }
+                        }
+                        .actionSheet(isPresented: $showingDeleteAlert) {
+                            // Confirmation of deletion
+                            ActionSheet(title: Text("Delete Application?"), message: Text("Are you sure you want to delete this application?"), buttons: [
+                                .default(Text("OK"), action: {
+                                    Task {
+                                        await userManager.deleteApplication(application: application)
+                                    }
+                                }),
+                                .cancel()
+                            ])
+                        }
                     }
                 }
             }
+            .padding()
         }
         .navigationTitle("Applications")
         .toolbar {
@@ -64,11 +73,12 @@ struct ApplicationsView: View {
     
 }
 
-//struct ApplicationsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationView {
-//            ApplicationsView(user: DummyUser())
-//        }
-//    }
-//}
+struct ApplicationsView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            ApplicationsView()
+                .environmentObject(UserManager(username: "Dummy", userId: ""))
+        }
+    }
+}
 
