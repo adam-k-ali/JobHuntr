@@ -51,6 +51,7 @@ struct ApplicationsView: View {
             .padding()
         }
         .navigationTitle("Applications")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             Button(action: {
                 isPresentingNewAppView = true
