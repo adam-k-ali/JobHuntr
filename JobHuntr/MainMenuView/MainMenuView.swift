@@ -32,9 +32,6 @@ struct MainMenuView: View {
                     Spacer()
                 }
                 .padding()
-                
-                
-                
             }
             .padding(.top, -20)
             
@@ -62,7 +59,7 @@ struct MainMenu_Previews: PreviewProvider {
         NavigationView {
             MainMenuView()
                 .environmentObject(SessionManager())
-                .environmentObject(UserManager(username: "Dummy", userId: ""))
+                .environmentObject(UserManager())
         }
     }
 }

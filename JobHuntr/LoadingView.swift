@@ -21,8 +21,6 @@ struct LoadingView: View {
                 ProgressCircle()
                     .frame(width: 48.0, height: 48.0)
                     .padding(20)
-//                ProgressView()
-//                    .padding(20)
                 Spacer()
             }
         }

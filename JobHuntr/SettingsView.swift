@@ -9,8 +9,6 @@ import SwiftUI
 import Amplify
 
 struct SettingsView: View {
-//    @State private var settings: UserSettings
-    
     @EnvironmentObject var sessionManager: SessionManager
     @EnvironmentObject var userManager: UserManager
     
@@ -18,14 +16,6 @@ struct SettingsView: View {
     
     var body: some View {
         List {
-            // Accessibility
-//            Section(header: Text("Accessibility")) {
-//                Toggle(isOn: $userManager.settings.colorBlind, label: {
-//                    Text("Colour Blindness")
-//                        
-//                })
-//            }
-//            
             // Account
             Section(header: Text("Account Management")) {
                 Button("Sign Out") {
@@ -66,7 +56,7 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView()
                 .environmentObject(SessionManager())
-                .environmentObject(UserManager(username: "Dummy", userId: ""))
+                .environmentObject(UserManager())
         }
     }
 }

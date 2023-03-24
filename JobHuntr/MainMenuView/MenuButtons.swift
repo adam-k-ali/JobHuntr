@@ -37,6 +37,6 @@ struct MenuButtons: View {
 struct MenuButtons_Previews: PreviewProvider {
     static var previews: some View {
         MenuButtons()
-            .environmentObject(UserManager(username: "Dummy", userId: ""))
+            .environmentObject(UserManager())
     }
 }

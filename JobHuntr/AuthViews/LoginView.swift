@@ -29,15 +29,18 @@ struct AppleUser: Codable {
     }
 }
 
+enum LoginState {
+    case idle, loading
+}
+
 struct LoginView: View {
-    
     @EnvironmentObject var sessionManager: SessionManager
     
     @State var username = ""
     @State var password = ""
     @State var error: String = ""
     
-    @State private var isLoading: Bool = false
+    @State var state: LoginState = .idle
     
     var body: some View {
         VStack(spacing: 24) {
@@ -47,14 +50,14 @@ struct LoginView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 .frame(width: 128, height: 128)
             Spacer()
-//                    .frame(minHeight: 10, idealHeight: 100, maxHeight: 600)
-//                    .fixedSize()
-            
+            if state == .loading {
+                ProgressCircle()
+                    .frame(width: 48.0, height: 48.0)
+                    .padding(20)
+            }
             // Login Form
             Section {
-                if isLoading {
-                    Text("Loading...")
-                }
+                
                 Text(error)
                     .font(.headline)
                     .foregroundColor(.red)
@@ -65,13 +68,7 @@ struct LoginView: View {
             }
             
             
-            Button(action: {
-                isLoading = true
-                Task {
-                    await sessionManager.signIn(username: username, password: password, errorMsg: $error)
-                }
-                isLoading = false
-            }, label: {
+            Button(action: signIn, label: {
                 Text("Login")
             })
             .buttonStyle(PrimaryButtonStyle())
@@ -83,11 +80,6 @@ struct LoginView: View {
             })
             .buttonStyle(SecondaryButtonStyle())
             
-//                if isLoading {
-//                    ProgressView()
-//                }
-            
-            
             Spacer()
             Button(action: {
                 sessionManager.showSignUp()
@@ -98,6 +90,15 @@ struct LoginView: View {
         .padding()
         
     }
+    
+    func signIn() {
+        Task {
+            state = .loading
+            await sessionManager.signIn(username: username, password: password, errorMsg: $error) {
+                state = .idle
+            }
+        }
+    }
 
 }
 
@@ -105,6 +106,7 @@ struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             LoginView()
+                .environmentObject(SessionManager())
         }
     }
 }

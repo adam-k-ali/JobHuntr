@@ -49,10 +49,11 @@ struct NewEducationView: View {
                         .colorScheme(.dark)
                 }
                 .padding()
-                
+                Spacer()
             }
             .padding()
         }
+        .navigationTitle("Add Education")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Dismiss") {
@@ -78,7 +79,7 @@ struct NewEducationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             NewEducationView()
-                .environmentObject(UserManager(username: "", userId: ""))
+                .environmentObject(UserManager())
         }
     }
 }

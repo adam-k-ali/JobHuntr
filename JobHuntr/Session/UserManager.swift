@@ -19,8 +19,10 @@ class UserManager: ObservableObject {
     
     static let defaultProfile: Profile = Profile(userID: "", givenName: "", familyName: "", profilePicture: "", jobTitle: "", about: "")
     
-    private var username: String
-    private var userId: String
+    private var username: String = ""
+    private var userId: String = ""
+    
+    private var isSignedIn: Bool = false
     
     /// The user's settings
     @Published public var settings: UserSettings = defaultSettings
@@ -47,11 +49,7 @@ class UserManager: ObservableObject {
     
     @Published public var isLoading: Bool = true
     
-    /**
-     Initialize management of a given user.
-     - parameter user: The AuthUser to manage.
-     */
-    init(username: String, userId: String) {
+    public func load(username: String, userId: String) {
         self.username = username
         self.userId = userId
         if userId.isEmpty {
@@ -62,6 +60,7 @@ class UserManager: ObservableObject {
                 Task {
                     await self.downloadUserData {
                         self.isLoading = false
+                        self.isSignedIn = true
                     }
                 }
             }
@@ -357,10 +356,25 @@ class UserManager: ObservableObject {
                 print("User education loaded")
             }
         } catch let error as DataStoreError {
-            print("Error fetching user jobs. \(error)")
+            print("Error fetching user skills. \(error)")
         } catch {
             print("Unexpected error. \(error)")
         }
+    }
+    
+    public func hasSkill(skillID: String) async -> Bool {
+        do {
+            let skills = try await Amplify.DataStore.query(UserSkills.self, where: UserSkills.keys.userID == self.userId && UserSkills.keys.skillID == skillID)
+            if !skills.isEmpty {
+                return true
+            }
+            return false
+        } catch let error as DataStoreError {
+            print("Error fetching user skills. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+        return false
     }
     
     public func addUserSkill(skillName: String) async {
@@ -371,6 +385,11 @@ class UserManager: ObservableObject {
                 return
             }
             print("Saving skill: \(skillID!)")
+            
+            if await hasSkill(skillID: skillID!) {
+                print("User already has skill")
+                return
+            }
             
             // Update the DataStore
             let userSkill = UserSkills(userID: self.userId, skillID: skillID!)

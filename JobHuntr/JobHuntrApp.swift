@@ -16,8 +16,9 @@ import SwiftUI
 
 @main
 struct JobHuntrApp: App {
-    @ObservedObject var sessionManager = SessionManager()
-    @ObservedObject var launchManager = LaunchScreenStateManager()
+    @ObservedObject var sessionManager: SessionManager = SessionManager()
+    @ObservedObject var launchManager: LaunchScreenStateManager = LaunchScreenStateManager()
+    @ObservedObject var userManager: UserManager = UserManager()
 
     var body: some Scene {
         WindowGroup {
@@ -35,10 +36,10 @@ struct JobHuntrApp: App {
                     case .confirmCode(let username):
                         ConfirmationView(username: username)
                             .environmentObject(sessionManager)
-                    case .session(let username, let userId):
+                    case .session:
                         ContentView()
                             .environmentObject(sessionManager)
-                            .environmentObject(UserManager(username: username, userId: userId))
+                            .environmentObject(userManager)
                     case .confirmReset(let username):
                         ResetConfirmationView(username: username)
                             .environmentObject(sessionManager)
@@ -53,24 +54,27 @@ struct JobHuntrApp: App {
     }
     
     init() {
-        self.initialUpdate()
+        // Global UI Setup
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
-//        sessionManager.requestNotificationPermissions()
-        launchManager.dismiss()
+        UITextView.appearance().backgroundColor = .clear
+
+        // Configure Amplify
+        self.configure()
+        
+        // Dismiss launch screen
+        self.launchManager.dismiss()
     }
     
-    func initialUpdate() {
+    func configure() {
+        self.setupListeners()
+        self.configureAmplify()
         Task {
-            print("===========================================================")
-            print("Starting Listeners")
-            self.setupListeners()
-            print("Configuring Amplify")
-            self.configureAmplify()
-            print("Getting current auth user")
-            await sessionManager.getCurrentAuthUser()
-            print("Starting DataStore")
-            await startDataStore()
-            print("===========================================================")
+            await self.startDataStore()
+            let user = await self.sessionManager.getCurrentAuthUser()
+            
+            if user != nil {
+                self.userManager.load(username: user!.username, userId: user!.userId)
+            }
         }
     }
     

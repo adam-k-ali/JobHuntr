@@ -14,9 +14,17 @@ struct NewSkillView: View {
     @State var skillName: String = ""
     
     var body: some View {
-        Form {
-            TextField("Skill", text: $skillName)
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack {
+                TextField("Skill", text: $skillName)
+                    .textFieldStyle(FormTextFieldStyle())
+                    .colorScheme(.dark)
+                    .padding()
+                Spacer()
+            }
         }
+        .navigationTitle("New Skill")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") {

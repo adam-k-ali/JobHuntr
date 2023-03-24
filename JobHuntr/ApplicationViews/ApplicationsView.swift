@@ -65,6 +65,7 @@ struct ApplicationsView: View {
                 NewApplicationView()
                     .environmentObject(userManager)
             }
+            .colorScheme(.dark)
         }
     }
     
@@ -74,7 +75,7 @@ struct ApplicationsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ApplicationsView()
-                .environmentObject(UserManager(username: "Dummy", userId: ""))
+                .environmentObject(UserManager())
         }
     }
 }

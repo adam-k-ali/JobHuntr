@@ -30,6 +30,6 @@ struct UserStatsDashboardView: View {
 struct UserStatsDashboardView_Previews: PreviewProvider {
     static var previews: some View {
         UserStatsDashboardView()
-            .environmentObject(UserManager(username: "Dummy", userId: ""))
+            .environmentObject(UserManager())
     }
 }
