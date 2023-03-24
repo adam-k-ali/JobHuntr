@@ -35,6 +35,15 @@ struct SettingsView: View {
                 }
                 Link("Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)
             }
+            
+            Section {
+                Button("Delete Account") {
+                    Task {
+                        await sessionManager.deleteUser()
+                    }
+                }
+                .foregroundColor(.red)
+            }
         }
         .onDisappear {
             Task {
