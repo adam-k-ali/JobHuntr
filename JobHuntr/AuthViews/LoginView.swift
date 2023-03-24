@@ -40,56 +40,63 @@ struct LoginView: View {
     @State private var isLoading: Bool = false
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 24) {
-                Spacer()
-                Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
-                    .resizable()
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    .frame(width: 128, height: 128)
-                Spacer()
-                    .frame(minHeight: 10, idealHeight: 100, maxHeight: 600)
-                    .fixedSize()
-                Section {
-                    Text(error)
-                        .font(.headline)
-                        .foregroundColor(.red)
-                    TextField("Username", text: $username)
-                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "person"))
-                    SecureField("Password", text: $password)
-                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
-                }
-                
-                
-                Button(action: {
-                    isLoading = true
-                    Task {
-                        await sessionManager.signIn(username: username, password: password, errorMsg: $error)
-                    }
-                    isLoading = false
-                }, label: {
-                    Text("Login")
-                })
-                .buttonStyle(PrimaryButtonStyle())
-                
-                Button(action: {
-                    sessionManager.showResetPassword()
-                }, label: {
-                    Text("Forgotten Password")
-                })
-                .buttonStyle(SecondaryButtonStyle())
-                
+        VStack(spacing: 24) {
+            Spacer()
+            Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
+                .resizable()
+                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                .frame(width: 128, height: 128)
+            Spacer()
+//                    .frame(minHeight: 10, idealHeight: 100, maxHeight: 600)
+//                    .fixedSize()
+            
+            // Login Form
+            Section {
                 if isLoading {
-                    ProgressView()
+                    Text("Loading...")
                 }
-                
-                Spacer()
-                Button("Don't have an account? Sign Up.", action: {
-                    sessionManager.showSignUp()
-                })
+                Text(error)
+                    .font(.headline)
+                    .foregroundColor(.red)
+                TextField("Username", text: $username)
+                    .textFieldStyle(GradientTextFieldBackground(systemImageString: "person"))
+                SecureField("Password", text: $password)
+                    .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
             }
-            .padding()
+            
+            
+            Button(action: {
+                isLoading = true
+                Task {
+                    await sessionManager.signIn(username: username, password: password, errorMsg: $error)
+                }
+                isLoading = false
+            }, label: {
+                Text("Login")
+            })
+            .buttonStyle(PrimaryButtonStyle())
+            
+            Button(action: {
+                sessionManager.showResetPassword()
+            }, label: {
+                Text("Forgotten Password")
+            })
+            .buttonStyle(SecondaryButtonStyle())
+            
+//                if isLoading {
+//                    ProgressView()
+//                }
+            
+            
+            Spacer()
+            Button(action: {
+                sessionManager.showSignUp()
+            }, label: {
+                Text("Don't have an account? Sign Up.")
+            })
         }
+        .padding()
+        
     }
 
 }

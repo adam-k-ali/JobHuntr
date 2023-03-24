@@ -43,6 +43,7 @@ struct SettingsView: View {
                 } label: {
                     Text("Send Feedback")
                 }
+                Link("Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)
             }
         }
         .onDisappear {
