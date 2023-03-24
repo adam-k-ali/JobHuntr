@@ -48,16 +48,19 @@ struct SignUpView: View {
                 ProgressView()
             }
             Spacer()
-            Button("Already have an account? Sign In.", action: {
-                sessionManager.showLogin()
-            })
-            Button("Looking to confirm your account? Click here.", action: {
-                if username.isEmpty {
-                    error = "To confirm, enter username."
-                } else {
-                    sessionManager.showConfirm(username: username)
-                }
-            })
+            VStack(spacing: 16) {
+                Button("Already have an account? Sign In.", action: {
+                    sessionManager.showLogin()
+                })
+                Button("Looking to confirm your account? Click here.", action: {
+                    if username.isEmpty {
+                        error = "To confirm, enter username."
+                    } else {
+                        sessionManager.showConfirm(username: username)
+                    }
+                })
+                Link("View our Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)
+            }
         }
         .padding()
     }
