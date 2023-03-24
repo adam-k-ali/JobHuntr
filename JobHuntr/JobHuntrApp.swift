@@ -17,33 +17,37 @@ import SwiftUI
 @main
 struct JobHuntrApp: App {
     @ObservedObject var sessionManager = SessionManager()
+    @ObservedObject var launchManager = LaunchScreenStateManager()
 
     var body: some Scene {
         WindowGroup {
             NavigationView {
-//                LoginView(user: $store.user)
-                switch sessionManager.authState {
-                case .login:
-                    LoginView()
-                        .environmentObject(sessionManager)
-                case .signUp:
+                if launchManager.isActive() {
+                    LoadingView()
+                } else {
+                    switch sessionManager.authState {
+                    case .login:
+                        LoginView()
+                            .environmentObject(sessionManager)
+                    case .signUp:
+                        SignUpView()
+                            .environmentObject(sessionManager)
+                    case .confirmCode(let username):
+                        ConfirmationView(username: username)
+                            .environmentObject(sessionManager)
+                    case .session(let username, let userId):
+                        ContentView()
+                            .environmentObject(sessionManager)
+                            .environmentObject(UserManager(username: username, userId: userId))
+                    case .confirmReset(let username):
+                        ResetConfirmationView(username: username)
+                            .environmentObject(sessionManager)
+                    case .resetPassword:
+                        ResetPasswordView()
+                            .environmentObject(sessionManager)
+                    }
                     SignUpView()
-                        .environmentObject(sessionManager)
-                case .confirmCode(let username):
-                    ConfirmationView(username: username)
-                        .environmentObject(sessionManager)
-                case .session(let username, let userId):
-                    ContentView()
-                        .environmentObject(sessionManager)
-                        .environmentObject(UserManager(username: username, userId: userId))
-                case .confirmReset(let username):
-                    ResetConfirmationView(username: username)
-                        .environmentObject(sessionManager)
-                case .resetPassword:
-                    ResetPasswordView()
-                        .environmentObject(sessionManager)
                 }
-                SignUpView()
             }
         }
     }
@@ -52,6 +56,7 @@ struct JobHuntrApp: App {
         self.initialUpdate()
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
 //        sessionManager.requestNotificationPermissions()
+        launchManager.dismiss()
     }
     
     func initialUpdate() {
