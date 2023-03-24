@@ -387,6 +387,26 @@ class UserManager: ObservableObject {
         }
     }
     
+    public func removeUserSkill(skillName: String) async {
+        let skillID = await GlobalDataManager.fetchOrSaveSkill(name: skillName)
+        
+        // Remove locally
+        DispatchQueue.main.async {
+            self.skills.removeAll(where: {
+                $0.lowercased() == skillName.lowercased()
+            })
+        }
+
+        // Remove from DataStore.
+        do {
+            try await Amplify.DataStore.delete(UserSkills.self, where: UserSkills.keys.userID == self.userId && UserSkills.keys.skillID == skillID)
+        } catch let error as DataStoreError {
+            print("Error removing skill. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
     // ======================================================
     // Settings Management
     // ======================================================
@@ -510,8 +530,15 @@ class UserManager: ObservableObject {
      */
     private func calculateStreak(applications: [Application]) -> Int {
         var streak = 0
+        var lastDate = Date()
         for application in applications {
+            if lastDate == application.dateApplied!.foundationDate {
+                continue
+            }
+            lastDate = application.dateApplied!.foundationDate
+            // Calculate days between the application date and the current date
             let daysSince = Calendar.current.daysSince(date: application.dateApplied!.foundationDate)
+            // If there is a missed day, break out of the loop
             if daysSince - streak > 1 {
                 break
             }

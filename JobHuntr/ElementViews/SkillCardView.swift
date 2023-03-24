@@ -10,6 +10,8 @@ import SwiftUI
 struct SkillCardView<Content: View>: View {
     @ViewBuilder var content: Content
     
+    var onDelete: () -> Void
+    
     let idleColor: Color = Color(uiColor: .systemIndigo)
     
     @State private var opacity: Double = 1.0
@@ -34,11 +36,17 @@ struct SkillCardView<Content: View>: View {
             content
                 .padding()
         }
+        .contextMenu {
+            Button(action: onDelete, label: {
+                Image(systemName: "trash")
+                Text("Delete")
+            })
+        }
     }
 }
 
 struct SkillCardView_Previews: PreviewProvider {
     static var previews: some View {
-        SkillCardView(content: {Text("Hello, World!")})
+        SkillCardView(content: {Text("Hello, World!")}, onDelete: {})
     }
 }

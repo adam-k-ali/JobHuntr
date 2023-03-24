@@ -16,39 +16,30 @@ struct MainMenuView: View {
     @EnvironmentObject var userManager: UserManager
         
     var body: some View {
-        ZStack {
-            // Set background color
-            AppColors.primary
-                .ignoresSafeArea()
-                // Profile
-                ZStack {
-                    ProfileCardView()
+        VStack(spacing: 0) {
+            ProfileCardView()
+                .environmentObject(userManager)
+                .frame(height: 300)
+            ZStack {
+                RoundedRectangle(cornerRadius: 8)
+                    .foregroundColor(AppColors.primary)
+                    .ignoresSafeArea()
+                
+                VStack {
+                    UserStatsDashboardView()
                         .environmentObject(userManager)
-                        .padding(.top, -500)
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 8)
-                            .foregroundColor(AppColors.primary)
-//                            .frame(height: 128)
-                            .shadow(color: .black.opacity(0.7), radius: 2, x: 0, y: -2)
-                        
-                        VStack {
-                            UserStatsDashboardView()
-                                .environmentObject(userManager)
-                            MenuButtons()
-                            Spacer()
-                        }
-                        .padding()
-                        
-                    }
-                    .padding(.top, 300)
+                    MenuButtons()
+                    Spacer()
                 }
-                .ignoresSafeArea()
+                .padding()
+                
+                
+                
+            }
+            .padding(.top, -20)
+            
+            
         }
-//        .onAppear {
-//            if (ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1") {
-//                return
-//            }
-//        }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 NavigationLink(destination: {

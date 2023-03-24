@@ -50,6 +50,7 @@ struct JobHuntrApp: App {
     
     init() {
         self.initialUpdate()
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
 //        sessionManager.requestNotificationPermissions()
     }
     

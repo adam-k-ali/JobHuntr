@@ -28,15 +28,10 @@ struct ApplicationsView: View {
                 } else {
                     ForEach($userManager.applications) { $application in
                         NavigationLink(destination: ApplicationDetailView(application: $application).environmentObject(userManager)) {
-                            ListCard {
+                            ListCard(isChangeable: true, onDelete: {
+                                showingDeleteAlert = true
+                            }) {
                                 ApplicationCardView(application: $application.wrappedValue)
-                                    .contextMenu {
-                                        Button(action: {
-                                            showingDeleteAlert = true
-                                        }) {
-                                            Label("Delete", systemImage: "trash.fill")
-                                        }
-                                    }
                             }
                         }
                         .actionSheet(isPresented: $showingDeleteAlert) {
@@ -63,6 +58,7 @@ struct ApplicationsView: View {
                 Image(systemName: "plus")
             }
         }
+        .colorScheme(.dark)
         .sheet(isPresented: $isPresentingNewAppView) {
             NavigationView {
                 NewApplicationView()
