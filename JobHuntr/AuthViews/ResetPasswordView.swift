@@ -14,30 +14,46 @@ struct ResetPasswordView: View {
     @State var errorMsg = ""
 
     var body: some View {
-        VStack {
-            Section {
-                Text(errorMsg)
-                    .foregroundColor(.red)
-                    .font(.headline)
-                Text("Enter your username")
-                TextField("Username", text: $username)
-                Button("Send E-Mail") {
-                    Task {
-                        await sessionManager.resetPassword(username: username, errorMsg: $errorMsg)
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack {
+                Spacer()
+                Image(uiImage: UIImage(named: "AppLogo") ?? UIImage())
+                    .resizable()
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    .frame(width: 128, height: 128)
+                Spacer()
+                Section {
+                    Text(errorMsg)
+                        .foregroundColor(.red)
+                        .font(.headline)
+                    TextField("Username", text: $username)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "person"))
+                    Spacer()
+                    Button("Send E-Mail") {
+                        Task {
+                            await sessionManager.resetPassword(username: username, errorMsg: $errorMsg)
+                        }
+                        if errorMsg.isEmpty {
+                            sessionManager.showConfirmReset(username: username)
+                        }
                     }
-                    if errorMsg.isEmpty {
-                        sessionManager.showConfirmReset(username: username)
+                    .buttonStyle(PrimaryButtonStyle())
+                    
+                    Button("Cancel") {
+                        sessionManager.showLogin()
                     }
+                    .buttonStyle(SecondaryButtonStyle())
                 }
             }
-            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .padding()
         }
-        .padding()
     }
 }
 
 struct ResetPasswordView_Previews: PreviewProvider {
     static var previews: some View {
         ResetPasswordView()
+            .environmentObject(SessionManager())
     }
 }

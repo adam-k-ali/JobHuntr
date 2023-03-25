@@ -23,7 +23,7 @@ struct ResetConfirmationView: View {
             VStack {
                 Spacer()
                 
-                Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
+                Image(uiImage: UIImage(named: "AppLogo") ?? UIImage())
                     .resizable()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     .frame(width: 128, height: 128)
