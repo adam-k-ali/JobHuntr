@@ -19,15 +19,15 @@ final class LaunchStateManager: ObservableObject {
         return state == .loading
     }
     
-    public func begin() {
+    @MainActor public func begin() {
         Task {
-            state = .loading
+            self.state = .loading
         }
     }
     
-    public func dismiss() {
+    @MainActor public func dismiss() {
         Task {
-            state = .finished
+            self.state = .finished
         }
     }
 }

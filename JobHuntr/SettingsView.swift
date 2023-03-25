@@ -13,6 +13,7 @@ struct SettingsView: View {
     @EnvironmentObject var userManager: UserManager
     
     @State var showFeedbackForm: Bool = false
+    @State var showingDeleteAccount: Bool = false
     
     var body: some View {
         List {
@@ -39,11 +40,22 @@ struct SettingsView: View {
             Section {
                 Button("Delete Account") {
                     Task {
-                        await sessionManager.deleteUser()
+                        showingDeleteAccount = true
                     }
                 }
                 .foregroundColor(.red)
             }
+        }
+        .actionSheet(isPresented: $showingDeleteAccount) {
+            // Confirmation of deletion
+            ActionSheet(title: Text("Delete Account?"), message: Text("Are you sure you want to delete your account?"), buttons: [
+                .destructive(Text("Delete"), action: {
+                    Task {
+                        await sessionManager.deleteUser()
+                    }
+                }),
+                .cancel()
+            ])
         }
         .onDisappear {
             Task {
