@@ -8,12 +8,12 @@
 import Foundation
 
 
-enum LaunchScreenState {
+enum LaunchState {
     case loading, finished
 }
 
-final class LaunchScreenStateManager: ObservableObject {
-    @Published private(set) var state: LaunchScreenState = .loading
+final class LaunchStateManager: ObservableObject {
+    @Published private(set) var state: LaunchState = .loading
     
     public func isActive() -> Bool {
         return state == .loading

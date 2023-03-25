@@ -17,7 +17,7 @@ import SwiftUI
 @main
 struct JobHuntrApp: App {
     @ObservedObject var sessionManager: SessionManager = SessionManager()
-    @ObservedObject var launchManager: LaunchScreenStateManager = LaunchScreenStateManager()
+    @ObservedObject var launchManager: LaunchStateManager = LaunchStateManager()
     @ObservedObject var userManager: UserManager = UserManager()
 
     var body: some Scene {
@@ -30,6 +30,8 @@ struct JobHuntrApp: App {
                     case .login:
                         LoginView()
                             .environmentObject(sessionManager)
+                            .environmentObject(userManager)
+                            .environmentObject(launchManager)
                     case .signUp:
                         SignUpView()
                             .environmentObject(sessionManager)
@@ -70,10 +72,14 @@ struct JobHuntrApp: App {
         self.configureAmplify()
         Task {
             await self.startDataStore()
+            
+            // Set up user manager
             let user = await self.sessionManager.getCurrentAuthUser()
             
             if user != nil {
-                self.userManager.load(username: user!.username, userId: user!.userId)
+                self.userManager.load(username: user!.username, userId: user!.userId) {
+                    print("User loaded")
+                }
             }
         }
     }

@@ -49,7 +49,7 @@ class UserManager: ObservableObject {
     
     @Published public var isLoading: Bool = true
     
-    public func load(username: String, userId: String) {
+    public func load(username: String, userId: String, completion: @escaping () -> Void) {
         self.username = username
         self.userId = userId
         if userId.isEmpty {
@@ -61,6 +61,7 @@ class UserManager: ObservableObject {
                     await self.downloadUserData {
                         self.isLoading = false
                         self.isSignedIn = true
+                        completion()
                     }
                 }
             }

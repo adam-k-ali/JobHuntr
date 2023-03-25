@@ -55,7 +55,8 @@
 		72921F9B299ABE9500165D38 /* CompanyCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F9A299ABE9500165D38 /* CompanyCardView.swift */; };
 		72921F9D299AC0CA00165D38 /* ProgressionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F9C299AC0CA00165D38 /* ProgressionView.swift */; };
 		72921F9F299AC5F200165D38 /* UpdateApplicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F9E299AC5F200165D38 /* UpdateApplicationView.swift */; };
-		7297DCC129CDFBF100563322 /* LaunchScreenStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7297DCC029CDFBF100563322 /* LaunchScreenStateManager.swift */; };
+		7297DCC129CDFBF100563322 /* LaunchStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7297DCC029CDFBF100563322 /* LaunchStateManager.swift */; };
+		7297DCC329CE8EFA00563322 /* SecureInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7297DCC229CE8EFA00563322 /* SecureInputView.swift */; };
 		72DC200D29B169E900E373C2 /* ModelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DC200C29B169E900E373C2 /* ModelExtensions.swift */; };
 		72DC200F29B2005600E373C2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DC200E29B2005600E373C2 /* SettingsView.swift */; };
 		72DC201629B26A8A00E373C2 /* ResetConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DC201529B26A8A00E373C2 /* ResetConfirmationView.swift */; };
@@ -144,7 +145,8 @@
 		72921F9A299ABE9500165D38 /* CompanyCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyCardView.swift; sourceTree = "<group>"; };
 		72921F9C299AC0CA00165D38 /* ProgressionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionView.swift; sourceTree = "<group>"; };
 		72921F9E299AC5F200165D38 /* UpdateApplicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateApplicationView.swift; sourceTree = "<group>"; };
-		7297DCC029CDFBF100563322 /* LaunchScreenStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenStateManager.swift; sourceTree = "<group>"; };
+		7297DCC029CDFBF100563322 /* LaunchStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchStateManager.swift; sourceTree = "<group>"; };
+		7297DCC229CE8EFA00563322 /* SecureInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureInputView.swift; sourceTree = "<group>"; };
 		72DC200C29B169E900E373C2 /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
 		72DC200E29B2005600E373C2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		72DC201529B26A8A00E373C2 /* ResetConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetConfirmationView.swift; sourceTree = "<group>"; };
@@ -209,7 +211,7 @@
 				72ED1E3E299B08BC00EC3B14 /* SessionManager.swift */,
 				7229BE5C29BFC39A005C3AAA /* UserManager.swift */,
 				7229BE5E29BFD1B9005C3AAA /* GlobalDataManager.swift */,
-				7297DCC029CDFBF100563322 /* LaunchScreenStateManager.swift */,
+				7297DCC029CDFBF100563322 /* LaunchStateManager.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -233,6 +235,7 @@
 				7217E74229C640A500017A82 /* SkillCardView.swift */,
 				72EE1C6229C6A9F800791160 /* ProgressCircle.swift */,
 				72FAD22D29C9BF9100E7B2A7 /* ListCard.swift */,
+				7297DCC229CE8EFA00563322 /* SecureInputView.swift */,
 			);
 			path = ElementViews;
 			sourceTree = "<group>";
@@ -479,6 +482,7 @@
 				72921F97299AB3A900165D38 /* NewApplicationView.swift in Sources */,
 				72921F8E299AA4C100165D38 /* MainMenuView.swift in Sources */,
 				72FB6CCD29C79BF7003390F5 /* MenuButtons.swift in Sources */,
+				7297DCC329CE8EFA00563322 /* SecureInputView.swift in Sources */,
 				7203369E29BB7535001B8FCB /* CircleCameraView.swift in Sources */,
 				7267CEA629B786510021E0ED /* EditableImage.swift in Sources */,
 				7229BE5D29BFC39A005C3AAA /* UserManager.swift in Sources */,
@@ -525,7 +529,7 @@
 				7217E72F29C6312900017A82 /* Company.swift in Sources */,
 				7267CEA829B78C360021E0ED /* ImagePicker.swift in Sources */,
 				72FD4A2129C4A66800A6F310 /* ProfileView.swift in Sources */,
-				7297DCC129CDFBF100563322 /* LaunchScreenStateManager.swift in Sources */,
+				7297DCC129CDFBF100563322 /* LaunchStateManager.swift in Sources */,
 				72833E0829C6284F00A023AE /* NewJobView.swift in Sources */,
 				72FD4A2D29C4C23D00A6F310 /* InstitutionCard.swift in Sources */,
 				7217E73A29C6312900017A82 /* FeedbackType.swift in Sources */,

@@ -239,6 +239,7 @@ class SessionManager: ObservableObject {
             try await Amplify.DataStore.delete(Education.self, where: Education.keys.userID == user!.userId)
             try await Amplify.DataStore.delete(Application.self, where: Application.keys.userID == user!.userId)
             try await Amplify.DataStore.delete(UserSettings.self, where: UserSettings.keys.userID == user!.userId)
+            await self.clearDataStore()
             
             try await Amplify.Auth.deleteUser()
             print("Successfully deleted user")

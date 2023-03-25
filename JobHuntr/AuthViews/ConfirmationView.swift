@@ -17,27 +17,41 @@ struct ConfirmationView: View {
     let username: String
     
     var body: some View {
-        VStack {
-            Section {
-                Text("Check your e-mail for a confirmation code.")
-                Text("Username: \(username)")
-                TextField("Confirmation Code", text: $confirmationCode)
-                Text(error)
-                    .font(.headline)
-                    .foregroundColor(.red)
-            }
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            Button("Confirm", action: {
-                Task {
-                    await sessionManager.confirmSignUp(for: username, with: confirmationCode, errorMsg: $error)
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack(spacing: 24) {
+                Spacer()
+                Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
+                    .resizable()
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    .frame(width: 128, height: 128)
+                Spacer()
+                Section {
+                    Text("Check your e-mail for a confirmation code.")
+                        .font(.headline)
+                        .foregroundColor(AppColors.fontColor)
+//                    Text("Username: \(username)")
+                    TextField("Confirmation Code", text: $confirmationCode)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "number"))
+                    Text(error)
+                        .font(.headline)
+                        .foregroundColor(.red)
                 }
-            })
-            Button("Cancel", action: {
-                sessionManager.showLogin()
-            })
+                Spacer()
+                
+                Button("Confirm", action: {
+                    Task {
+                        await sessionManager.confirmSignUp(for: username, with: confirmationCode, errorMsg: $error)
+                    }
+                })
+                .buttonStyle(PrimaryButtonStyle())
+                Button("Cancel", action: {
+                    sessionManager.showLogin()
+                })
+                .buttonStyle(SecondaryButtonStyle())
+            }
+            .padding()
         }
-        .padding()
     }
 }
 
