@@ -29,6 +29,7 @@ struct GradientTextFieldBackground: TextFieldStyle {
                Image(systemName: systemImageString)
                // Reference the TextField here
                configuration
+                   .colorScheme(.dark)
            }
            .padding(.leading)
            .foregroundColor(.gray)

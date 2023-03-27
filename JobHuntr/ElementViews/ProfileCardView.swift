@@ -60,6 +60,6 @@ struct ProfileCardView: View {
 struct ProfileCardView_Previews: PreviewProvider {
     static var previews: some View {
         ProfileCardView()
-            .environmentObject(UserManager(username: "Dummy", userId: ""))
+            .environmentObject(UserManager())
     }
 }

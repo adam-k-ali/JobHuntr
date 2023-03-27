@@ -87,7 +87,7 @@ class SessionManager: ObservableObject {
      Fetch the AuthUser.
      Called when the user signs in.
      */
-    func getCurrentAuthUser() async {
+    func getCurrentAuthUser() async -> AuthUser? {
         print("Fetching Auth User")
         
         do {
@@ -100,12 +100,14 @@ class SessionManager: ObservableObject {
                 self.authState = .session(username: user.username, userId: userId ?? user.userId)
             }
             print("User fetched")
+            return user
         } catch {
             print(error)
             DispatchQueue.main.async {
                 self.authState = .login
             }
         }
+        return nil
     }
     
     func confirmResetPassword(username: String, newPassword: String, confirmationCode: String, errorMsg: Binding<String>) async {
@@ -192,22 +194,22 @@ class SessionManager: ObservableObject {
         }
     }
     
-    func signIn(username: String, password: String, errorMsg: Binding<String>) async {
+    func signIn(username: String, password: String, errorMsg: Binding<String>, completion: () -> Void) async {
         do {
             let signInResult = try await Amplify.Auth.signIn(username: username, password: password)
             if signInResult.isSignedIn {
                 print("Sign in succeeded")
 //                await self.fetchCurrentAuthSession()
-                await self.getCurrentAuthUser()
+                let _ = await self.getCurrentAuthUser()
                 await self.startDataStore()
             }
-            
         } catch let error as AuthError {
             print("Sign in failed \(error)")
             errorMsg.wrappedValue = error.errorDescription
         } catch {
             print("Unexpected error: \(error)")
         }
+        completion()
     }
     
     func signOut() async {
@@ -215,10 +217,39 @@ class SessionManager: ObservableObject {
         let _ = await Amplify.Auth.signOut()
         
         // Update user state
-        await self.getCurrentAuthUser()
+        let _ = await self.getCurrentAuthUser()
         
         // Clear DataStore
 //        await self.clearDataStore()
+    }
+    
+    func deleteUser() async {
+        do {
+            // Get current user
+            let user = await self.getCurrentAuthUser()
+            if user == nil {
+                print("User not signed in")
+                return
+            }
+            
+            // Delete user information
+            try await Amplify.DataStore.delete(UserSkills.self, where: UserSkills.keys.userID == user!.userId)
+            try await Amplify.DataStore.delete(Profile.self, where: Profile.keys.userID == user!.userId)
+            try await Amplify.DataStore.delete(Job.self, where: Job.keys.userID == user!.userId)
+            try await Amplify.DataStore.delete(Education.self, where: Education.keys.userID == user!.userId)
+            try await Amplify.DataStore.delete(Application.self, where: Application.keys.userID == user!.userId)
+            try await Amplify.DataStore.delete(UserSettings.self, where: UserSettings.keys.userID == user!.userId)
+            await self.clearDataStore()
+            
+            try await Amplify.Auth.deleteUser()
+            print("Successfully deleted user")
+        } catch let error as AuthError {
+            print("Delete user failed with error \(error)")
+        } catch let error as DataStoreError {
+            print("Delete user failed with error \(error)")
+        } catch {
+            print("Unexpected error: \(error)")
+        }
     }
     
     func clearDataStore() async {

@@ -20,49 +20,84 @@ struct SignUpView: View {
     @State private var isLoading: Bool = false
     
     var body: some View {
-        VStack {
-            Spacer()
-            Section {
-                TextField("Username", text: $username)
-                TextField("E-Mail", text: $email)
-                SecureField("Password", text: $password)
-                SecureField("Confirm Password", text: $confirmPassword)
-                Text(error)
-                    .font(.headline)
-                    .foregroundColor(.red)
-            }
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-
-            Button("Sign Up", action: {
-                if password != confirmPassword {
-                    error = "Passwords don't match"
-                    return
-                }
-                isLoading = true
-                Task {
-                    await sessionManager.signUp(username: username, email: email, password: password, errorMsg: $error)
-                }
-                isLoading = false
-            })
-            if isLoading {
-                ProgressView()
-            }
-            Spacer()
+        ZStack {
+            AppColors.background.ignoresSafeArea()
             VStack(spacing: 16) {
-                Button("Already have an account? Sign In.", action: {
-                    sessionManager.showLogin()
-                })
-                Button("Looking to confirm your account? Click here.", action: {
-                    if username.isEmpty {
-                        error = "To confirm, enter username."
-                    } else {
-                        sessionManager.showConfirm(username: username)
+                Spacer()
+                Image(uiImage: UIImage(named: "AppLogo") ?? UIImage())
+                    .resizable()
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    .frame(width: 128, height: 128)
+                Spacer()
+                Section {
+                    TextField("Username", text: $username)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "person"))
+                    
+                    TextField("E-Mail", text: $email)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "envelope"))
+                    
+                    SecureField("Password", text: $password)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
+                    
+                    SecureField("Confirm Password", text: $confirmPassword)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
+                    Text(error)
+                        .font(.headline)
+                        .foregroundColor(.red)
+                }
+                
+                Button("Sign Up", action: {
+                    if password != confirmPassword {
+                        error = "Passwords don't match"
+                        return
                     }
+                    isLoading = true
+                    Task {
+                        await sessionManager.signUp(username: username, email: email, password: password, errorMsg: $error)
+                    }
+                    isLoading = false
                 })
-                Link("View our Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)
+                .buttonStyle(PrimaryButtonStyle())
+                
+                if isLoading {
+                    ProgressView()
+                }
+                Spacer()
+                VStack(spacing: 12) {
+                    HStack {
+                        Text("Already have an account?")
+                            .foregroundColor(AppColors.fontColor)
+                            .font(.headline)
+                        Button("Sign In.", action: {
+                            sessionManager.showLogin()
+                        })
+                        .foregroundColor(Color(uiColor: UIColor.systemBlue))
+                    }
+                    Spacer()
+                    
+                    
+                    
+                    HStack {
+                        Text("View our")
+                            .foregroundColor(AppColors.fontColor)
+                            .font(.headline)
+                        
+                        Link("Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)
+                            .foregroundColor(Color(uiColor: UIColor.systemBlue))
+                    }
+                    
+                    Button("Enter Confirmation Code", action: {
+                        if username.isEmpty {
+                            error = "To confirm, enter username."
+                        } else {
+                            sessionManager.showConfirm(username: username)
+                        }
+                    })
+                    .foregroundColor(Color(uiColor: UIColor.systemBlue))
+                }
             }
+            .padding()
         }
-        .padding()
     }
 }
 

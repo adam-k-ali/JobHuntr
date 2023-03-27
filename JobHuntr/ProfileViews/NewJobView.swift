@@ -20,18 +20,64 @@ struct NewJobView: View {
     
     
     var body: some View {
-        Form {
-            TextField("Company Name", text: $companyName)
-            TextField("Job Title", text: $jobTitle)
-            DatePicker("Start Date", selection: $start, displayedComponents: [.date])
-            Toggle(isOn: $isCurrent, label: {Text("Current Employment")})
-            if !isCurrent {
-                DatePicker("End Date", selection: $end, displayedComponents: [.date])
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack {
+                TextField("Company Name", text: $companyName)
+                    .textFieldStyle(FormTextFieldStyle())
+                    .colorScheme(.dark)
+                    .padding()
+                
+                TextField("Job Title", text: $jobTitle)
+                    .textFieldStyle(FormTextFieldStyle())
+                    .colorScheme(.dark)
+                    .padding()
+                
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(AppColors.primary)
+                        .frame(height: 64)
+                    DatePicker("Start Date", selection: $start, displayedComponents: [.date])
+                        .padding(.horizontal)
+                        .colorScheme(.dark)
+                }
+                .padding()
+                
+                Toggle(isOn: $isCurrent, label: {Text("Current Employment")})
+                    .padding()
+                
+                if !isCurrent {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 8)
+                            .foregroundColor(AppColors.primary)
+                            .frame(height: 64)
+                        DatePicker("End Date", selection: $end, displayedComponents: [.date])
+                            .padding(.horizontal)
+                            .colorScheme(.dark)
+                    }
+                    .padding()
+                }
+                
+                
+                ZStack(alignment: .topLeading) {
+//                    RoundedRectangle(cornerRadius: 8)
+//                        .foregroundColor(AppColors.primary)
+                    
+                    TextEditor(text: $jobDescription)
+                        .cornerRadius(8.0)
+                        .colorMultiply(AppColors.primary)
+                        
+                    
+                    if jobDescription.isEmpty {
+                        Text("Description")
+                            .foregroundColor(.white.opacity(0.5))
+                            .padding(6)
+                    }
+                }
+                .padding()
             }
-            Text("Description:")
-            TextEditor(text: $jobDescription)
-            
         }
+        .navigationTitle("Add Experience")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Dismiss") {

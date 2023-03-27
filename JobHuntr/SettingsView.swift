@@ -9,23 +9,14 @@ import SwiftUI
 import Amplify
 
 struct SettingsView: View {
-//    @State private var settings: UserSettings
-    
     @EnvironmentObject var sessionManager: SessionManager
     @EnvironmentObject var userManager: UserManager
     
     @State var showFeedbackForm: Bool = false
+    @State var showingDeleteAccount: Bool = false
     
     var body: some View {
         List {
-            // Accessibility
-//            Section(header: Text("Accessibility")) {
-//                Toggle(isOn: $userManager.settings.colorBlind, label: {
-//                    Text("Colour Blindness")
-//                        
-//                })
-//            }
-//            
             // Account
             Section(header: Text("Account Management")) {
                 Button("Sign Out") {
@@ -45,6 +36,26 @@ struct SettingsView: View {
                 }
                 Link("Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)
             }
+            
+            Section {
+                Button("Delete Account") {
+                    Task {
+                        showingDeleteAccount = true
+                    }
+                }
+                .foregroundColor(.red)
+            }
+        }
+        .actionSheet(isPresented: $showingDeleteAccount) {
+            // Confirmation of deletion
+            ActionSheet(title: Text("Delete Account?"), message: Text("Are you sure you want to delete your account?"), buttons: [
+                .destructive(Text("Delete"), action: {
+                    Task {
+                        await sessionManager.deleteUser()
+                    }
+                }),
+                .cancel()
+            ])
         }
         .onDisappear {
             Task {
@@ -66,7 +77,7 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView()
                 .environmentObject(SessionManager())
-                .environmentObject(UserManager(username: "Dummy", userId: ""))
+                .environmentObject(UserManager())
         }
     }
 }

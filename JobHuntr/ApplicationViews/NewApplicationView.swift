@@ -17,29 +17,36 @@ struct NewApplicationView: View {
     @State private var jobTitle = ""
     @State private var dateApplied = Date()
     
-    @State private var error = ""
-    
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var userManager: UserManager
     
     var body: some View {
-        NavigationView {
-            VStack {
-                Text(error)
-                    .font(.headline)
-                    .foregroundColor(.red)
-                Form {
-                    Section(header: Text("Company Information")) {
-                        TextField("Company Name", text: $companyName)
-                    }
-                    
-                    Section(header: Text("Application")) {
-                        TextField("Job Title", text: $jobTitle)
-                        DatePicker("Date Applied", selection: $dateApplied, displayedComponents: [.date])
-                    }
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack(alignment: .leading) {
+                TextField("Company Name", text: $companyName)
+                    .textFieldStyle(FormTextFieldStyle())
+                    .colorScheme(.dark)
+                    .padding()
+                
+                TextField("Job Title", text: $jobTitle)
+                    .textFieldStyle(FormTextFieldStyle())
+                    .colorScheme(.dark)
+                    .padding()
+                
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(AppColors.primary)
+                        .frame(height: 64)
+                    DatePicker("Date Applied", selection: $dateApplied, displayedComponents: [.date])
+                        .padding(.horizontal)
+                        .colorScheme(.dark)
                 }
+                .padding()
+                Spacer()
             }
         }
+        .navigationTitle("New Application")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Dismiss") {
@@ -48,19 +55,12 @@ struct NewApplicationView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
-                    if jobTitle.isEmpty {
-                        error = "Enter a job title"
-                        return
-                    }
-                    if companyName.isEmpty {
-                        error = "Enter a company name"
-                        return
-                    }
                     Task {
                         await saveApplication()
                     }
                     presentationMode.wrappedValue.dismiss()
                 }
+                .disabled(jobTitle.isEmpty || companyName.isEmpty)
             }
         }
     }
@@ -78,6 +78,7 @@ struct NewApplicationView_Previews: PreviewProvider {
     
     static var previews: some View {
         NewApplicationView()
+            .environmentObject(UserManager())
 //            .environmentObject(SessionManager())
     }
 }

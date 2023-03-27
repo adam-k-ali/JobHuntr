@@ -18,17 +18,22 @@ struct UpdateApplicationView: View {
     let stages: [ApplicationStage] = [.applied, .preInterview, .interviewing, .offer, .accepted, .rejection]
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Application Stage")) {
-                    Picker("Stage", selection: $applicationStage) {
-                        ForEach(stages, id: \.self) { stage in
-                            Text(stage.name)
-                        }
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack {
+                Picker("Stage", selection: $applicationStage) {
+                    ForEach(stages, id: \.self) { stage in
+                        Text(stage.name)
                     }
                 }
+                .pickerStyle(.wheel)
+                Spacer()
             }
         }
+        .onAppear {
+            applicationStage = application.currentStage!
+        }
+        .navigationTitle("Update Application")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") {
@@ -43,6 +48,7 @@ struct UpdateApplicationView: View {
                     }
                     presentationMode.wrappedValue.dismiss()
                 }
+                .disabled(application.currentStage! == applicationStage)
             }
         }
     }

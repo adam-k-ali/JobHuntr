@@ -29,74 +29,95 @@ struct AppleUser: Codable {
     }
 }
 
+enum LoginState {
+    case idle, loading
+}
+
 struct LoginView: View {
-    
     @EnvironmentObject var sessionManager: SessionManager
+    @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var launchStateManager: LaunchStateManager
     
     @State var username = ""
     @State var password = ""
     @State var error: String = ""
     
-    @State private var isLoading: Bool = false
+    @State var state: LoginState = .idle
     
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
-            Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
-                .resizable()
-                .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                .frame(width: 128, height: 128)
-            Spacer()
-//                    .frame(minHeight: 10, idealHeight: 100, maxHeight: 600)
-//                    .fixedSize()
-            
-            // Login Form
-            Section {
-                if isLoading {
-                    Text("Loading...")
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack(spacing: 24) {
+                Spacer()
+                Image(uiImage: UIImage(named: "AppLogo") ?? UIImage())
+                    .resizable()
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    .frame(width: 128, height: 128)
+                Spacer()
+                if state == .loading {
+                    ProgressCircle()
+                        .frame(width: 48.0, height: 48.0)
+                        .padding(20)
                 }
-                Text(error)
-                    .font(.headline)
-                    .foregroundColor(.red)
-                TextField("Username", text: $username)
-                    .textFieldStyle(GradientTextFieldBackground(systemImageString: "person"))
-                SecureField("Password", text: $password)
-                    .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
+                // Login Form
+                Section {
+                    Text(error)
+                        .font(.headline)
+                        .foregroundColor(.red)
+                    TextField("Username", text: $username)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "person"))
+                    SecureField("Password", text: $password)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
+                }
+                
+                
+                Button(action: signIn, label: {
+                    Text("Login")
+                })
+                .buttonStyle(PrimaryButtonStyle())
+                
+                Button(action: {
+                    sessionManager.showResetPassword()
+                }, label: {
+                    Text("Forgotten Password")
+                })
+                .buttonStyle(SecondaryButtonStyle())
+                
+                Spacer()
+                HStack {
+                    Text("Don't have an account?")
+                        .font(.headline)
+                        .foregroundColor(AppColors.fontColor)
+                    Button(action: {
+                        sessionManager.showSignUp()
+                    }, label: {
+                        Text("Sign Up.")
+                            .foregroundColor(Color(uiColor: .systemBlue))
+                    })
+                }
             }
-            
-            
-            Button(action: {
-                isLoading = true
-                Task {
-                    await sessionManager.signIn(username: username, password: password, errorMsg: $error)
-                }
-                isLoading = false
-            }, label: {
-                Text("Login")
-            })
-            .buttonStyle(PrimaryButtonStyle())
-            
-            Button(action: {
-                sessionManager.showResetPassword()
-            }, label: {
-                Text("Forgotten Password")
-            })
-            .buttonStyle(SecondaryButtonStyle())
-            
-//                if isLoading {
-//                    ProgressView()
-//                }
-            
-            
-            Spacer()
-            Button(action: {
-                sessionManager.showSignUp()
-            }, label: {
-                Text("Don't have an account? Sign Up.")
-            })
+            .padding()
         }
-        .padding()
-        
+    }
+    
+    func signIn() {
+        Task {
+            state = .loading
+            await sessionManager.signIn(username: username, password: password, errorMsg: $error) {
+                // Completion
+                state = .idle
+                // Check if success
+                Task {
+                    let user = await sessionManager.getCurrentAuthUser()
+                    if user != nil {
+                        launchStateManager.begin()
+                        await userManager.load(username: username, userId: sessionManager.getCurrentAuthUser()!.userId) {
+                            launchStateManager.dismiss()
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
@@ -105,6 +126,7 @@ struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             LoginView()
+                .environmentObject(SessionManager())
         }
     }
 }

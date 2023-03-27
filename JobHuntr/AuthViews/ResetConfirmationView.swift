@@ -18,44 +18,68 @@ struct ResetConfirmationView: View {
     let username: String
     
     var body: some View {
-        VStack {
-            Section {
-                Text("Check your e-mail for a confirmation code.")
-                Text("Username: \(username)")
-                TextField("Confirmation Code", text: $confirmationCode)
-                SecureField("New Password", text: $newPassword)
-                SecureField("Confirm Password", text: $newPasswordConfirm)
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack {
+                Spacer()
+                
+                Image(uiImage: UIImage(named: "AppLogo") ?? UIImage())
+                    .resizable()
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    .frame(width: 128, height: 128)
+                
+                Spacer()
+                
+                Group {
+                    Text("Check your e-mail for a confirmation code")
+                        .font(.headline)
+                        .foregroundColor(AppColors.fontColor)
+                    TextField("Confirmation Code", text: $confirmationCode)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "number"))
+                    SecureInputView("New Password", text: $newPassword)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
+                    SecureInputView("Confirm Password", text: $newPasswordConfirm)
+                        .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
+                }
+                
                 Text(error)
                     .font(.headline)
                     .foregroundColor(.red)
-            }
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            HStack {
-                Button("Cancel", action: {
-                    sessionManager.showLogin()
-                })
+                
                 Spacer()
-                Button("Confirm", action: {
-                    if newPassword != newPasswordConfirm {
-                        error = "Passwords don't match"
-                        return
-                    }
-                    Task {
-                        await sessionManager.confirmResetPassword(username: username, newPassword: newPassword, confirmationCode: confirmationCode, errorMsg: $error)
-                    }
-                    if error.isEmpty {
-                        sessionManager.showLogin()
-                    }
-                })
+                
+                Group {
+                    Button(action: confirm, label: {Text("Reset Password")})
+                        .buttonStyle(PrimaryButtonStyle())
+                    Button(action: cancel, label: {Text("Cancel")})
+                        .buttonStyle(SecondaryButtonStyle())
+                }
             }
+            .padding()
         }
-        .padding()
-
+    }
+    
+    func cancel() {
+        sessionManager.showLogin()
+    }
+    
+    func confirm() {
+        if newPassword != newPasswordConfirm {
+            error = "Passwords don't match"
+            return
+        }
+        Task {
+            await sessionManager.confirmResetPassword(username: username, newPassword: newPassword, confirmationCode: confirmationCode, errorMsg: $error)
+        }
+        if error.isEmpty {
+            sessionManager.showLogin()
+        }
     }
 }
-//
-//struct ResetConfirmationView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ResetConfirmationView()
-//    }
-//}
+
+struct ResetConfirmationView_Previews: PreviewProvider {
+    static var previews: some View {
+        ResetConfirmationView(username: "")
+            .environmentObject(SessionManager())
+    }
+}

@@ -47,6 +47,6 @@ struct FeedbackView: View {
 struct FeedbackView_Previews: PreviewProvider {
     static var previews: some View {
         FeedbackView()
-            .environmentObject(UserManager(username: "Dummy", userId: ""))
+            .environmentObject(UserManager())
     }
 }

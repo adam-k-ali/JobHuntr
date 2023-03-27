@@ -117,6 +117,6 @@ extension UIView {
 struct EditableImage_Previews: PreviewProvider {
     static var previews: some View {
         EditableImage(width: 64.0, height: 64.0)
-            .environmentObject(UserManager(username: "Dummy", userId: ""))
+            .environmentObject(UserManager())
     }
 }

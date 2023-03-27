@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProgressCircle: View {
-    @State var isRotating: Bool = false
+    @State var rotation: Angle = .degrees(0)
     
     var body: some View {
         Circle()
@@ -24,11 +24,14 @@ struct ProgressCircle: View {
                 ),
                 style: StrokeStyle(lineWidth: 5, lineCap: .round)
             )
-            .rotationEffect(Angle(degrees: isRotating ? 360 : 0))
+            .rotationEffect(rotation)
             .shadow(radius: 3.0, x: 0, y: 3)
-            .animation(.linear(duration: 2.0).repeatForever(autoreverses: false))
             .onAppear {
-                isRotating = true
+                DispatchQueue.main.async {
+                    withAnimation(Animation.linear(duration: 2.0).repeatForever(autoreverses: false)) {
+                        self.rotation = .degrees(360)
+                    }
+                }
             }
             
     }

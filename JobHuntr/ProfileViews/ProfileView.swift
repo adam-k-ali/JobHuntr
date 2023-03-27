@@ -153,18 +153,21 @@ struct ProfileView: View {
                 NewEducationView()
                     .environmentObject(userManager)
             }
+            .colorScheme(.dark)
         }
         .sheet(isPresented: $showingNewJob) {
             NavigationView {
                 NewJobView()
                     .environmentObject(userManager)
             }
+            .colorScheme(.dark)
         }
         .sheet(isPresented: $showingEditProfile) {
             NavigationView {
                 EditProfileView()
                     .environmentObject(userManager)
             }
+            .colorScheme(.dark)
         }
         .sheet(isPresented: $showingEditEducation) {
             if let education = self.selectedEducation {
@@ -196,7 +199,7 @@ struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ProfileView()
-                .environmentObject(UserManager(username: "Dummy", userId: ""))
+                .environmentObject(UserManager())
         }
     }
 }

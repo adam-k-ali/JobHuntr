@@ -12,20 +12,17 @@ struct ContentView: View {
     @EnvironmentObject var userManager: UserManager
     
     var body: some View {
-        if !userManager.isLoading {
-            MainMenuView()
-                .environmentObject(sessionManager)
-                .environmentObject(userManager)
-        } else {
-            LoadingView()
-        }
+        MainMenuView()
+            .environmentObject(sessionManager)
+            .environmentObject(userManager)
+        
     }
 }
 
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//            .environmentObject(SessionManager())
-//            .environmentObject(UserManager(user: DummyUser()))
-//    }
-//}
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+            .environmentObject(SessionManager())
+            .environmentObject(UserManager())
+    }
+}

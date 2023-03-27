@@ -16,56 +16,71 @@ import SwiftUI
 
 @main
 struct JobHuntrApp: App {
-    @ObservedObject var sessionManager = SessionManager()
+    @ObservedObject var sessionManager: SessionManager = SessionManager()
+    @ObservedObject var launchManager: LaunchStateManager = LaunchStateManager()
+    @ObservedObject var userManager: UserManager = UserManager()
 
     var body: some Scene {
         WindowGroup {
             NavigationView {
-//                LoginView(user: $store.user)
-                switch sessionManager.authState {
-                case .login:
-                    LoginView()
-                        .environmentObject(sessionManager)
-                case .signUp:
+                if launchManager.isActive() {
+                    LoadingView()
+                } else {
+                    switch sessionManager.authState {
+                    case .login:
+                        LoginView()
+                            .environmentObject(sessionManager)
+                            .environmentObject(userManager)
+                            .environmentObject(launchManager)
+                    case .signUp:
+                        SignUpView()
+                            .environmentObject(sessionManager)
+                    case .confirmCode(let username):
+                        ConfirmationView(username: username)
+                            .environmentObject(sessionManager)
+                    case .session:
+                        ContentView()
+                            .environmentObject(sessionManager)
+                            .environmentObject(userManager)
+                    case .confirmReset(let username):
+                        ResetConfirmationView(username: username)
+                            .environmentObject(sessionManager)
+                    case .resetPassword:
+                        ResetPasswordView()
+                            .environmentObject(sessionManager)
+                    }
                     SignUpView()
-                        .environmentObject(sessionManager)
-                case .confirmCode(let username):
-                    ConfirmationView(username: username)
-                        .environmentObject(sessionManager)
-                case .session(let username, let userId):
-                    ContentView()
-                        .environmentObject(sessionManager)
-                        .environmentObject(UserManager(username: username, userId: userId))
-                case .confirmReset(let username):
-                    ResetConfirmationView(username: username)
-                        .environmentObject(sessionManager)
-                case .resetPassword:
-                    ResetPasswordView()
-                        .environmentObject(sessionManager)
                 }
-                SignUpView()
             }
         }
     }
     
     init() {
-        self.initialUpdate()
+        // Global UI Setup
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
-//        sessionManager.requestNotificationPermissions()
+        UITextView.appearance().backgroundColor = .clear
+
+        // Configure Amplify
+        self.configure()
+        
+        // Dismiss launch screen
+        self.launchManager.dismiss()
     }
     
-    func initialUpdate() {
+    func configure() {
+        self.setupListeners()
+        self.configureAmplify()
         Task {
-            print("===========================================================")
-            print("Starting Listeners")
-            self.setupListeners()
-            print("Configuring Amplify")
-            self.configureAmplify()
-            print("Getting current auth user")
-            await sessionManager.getCurrentAuthUser()
-            print("Starting DataStore")
-            await startDataStore()
-            print("===========================================================")
+            await self.startDataStore()
+            
+            // Set up user manager
+            let user = await self.sessionManager.getCurrentAuthUser()
+            
+            if user != nil {
+                self.userManager.load(username: user!.username, userId: user!.userId) {
+                    print("User loaded")
+                }
+            }
         }
     }
     
