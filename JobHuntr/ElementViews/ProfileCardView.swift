@@ -31,7 +31,6 @@ struct ProfileCardView: View {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
                             .frame(width: 128.0, height: 128.0)
-                            .foregroundColor(AppColors.fontColor)
                     }
                 }
                 .shadow(color: .black.opacity(0.7), radius: 2, x: 0, y: -2)
@@ -39,16 +38,13 @@ struct ProfileCardView: View {
                 if userManager.profile.givenName.isEmpty || userManager.profile.familyName.isEmpty {
                     Text("\(userManager.getUsername())")
                         .font(.headline)
-                        .foregroundColor(AppColors.fontColor)
                 } else {
                     Text("\(userManager.profile.givenName) \(userManager.profile.familyName)")
                         .font(.headline)
-                        .foregroundColor(AppColors.fontColor)
                 }
                 
                 if !userManager.profile.jobTitle.isEmpty {
                     Text("\(userManager.profile.jobTitle)")
-                        .foregroundColor(AppColors.fontColor)
                 }
             }
             .padding(0)

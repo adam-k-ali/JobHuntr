@@ -29,7 +29,6 @@ struct ConfirmationView: View {
                 Section {
                     Text("Check your e-mail for a confirmation code.")
                         .font(.headline)
-                        .foregroundColor(AppColors.fontColor)
 //                    Text("Username: \(username)")
                     TextField("Confirmation Code", text: $confirmationCode)
                         .textFieldStyle(GradientTextFieldBackground(systemImageString: "number"))

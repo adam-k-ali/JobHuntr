@@ -96,6 +96,8 @@ class SessionManager: ObservableObject {
             let userId = await self.fetchCurrentAuthSession()
             
             DispatchQueue.main.async {
+                // Log sign in
+                AnalyticsManager.logUserSignInEvent(user: user)
                 // Update auth state
                 self.authState = .session(username: user.username, userId: userId ?? user.userId)
             }
@@ -120,9 +122,11 @@ class SessionManager: ObservableObject {
             print("Password reset confirmed")
         } catch let error as AuthError {
             print("Reset password failed with error \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.errorDescription)
             errorMsg.wrappedValue = error.errorDescription
         } catch {
             print("Unexpected error: \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.localizedDescription)
         }
     }
     
@@ -137,6 +141,7 @@ class SessionManager: ObservableObject {
             }
         } catch let error as AuthError {
             print("Reset password failed with error \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.errorDescription)
             switch (error.underlyingError as? AWSCognitoAuthError) {
             case .userNotFound:
                 errorMsg.wrappedValue = "User Not Found"
@@ -147,6 +152,7 @@ class SessionManager: ObservableObject {
             }
         } catch {
             print("Unexpected error: \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.localizedDescription)
         }
     }
     
@@ -167,9 +173,11 @@ class SessionManager: ObservableObject {
             }
         } catch let error as AuthError {
             print("An error occurred while registering a user \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.errorDescription)
             errorMsg.wrappedValue = error.errorDescription
         } catch {
             print("Unexpected error: \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.localizedDescription)
         }
     }
     
@@ -181,16 +189,21 @@ class SessionManager: ObservableObject {
             )
             
             if confirmSignUpResult.isSignUpComplete {
+                
                 DispatchQueue.main.async {
+                    AnalyticsManager.logUserSignUpEvent()
+                    
                     self.showLogin()
                 }
             }
             print("Confirm sign up result completed: \(confirmSignUpResult.isSignUpComplete)")
         } catch let error as AuthError {
             print("An error occurred while confirming sign up \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.errorDescription)
             errorMsg.wrappedValue = error.errorDescription
         } catch {
             print("Unexpected error: \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.localizedDescription)
         }
     }
     
@@ -206,8 +219,10 @@ class SessionManager: ObservableObject {
         } catch let error as AuthError {
             print("Sign in failed \(error)")
             errorMsg.wrappedValue = error.errorDescription
+            AnalyticsManager.logAuthFailEvent(description: error.errorDescription)
         } catch {
             print("Unexpected error: \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.localizedDescription)
         }
         completion()
     }
@@ -245,10 +260,13 @@ class SessionManager: ObservableObject {
             print("Successfully deleted user")
         } catch let error as AuthError {
             print("Delete user failed with error \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.errorDescription)
         } catch let error as DataStoreError {
             print("Delete user failed with error \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.errorDescription)
         } catch {
             print("Unexpected error: \(error)")
+            AnalyticsManager.logAuthFailEvent(description: error.localizedDescription)
         }
     }
     

@@ -28,16 +28,20 @@ struct InstitutionCard: View {
     
     var body: some View {
         HStack {
-            switch type {
-            case .education:
-                Image(systemName: "graduationcap.fill")
-                    .resizable()
-                    .frame(width: 48.0, height: 48.0)
-            case .placeOfWork:
-                Image(systemName: "studentdesk")
-                    .resizable()
-                    .frame(width: 48.0, height: 48.0)
+            ZStack {
+                switch type {
+                case .education:
+                    Image(systemName: "graduationcap.fill")
+                        .resizable()
+                        .frame(width: 48.0, height: 48.0)
+                case .placeOfWork:
+                    Image(systemName: "studentdesk")
+                        .resizable()
+                        .frame(width: 48.0, height: 48.0)
+                }
             }
+            .padding(.leading, 16)
+            
             VStack(alignment: .leading) {
                 Text(companyName)
                     .font(.headline)
@@ -47,14 +51,19 @@ struct InstitutionCard: View {
                     .font(.caption)
             }
             .padding()
+//            .padding()
         }
         .onAppear {
-            Task {
-                if let company = await GlobalDataManager.fetchCompany(id: companyID) {
-                    companyName = company.name
-                } else {
-                    companyName = "Unknown Company"
+            if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
+                Task {
+                    if let company = await GlobalDataManager.fetchCompany(id: companyID) {
+                        companyName = company.name
+                    } else {
+                        companyName = "Unknown Company"
+                    }
                 }
+            } else {
+                companyName = "Unknown Company"
             }
         }
     }

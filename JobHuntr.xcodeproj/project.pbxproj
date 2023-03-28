@@ -43,6 +43,9 @@
 		7267CEA629B786510021E0ED /* EditableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7267CEA529B786510021E0ED /* EditableImage.swift */; };
 		7267CEA829B78C360021E0ED /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7267CEA729B78C360021E0ED /* ImagePicker.swift */; };
 		727D2C6329C4EF7600736435 /* NewEducationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D2C6229C4EF7600736435 /* NewEducationView.swift */; };
+		727F62FE29D21E0600B160A2 /* NavigationTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727F62FD29D21E0600B160A2 /* NavigationTabView.swift */; };
+		727F630029D2FAA500B160A2 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727F62FF29D2FAA500B160A2 /* AnalyticsManager.swift */; };
+		727F630229D311E600B160A2 /* ProfilePicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727F630129D311E600B160A2 /* ProfilePicture.swift */; };
 		72833E0629C61DCB00A023AE /* LongPressButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72833E0529C61DCB00A023AE /* LongPressButton.swift */; };
 		72833E0829C6284F00A023AE /* NewJobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72833E0729C6284F00A023AE /* NewJobView.swift */; };
 		72833E0A29C62D9C00A023AE /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72833E0929C62D9C00A023AE /* EditProfileView.swift */; };
@@ -131,6 +134,9 @@
 		7267CEA529B786510021E0ED /* EditableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableImage.swift; sourceTree = "<group>"; };
 		7267CEA729B78C360021E0ED /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		727D2C6229C4EF7600736435 /* NewEducationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEducationView.swift; sourceTree = "<group>"; };
+		727F62FD29D21E0600B160A2 /* NavigationTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTabView.swift; sourceTree = "<group>"; };
+		727F62FF29D2FAA500B160A2 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
+		727F630129D311E600B160A2 /* ProfilePicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePicture.swift; sourceTree = "<group>"; };
 		72833E0529C61DCB00A023AE /* LongPressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongPressButton.swift; sourceTree = "<group>"; };
 		72833E0729C6284F00A023AE /* NewJobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewJobView.swift; sourceTree = "<group>"; };
 		72833E0929C62D9C00A023AE /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
@@ -212,6 +218,7 @@
 				7229BE5C29BFC39A005C3AAA /* UserManager.swift */,
 				7229BE5E29BFD1B9005C3AAA /* GlobalDataManager.swift */,
 				7297DCC029CDFBF100563322 /* LaunchStateManager.swift */,
+				727F62FF29D2FAA500B160A2 /* AnalyticsManager.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -221,15 +228,11 @@
 			children = (
 				72921F8F299AA54A00165D38 /* ProfileCardView.swift */,
 				72921F9A299ABE9500165D38 /* CompanyCardView.swift */,
-				72FD4A2A29C4C17E00A6F310 /* UserStatsDashboardView.swift */,
-				7267CE9F29B4FFB90021E0ED /* StatCardView.swift */,
-				7267CEA129B501510021E0ED /* MenuButtonView.swift */,
 				7267CEA329B560340021E0ED /* CategoryCapsuleView.swift */,
 				7267CEA529B786510021E0ED /* EditableImage.swift */,
 				7267CEA729B78C360021E0ED /* ImagePicker.swift */,
 				7203369D29BB7535001B8FCB /* CircleCameraView.swift */,
 				72FD4A1C29C4A15400A6F310 /* ProgressBar.swift */,
-				72FD4A2C29C4C23D00A6F310 /* InstitutionCard.swift */,
 				72FD4A2E29C4CA9A00A6F310 /* ProjectCard.swift */,
 				72833E0529C61DCB00A023AE /* LongPressButton.swift */,
 				7217E74229C640A500017A82 /* SkillCardView.swift */,
@@ -250,6 +253,8 @@
 				7217E74029C63FAC00017A82 /* SkillsView.swift */,
 				723B704029C6562B003587D2 /* NewSkillView.swift */,
 				72FAD23129C9F2C000E7B2A7 /* EditEducationView.swift */,
+				727F630129D311E600B160A2 /* ProfilePicture.swift */,
+				72FD4A2C29C4C23D00A6F310 /* InstitutionCard.swift */,
 			);
 			path = ProfileViews;
 			sourceTree = "<group>";
@@ -293,6 +298,9 @@
 			children = (
 				72921F8D299AA4C100165D38 /* MainMenuView.swift */,
 				72FB6CCC29C79BF7003390F5 /* MenuButtons.swift */,
+				7267CEA129B501510021E0ED /* MenuButtonView.swift */,
+				72FD4A2A29C4C17E00A6F310 /* UserStatsDashboardView.swift */,
+				7267CE9F29B4FFB90021E0ED /* StatCardView.swift */,
 			);
 			path = MainMenuView;
 			sourceTree = "<group>";
@@ -335,6 +343,7 @@
 				72FD4A1A29C49E6E00A6F310 /* LoadingView.swift */,
 				72FD4A1E29C4A29800A6F310 /* ContentView.swift */,
 				72FD4A2229C4AB5F00A6F310 /* FeedbackView.swift */,
+				727F62FD29D21E0600B160A2 /* NavigationTabView.swift */,
 			);
 			path = JobHuntr;
 			sourceTree = "<group>";
@@ -471,6 +480,7 @@
 				7217E73E29C63DC500017A82 /* Profile+Schema.swift in Sources */,
 				72921F90299AA54A00165D38 /* ProfileCardView.swift in Sources */,
 				72FD4A2B29C4C17E00A6F310 /* UserStatsDashboardView.swift in Sources */,
+				727F630229D311E600B160A2 /* ProfilePicture.swift in Sources */,
 				7217E73129C6312900017A82 /* UserSettings+Schema.swift in Sources */,
 				7217E73329C6312900017A82 /* Feedback+Schema.swift in Sources */,
 				72FD4A1B29C49E6E00A6F310 /* LoadingView.swift in Sources */,
@@ -485,6 +495,7 @@
 				7297DCC329CE8EFA00563322 /* SecureInputView.swift in Sources */,
 				7203369E29BB7535001B8FCB /* CircleCameraView.swift in Sources */,
 				7267CEA629B786510021E0ED /* EditableImage.swift in Sources */,
+				727F62FE29D21E0600B160A2 /* NavigationTabView.swift in Sources */,
 				7229BE5D29BFC39A005C3AAA /* UserManager.swift in Sources */,
 				72833E0629C61DCB00A023AE /* LongPressButton.swift in Sources */,
 				7217E72C29C6312900017A82 /* Education.swift in Sources */,
@@ -531,6 +542,7 @@
 				72FD4A2129C4A66800A6F310 /* ProfileView.swift in Sources */,
 				7297DCC129CDFBF100563322 /* LaunchStateManager.swift in Sources */,
 				72833E0829C6284F00A023AE /* NewJobView.swift in Sources */,
+				727F630029D2FAA500B160A2 /* AnalyticsManager.swift in Sources */,
 				72FD4A2D29C4C23D00A6F310 /* InstitutionCard.swift in Sources */,
 				7217E73A29C6312900017A82 /* FeedbackType.swift in Sources */,
 				72DC201829B26C8400E373C2 /* ResetPasswordView.swift in Sources */,
@@ -663,7 +675,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = JobHuntr/JobHuntr.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"JobHuntr/Preview Content\"";
 				DEVELOPMENT_TEAM = 2597S9U4NK;
 				ENABLE_PREVIEWS = YES;
@@ -680,7 +692,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adamkali.JobHuntr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -699,7 +711,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = JobHuntr/JobHuntr.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"JobHuntr/Preview Content\"";
 				DEVELOPMENT_TEAM = 2597S9U4NK;
 				ENABLE_PREVIEWS = YES;
@@ -716,7 +728,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adamkali.JobHuntr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

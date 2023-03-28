@@ -36,10 +36,10 @@ struct SignUpView: View {
                     TextField("E-Mail", text: $email)
                         .textFieldStyle(GradientTextFieldBackground(systemImageString: "envelope"))
                     
-                    SecureField("Password", text: $password)
+                    SecureInputView("Password", text: $password)
                         .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
                     
-                    SecureField("Confirm Password", text: $confirmPassword)
+                    SecureInputView("Confirm Password", text: $confirmPassword)
                         .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
                     Text(error)
                         .font(.headline)
@@ -66,7 +66,6 @@ struct SignUpView: View {
                 VStack(spacing: 12) {
                     HStack {
                         Text("Already have an account?")
-                            .foregroundColor(AppColors.fontColor)
                             .font(.headline)
                         Button("Sign In.", action: {
                             sessionManager.showLogin()
@@ -79,7 +78,6 @@ struct SignUpView: View {
                     
                     HStack {
                         Text("View our")
-                            .foregroundColor(AppColors.fontColor)
                             .font(.headline)
                         
                         Link("Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)

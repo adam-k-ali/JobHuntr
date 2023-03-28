@@ -12,7 +12,7 @@ struct SkillCardView<Content: View>: View {
     
     var onDelete: () -> Void
     
-    let idleColor: Color = Color(uiColor: .systemIndigo)
+    let idleColor: Color = AppColors.primary
     
     @State private var opacity: Double = 1.0
     
@@ -34,6 +34,7 @@ struct SkillCardView<Content: View>: View {
                 }
             
             content
+                .foregroundColor(.white.opacity(0.9))
                 .padding()
         }
         .contextMenu {
@@ -47,6 +48,8 @@ struct SkillCardView<Content: View>: View {
 
 struct SkillCardView_Previews: PreviewProvider {
     static var previews: some View {
-        SkillCardView(content: {Text("Hello, World!")}, onDelete: {})
+        SkillCardView(content: {
+            Text("Hello, World!")
+        }, onDelete: {})
     }
 }

@@ -28,9 +28,7 @@ struct ApplicationDetailView: View {
                     let dateStr = application.dateApplied!.foundationDate.format(date: .short, time: .none)
                     
                         Text("Applied on \(dateStr)")
-                            .foregroundColor(AppColors.fontColor)
                     ProgressionView(applicationStage: application.currentStage!)
-                        .colorScheme(.dark)
                     
                     Spacer()
                     Button(action: {
@@ -39,7 +37,6 @@ struct ApplicationDetailView: View {
                         Text("Update")
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    .colorScheme(.dark)
                 }
                 Spacer()
             }
@@ -51,7 +48,6 @@ struct ApplicationDetailView: View {
                 UpdateApplicationView(application: $application)
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
         
     }

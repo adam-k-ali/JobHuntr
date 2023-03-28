@@ -505,6 +505,14 @@ class UserManager: ObservableObject {
         
         let updatedApplication = application
         
+        // Check if the application already exists (for analytics)
+        let exists = self.applications.first(where: {$0.id == updatedApplication.id}) != nil
+        if exists {
+            AnalyticsManager.logUpdateApplicationEvent(applicationId: updatedApplication.id, newStage: updatedApplication.currentStage!)
+        } else {
+            AnalyticsManager.logNewApplicationEvent(jobTitle: application.jobTitle!, companyName: company!.name)
+        }
+        
         // Update the local list of applications
         DispatchQueue.main.async {
             self.applications.removeAll(where: {$0.id == updatedApplication.id})
@@ -513,6 +521,7 @@ class UserManager: ObservableObject {
             self.numApplications = self.applications.count
             self.streak = self.calculateStreak(applications: self.applications)
         }
+        
         // Update the application on the cloud
         do {
             try await Amplify.DataStore.save(updatedApplication)

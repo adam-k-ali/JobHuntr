@@ -29,7 +29,6 @@ struct GradientTextFieldBackground: TextFieldStyle {
                Image(systemName: systemImageString)
                // Reference the TextField here
                configuration
-                   .colorScheme(.dark)
            }
            .padding(.leading)
            .foregroundColor(.gray)
@@ -50,7 +49,6 @@ struct FormTextFieldStyle: TextFieldStyle {
             HStack {
                 // Reference the TextField here
                 configuration
-                    .foregroundColor(AppColors.fontColor)
                 
             }
             .padding(.leading)

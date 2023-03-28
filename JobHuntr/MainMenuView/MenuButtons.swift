@@ -22,9 +22,10 @@ struct MenuButtons: View {
                 .buttonStyle(.plain)
                 
                 NavigationLink(destination: {
-                    ApplicationsView()
-                        .environmentObject(userManager)
-                        .colorScheme(.dark)
+                    NavigationView {
+                        ApplicationsView()
+                            .environmentObject(userManager)
+                    }
                 }) {
                     MenuButtonView(iconName: "tray.full.fill", title: "Your Job Applications")
                 }
