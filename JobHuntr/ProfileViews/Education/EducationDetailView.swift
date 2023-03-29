@@ -24,6 +24,8 @@ struct EducationDetailView: View {
                 Text(education.roleName)
                     .font(.headline)
                     .padding(.leading, 4)
+                
+                // Course List
                 ScrollView {
                     ForEach(courses, id: \.id) { course in
                         ListCard(isChangeable: true, onDelete: {
