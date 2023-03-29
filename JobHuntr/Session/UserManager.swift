@@ -273,6 +273,7 @@ class UserManager: ObservableObject {
         // Update on cloud
         do {
             try await Amplify.DataStore.save(course)
+            AnalyticsManager.logNewCourseEvent()
         } catch let error as DataStoreError {
             print("Error saving course. \(error)")
         } catch {
