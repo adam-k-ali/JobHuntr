@@ -24,10 +24,8 @@ struct StatCardView<Content>: View where Content: View {
                 VStack(alignment: .leading) {
                     Text("\(value)")
                         .font(.headline)
-                        .foregroundColor(AppColors.fontColor)
                     Text(title)
                         .font(.caption)
-                        .foregroundColor(AppColors.fontColor)
                 }
             }
         }
@@ -39,7 +37,6 @@ struct StatCardView_Previews: PreviewProvider {
     static var previews: some View {
         StatCardView(title: "Applications", value: .constant(14)) {
             Image(systemName: "tray.full.fill")
-                .foregroundColor(AppColors.fontColor)
         }
     }
 }

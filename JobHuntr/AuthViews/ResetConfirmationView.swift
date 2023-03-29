@@ -33,7 +33,6 @@ struct ResetConfirmationView: View {
                 Group {
                     Text("Check your e-mail for a confirmation code")
                         .font(.headline)
-                        .foregroundColor(AppColors.fontColor)
                     TextField("Confirmation Code", text: $confirmationCode)
                         .textFieldStyle(GradientTextFieldBackground(systemImageString: "number"))
                     SecureInputView("New Password", text: $newPassword)

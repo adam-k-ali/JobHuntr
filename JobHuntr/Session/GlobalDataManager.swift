@@ -62,6 +62,7 @@ class GlobalDataManager {
         // The company doesn't exist; save it.
         do {
             try await Amplify.DataStore.save(company)
+            AnalyticsManager.logNewCompanyEvent(companyName: company.name)
         } catch let error as DataStoreError {
             print("Unable to save company - \(error)")
         } catch {

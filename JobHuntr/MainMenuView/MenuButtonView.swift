@@ -19,10 +19,12 @@ struct MenuButtonView: View {
                 .frame(height: 64)
             HStack {
                 Image(systemName: iconName)
-                    .foregroundColor(AppColors.fontColor)
+                    .foregroundColor(Color(uiColor: AppColors.secondary.contrastColor()))
+                
                 Text(title)
                     .font(.body)
-                    .foregroundColor(AppColors.fontColor)
+                    .foregroundColor(Color(uiColor: AppColors.secondary.contrastColor()))
+//                    .foregroundColor(Color(uiColor: .systemGray5))
                 Spacer()
             }
             .padding()

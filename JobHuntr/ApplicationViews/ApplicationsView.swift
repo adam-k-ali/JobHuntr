@@ -23,17 +23,21 @@ struct ApplicationsView: View {
                 if userManager.applications.isEmpty {
                     ListCard {
                         Text("No Applications Found.")
-                            .foregroundColor(AppColors.fontColor)
                     }
                 } else {
                     ForEach($userManager.applications) { $application in
                         NavigationLink(destination: ApplicationDetailView(application: $application).environmentObject(userManager)) {
-                            ListCard(isChangeable: true, onDelete: {
-                                showingDeleteAlert = true
-                            }) {
-                                ApplicationCardView(application: $application.wrappedValue)
-                            }
+                            ApplicationCardView(application: $application.wrappedValue)
+                                .contextMenu {
+                                    Button(action: {
+                                        showingDeleteAlert = true
+                                    }, label: {
+                                        Image(systemName: "trash")
+                                        Text("Delete")
+                                    })
+                                }
                         }
+                        .buttonStyle(.plain)
                         .actionSheet(isPresented: $showingDeleteAlert) {
                             // Confirmation of deletion
                             ActionSheet(title: Text("Delete Application?"), message: Text("Are you sure you want to delete this application?"), buttons: [
@@ -50,8 +54,12 @@ struct ApplicationsView: View {
             }
             .padding()
         }
+        .onAppear {
+            if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
+                AnalyticsManager.logViewApplicationsEvent()
+            }
+        }
         .navigationTitle("Applications")
-        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             Button(action: {
                 isPresentingNewAppView = true
@@ -59,13 +67,11 @@ struct ApplicationsView: View {
                 Image(systemName: "plus")
             }
         }
-        .colorScheme(.dark)
         .sheet(isPresented: $isPresentingNewAppView) {
             NavigationView {
                 NewApplicationView()
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
     }
     

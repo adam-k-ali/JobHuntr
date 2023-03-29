@@ -17,11 +17,13 @@ struct UserStatsDashboardView: View {
                 Image(systemName: "flame.fill")
                     .foregroundColor(Color(uiColor: .systemOrange))
             }
+            .foregroundColor(Color(uiColor: .systemGray5))
             Spacer()
             StatCardView(title: "Applications", value: $userManager.numApplications) {
                 Image(systemName: "tray.full.fill")
-                    .foregroundColor(AppColors.fontColor)
+                    
             }
+            .foregroundColor(Color(uiColor: .systemGray5))
             Spacer()
         }
     }

@@ -55,19 +55,20 @@ extension ApplicationStage: Comparable {
     var color: Color {
         switch self {
             case .applied:
-            return Color(hex: "#ef9b20")
+            return Color("ApplicationApplied")
             case .preInterview:
-            return Color(hex: "#f46a9b")
+            return Color("ApplicationPreInterview")
             case .interviewing:
-            return Color(hex: "#27aeef")
+            return Color("ApplicationInterviewing")
             case .offer:
-            return Color(hex: "#f46a9b")
+            return Color("ApplicationOffer")
             case .rejection:
-            return Color(hex: "#ea5545")
+            return Color("ApplicationRejected")
             case .accepted:
-            return Color(hex: "#87bc45")
+            return Color("ApplicationAccepted")
         }
     }
+    
     var name: String {
         switch self {
             case .applied:
@@ -81,7 +82,7 @@ extension ApplicationStage: Comparable {
             case .rejection:
                 return "Rejected"
             case .accepted:
-                return "Offer Accepted"
+                return "Accepted"
         }
     }
 }
@@ -100,43 +101,69 @@ extension UIColor {
 
 extension Color {
     init(uiColor: UIColor) {
-            self.init(red: Double(uiColor.rgba.red),
-                      green: Double(uiColor.rgba.green),
-                      blue: Double(uiColor.rgba.blue),
-                      opacity: Double(uiColor.rgba.alpha))
-        }
+        self.init(red: Double(uiColor.rgba.red),
+                  green: Double(uiColor.rgba.green),
+                  blue: Double(uiColor.rgba.blue),
+                  opacity: Double(uiColor.rgba.alpha))
+    }
+    
+    var uiColor: UIColor {
+        return UIColor(self)
+    }
     
     init(hex: String) {
-            let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-            var int: UInt64 = 0
-            Scanner(string: hex).scanHexInt64(&int)
-            let a, r, g, b: UInt64
-            switch hex.count {
-            case 3: // RGB (12-bit)
-                (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-            case 6: // RGB (24-bit)
-                (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-            case 8: // ARGB (32-bit)
-                (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-            default:
-                (a, r, g, b) = (1, 1, 1, 0)
-            }
-
-            self.init(
-                .sRGB,
-                red: Double(r) / 255,
-                green: Double(g) / 255,
-                blue:  Double(b) / 255,
-                opacity: Double(a) / 255
-            )
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (1, 1, 1, 0)
         }
+
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue:  Double(b) / 255,
+            opacity: Double(a) / 255
+        )
+    }
+    
+    func contrastColor() -> UIColor {
+        var d = CGFloat(0)
+
+        var r = CGFloat(0)
+        var g = CGFloat(0)
+        var b = CGFloat(0)
+        var a = CGFloat(0)
+
+        self.uiColor.getRed(&r, green: &g, blue: &b, alpha: &a)
+
+        // Counting the perceptive luminance - human eye favors green color...
+        let luminance = 1 - ((0.299 * r) + (0.587 * g) + (0.114 * b))
+
+        if luminance < 0.5 {
+            d = CGFloat(0) // bright colors - black font
+        } else {
+            d = CGFloat(1) // dark colors - white font
+        }
+
+        return UIColor( red: d, green: d, blue: d, alpha: a)
+    }
 }
 
 struct AppColors {
     public static var background: Color = Color("AppBackground")
     public static var secondary: Color = Color("Secondary")
     public static var primary: Color = Color("Primary")
-    public static var fontColor: Color = Color.white.opacity(0.9)
+//    public static var fontColor: Color = .
 }
 
 extension Date {

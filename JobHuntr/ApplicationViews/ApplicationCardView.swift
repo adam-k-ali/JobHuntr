@@ -20,43 +20,28 @@ struct ApplicationCardView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                if let company = company {
-                    Text(company.name)
+        ZStack {
+            RoundedRectangle(cornerRadius: 8)
+                .foregroundColor(self.application.currentStage?.color)
+            HStack(alignment: .top) {
+                let companyName = company != nil ? company!.name : "Unknown Company"
+                VStack(alignment: .leading, spacing: 16) {
+                    Text(companyName)
                         .font(.headline)
-                        .foregroundColor(AppColors.fontColor)
-                } else {
-                    Text("Unknown Company")
-                        .font(.headline)
-                        .foregroundColor(AppColors.fontColor)
+                    Text(self.application.jobTitle!)
                 }
                 Spacer()
-                if let dateApplied = application.dateApplied {
-                    let dateStr = formatDateString(from: dateApplied.foundationDate)
-                    
-                    HStack {
-                        Text(dateStr)
-                            .font(.headline)
-                            .foregroundColor(AppColors.fontColor.opacity(0.8))
-                    }
-                }
+                
+                CategoryCapsuleView(title: application.currentStage!.name, color: .white.opacity(0.40))
             }
+            .padding()
             
-            Text(application.jobTitle!)
-                .font(.subheadline)
-                .foregroundColor(AppColors.fontColor)
-            
-            if let currentStage = application.currentStage {
-                CategoryCapsuleView(title: currentStage.name, color: currentStage.color)
-            }
         }
         .onAppear {
             Task {
                 self.company = await GlobalDataManager.fetchCompany(id: application.companyID!)
             }
         }
-        .padding(.bottom)
     }
     
     func formatDateString(from date: Date) -> String {

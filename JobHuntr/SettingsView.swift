@@ -57,7 +57,13 @@ struct SettingsView: View {
                 .cancel()
             ])
         }
+        .onAppear {
+            if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
+                AnalyticsManager.logViewSettingsEvent()
+            }
+        }
         .onDisappear {
+            // TODO: Replace this with a 'save' button in toolbar?
             Task {
                 await userManager.saveUserSettings()
             }

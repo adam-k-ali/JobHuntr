@@ -18,7 +18,6 @@ struct CategoryCapsuleView: View {
                 .frame(width: 128, height: 32)
             Text(title)
                 .font(.body)
-                .foregroundColor(AppColors.fontColor)
         }
     }
 }

@@ -29,7 +29,6 @@ struct GradientTextFieldBackground: TextFieldStyle {
                Image(systemName: systemImageString)
                // Reference the TextField here
                configuration
-                   .colorScheme(.dark)
            }
            .padding(.leading)
            .foregroundColor(.gray)
@@ -40,21 +39,22 @@ struct GradientTextFieldBackground: TextFieldStyle {
 struct FormTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
         ZStack {
+            let bgColor = Color(uiColor: .systemGray6)
             RoundedRectangle(cornerRadius: 8.0)
-                .foregroundColor(AppColors.primary)
+                .foregroundColor(bgColor)
                 .frame(height: 48)
 //            RoundedRectangle(cornerRadius: 8.0)
 //                .stroke(.black)
 //                .frame(height: 48)
             
+            
+            let textColor = Color(uiColor: bgColor.contrastColor())
             HStack {
                 // Reference the TextField here
                 configuration
-                    .foregroundColor(AppColors.fontColor)
-                
             }
             .padding(.leading)
-            .foregroundColor(.gray)
+            .foregroundColor(textColor)
         }
     }
 }

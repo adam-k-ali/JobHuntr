@@ -19,7 +19,6 @@ struct SkillsView: View {
                 ForEach(skills, id: \.self) { skill in
                     SkillCardView(content: {
                         Text(skill)
-                            .foregroundColor(AppColors.fontColor)
                     }, onDelete: {
                         Task {
                             await userManager.removeUserSkill(skillName: skill)
@@ -33,7 +32,6 @@ struct SkillsView: View {
                     Image(systemName: "plus")
                 })
                 .buttonStyle(.plain)
-                .foregroundColor(AppColors.fontColor)
             }
             
         }
@@ -42,7 +40,6 @@ struct SkillsView: View {
                 NewSkillView()
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
         
     }

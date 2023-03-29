@@ -8,6 +8,7 @@
 import Amplify
 import AWSDataStorePlugin
 import AWSCognitoAuthPlugin
+import AWSPinpointAnalyticsPlugin
 import AWSAPIPlugin
 import AWSS3StoragePlugin
 import UserNotifications
@@ -65,13 +66,17 @@ struct JobHuntrApp: App {
         
         // Dismiss launch screen
         self.launchManager.dismiss()
+        
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
+            AnalyticsManager.logAppLoad()
+        }
     }
     
     func configure() {
         self.setupListeners()
         self.configureAmplify()
         Task {
-            await self.startDataStore()
+//            await self.startDataStore()
             
             // Set up user manager
             let user = await self.sessionManager.getCurrentAuthUser()
@@ -124,6 +129,7 @@ struct JobHuntrApp: App {
             )
             try Amplify.add(plugin: AWSAPIPlugin())
             try Amplify.add(plugin: AWSS3StoragePlugin())
+            try Amplify.add(plugin: AWSPinpointAnalyticsPlugin())
 //            Amplify.Logging.logLevel = .verbose
             try Amplify.configure()
             print("Amplify configured.")
@@ -133,14 +139,14 @@ struct JobHuntrApp: App {
         }
     }
     
-    func startDataStore() async {
-        do {
-            try await Amplify.DataStore.start()
-            print("DataStore Started")
-        } catch let error as DataStoreError {
-            print("Failed with error \(error)")
-        } catch {
-            print("Unexpected Error \(error)")
-        }
-    }
+//    func startDataStore() async {
+//        do {
+//            try await Amplify.DataStore.start()
+//            print("DataStore Started")
+//        } catch let error as DataStoreError {
+//            print("Failed with error \(error)")
+//        } catch {
+//            print("Unexpected Error \(error)")
+//        }
+//    }
 }

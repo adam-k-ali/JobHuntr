@@ -12,7 +12,7 @@ struct ContentView: View {
     @EnvironmentObject var userManager: UserManager
     
     var body: some View {
-        MainMenuView()
+        NavigationTabView()
             .environmentObject(sessionManager)
             .environmentObject(userManager)
         

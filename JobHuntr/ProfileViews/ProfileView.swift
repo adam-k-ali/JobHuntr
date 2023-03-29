@@ -18,156 +18,189 @@ struct ProfileView: View {
     @State var showingEditEducation: Bool = false
     @State var selectedEducation: Education?
     
-    var body: some View {
-        ZStack(alignment: .top) {
-            AppColors.primary.ignoresSafeArea()
-            ScrollView {
-                VStack (alignment: .leading, spacing: 16) {
-                    Section(
-                        header: Text("Skills")
-                            .font(.callout)
-                            .foregroundColor(AppColors.fontColor)
-                    ) {
-                        SkillsView(skills: $userManager.skills)
-                            .environmentObject(userManager)
-                            .padding(.horizontal)
-                    }
-                    
-                    Section(
-                        header: Text("About Me")
-                            .font(.callout)
-                            .foregroundColor(AppColors.fontColor)
-                    ) {
-                        ListCard {
-                            Text(userManager.profile.about)
-                                .foregroundColor(AppColors.fontColor)
-                                .padding()
-                        }
-                    }
-                    
-                    Section (
-                        header: Text("Education")
-                            .font(.callout)
-                            .foregroundColor(AppColors.fontColor)
-                    ) {
-                        ForEach($userManager.education) { $education in
-                            let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
-                            let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
-                            
-                            ListCard(isChangeable: true, onDelete: {
-                                deleteEducation(education: education)
-                            }) {
-                                InstitutionCard(type: .education,
-                                                companyID: education.companyID,
-                                                title: education.roleName,
-                                                subheading: "\(startDate) - \(endDate)"
-                                )
-                                .colorScheme(.dark)
-                            }
-                            
-                        }
-                        ListCard {
-                            Button(action: {
-                                showingNewEducation = true
-                            }) {
-                                HStack {
-                                    Spacer()
-                                    Text("Add Education")
-                                    Spacer()
-                                }
-                            }
-                            .buttonStyle(.plain)
-                            .foregroundColor(AppColors.fontColor)
-                        }
-                    }
-                    
-                    Section(
-                        header: Text("Experience")
-                            .font(.callout)
-                            .foregroundColor(AppColors.fontColor)
-                    ) {
-                        ForEach($userManager.jobs) { $job in
-                            let startDate = job.startDate.foundationDate.format(formatString: "MMM yyyy")
-                            if job.endDate != nil {
-                                let endDate = job.endDate!.foundationDate.format(formatString: "MMM yyyy")
-                                ListCard(isChangeable: true, onDelete: {
-                                    deleteJob(job: job)
-                                }) {
-                                    InstitutionCard(type: .placeOfWork,
-                                                    companyID: job.companyID,
-                                                    title: job.jobTitle,
-                                                    subheading: "\(startDate) - \(endDate)")
-                                    .colorScheme(.dark)
-                                }
-                            } else {
-                                ListCard(isChangeable: true, onDelete: {
-                                    deleteJob(job: job)
-                                }) {
-                                    InstitutionCard(type: .placeOfWork,
-                                                    companyID: job.companyID,
-                                                    title: job.jobTitle,
-                                                    subheading: "\(startDate) - Present")
-                                    .colorScheme(.dark)
-                                }
-                            }
-                            
-                        }
-                        ListCard {
-                            Button(action: {
-                                showingNewJob = true
-                            }) {
-                                HStack {
-                                    Spacer()
-                                    Text("Add Experience")
-                                    Spacer()
-                                }
-                            }
-                            .buttonStyle(.plain)
-                            .foregroundColor(AppColors.fontColor)
-                        }
-                    }
-                    
-                }
-            }
-            
-            .padding()
-            .background(AppColors.primary.ignoresSafeArea())
-            .padding(.top, 256)
-            
-            ProfileCardView()
-                .shadow(radius: 2)
-                .frame(height: 256)
-        }
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button(action: {
-                    showingEditProfile = true
-                }, label: {
-                    Image(systemName: "pencil")
-                })
-            }
+    @State var name: String = ""
 
+    var body: some View {
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack {
+                HStack {
+                    HStack {
+                        ProfilePicture(showEdit: false, size: CGSize(width: 42, height: 42))
+                            .environmentObject(userManager)
+                            
+                        Text("**Welcome, \(self.name)!**")
+                            .font(.largeTitle)
+                            .lineLimit(2)
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                    Button(action: {
+                        showingEditProfile = true
+                    }, label: {
+                        Image(systemName: "pencil")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                    })
+                    .buttonStyle(.plain)
+//                    .padding(.top, 50)
+                }
+                .padding(24)
+                
+                if !userManager.profile.jobTitle.isEmpty {
+                    HStack {
+                        Text(userManager.profile.jobTitle)
+                            .font(.headline)
+                        Spacer()
+                    }
+                    .padding(.leading, 20)
+                }
+                VStack {
+//                    VStack(spacing: 32) {
+//                        ProfilePicture()
+//                            .environmentObject(userManager)
+//                            .frame(width: 200, height: 200)
+//                            .shadow(radius: 12)
+//                        Divider()
+//                    }
+                    
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Section(header: Text("About Me").font(.callout)) {
+                                ListCard {
+                                    Text(userManager.profile.about.isEmpty ? "A brief profile about me." : userManager.profile.about)
+                                }
+                            }
+                            Section(header: Text("My Skills").font(.callout)) {
+                                SkillsView(skills: $userManager.skills)
+                                    .environmentObject(userManager)
+                            }
+                            Section(header: Text("My Education").font(.callout)) {
+                                
+                                if (userManager.education.isEmpty) {
+                                    ListCard {
+                                        Text("No Education History")
+                                    }
+                                }
+                                // List of education history
+                                ForEach($userManager.education) { $education in
+                                    let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
+                                    let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
+                                    NavigationLink(destination: {
+                                        NavigationView {
+                                            EducationDetailView(education: education)
+                                        }
+                                    }) {
+                                        ListCard(isChangeable: true, onDelete: {
+                                            deleteEducation(education: education)
+                                        }) {
+                                            InstitutionCard(type: .education,
+                                                            companyID: education.companyID,
+                                                            title: education.roleName,
+                                                            subheading: "\(startDate) - \(endDate)",
+                                                            isLink: true
+                                            )
+                                        }
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                // New Education card
+                                ListCard {
+                                    Button(action: {
+                                        showingNewEducation = true
+                                    }) {
+                                        HStack {
+                                            Spacer()
+                                            Text("Add Education")
+                                            Spacer()
+                                        }
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                
+                            }
+                            
+                            Section(header: Text("My Experience").font(.callout)) {
+                                if userManager.jobs.isEmpty {
+                                    ListCard {
+                                        Text("No Experience")
+                                    }
+                                }
+                                // Work experience list
+                                ForEach($userManager.jobs) { $job in
+                                    let startDate = job.startDate.foundationDate.format(formatString: "MMM yyyy")
+                                    if job.endDate != nil {
+                                        let endDate = job.endDate!.foundationDate.format(formatString: "MMM yyyy")
+                                        ListCard(isChangeable: true, onDelete: {
+                                            deleteJob(job: job)
+                                        }) {
+                                            InstitutionCard(type: .placeOfWork,
+                                                            companyID: job.companyID,
+                                                            title: job.jobTitle,
+                                                            subheading: "\(startDate) - \(endDate)")
+                                        }
+                                    } else {
+                                        ListCard(isChangeable: true, onDelete: {
+                                            deleteJob(job: job)
+                                        }) {
+                                            InstitutionCard(type: .placeOfWork,
+                                                            companyID: job.companyID,
+                                                            title: job.jobTitle,
+                                                            subheading: "\(startDate) - Present")
+                                        }
+                                    }
+                                }
+                                
+                                // New Experience Button
+                                ListCard {
+                                    Button(action: {
+                                        showingNewJob = true
+                                    }) {
+                                        HStack {
+                                            Spacer()
+                                            Text("Add Experience")
+                                            Spacer()
+                                        }
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+
+                            }
+                        }
+                    }
+                }
+                .padding()
+            }
+            
+        }
+        .onAppear {
+            if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
+                AnalyticsManager.logViewProfileEvent()
+            }
+            if self.userManager.profile.givenName.isEmpty {
+                self.name = userManager.getUsername()
+            } else {
+                self.name = userManager.profile.givenName
+            }
         }
         .sheet(isPresented: $showingNewEducation) {
             NavigationView {
                 NewEducationView()
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
         .sheet(isPresented: $showingNewJob) {
             NavigationView {
                 NewJobView()
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
         .sheet(isPresented: $showingEditProfile) {
             NavigationView {
                 EditProfileView()
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
         .sheet(isPresented: $showingEditEducation) {
             if let education = self.selectedEducation {

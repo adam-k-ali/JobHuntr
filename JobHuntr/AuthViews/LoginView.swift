@@ -66,7 +66,7 @@ struct LoginView: View {
                         .foregroundColor(.red)
                     TextField("Username", text: $username)
                         .textFieldStyle(GradientTextFieldBackground(systemImageString: "person"))
-                    SecureField("Password", text: $password)
+                    SecureInputView("Password", text: $password)
                         .textFieldStyle(GradientTextFieldBackground(systemImageString: "key"))
                 }
                 
@@ -87,7 +87,6 @@ struct LoginView: View {
                 HStack {
                     Text("Don't have an account?")
                         .font(.headline)
-                        .foregroundColor(AppColors.fontColor)
                     Button(action: {
                         sessionManager.showSignUp()
                     }, label: {
