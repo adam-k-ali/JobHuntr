@@ -18,7 +18,7 @@ struct ProfileView: View {
     @State var showingEditEducation: Bool = false
     @State var selectedEducation: Education?
     
-    @State var name: String = ""
+    @Binding var name: String
 
     var body: some View {
         ZStack {
@@ -26,12 +26,18 @@ struct ProfileView: View {
             VStack {
                 HStack {
                     HStack {
-                        ProfilePicture(showEdit: false, size: CGSize(width: 42, height: 42))
-                            .environmentObject(userManager)
-                            
-                        Text("**Welcome, \(self.name)!**")
-                            .font(.largeTitle)
-                            .lineLimit(2)
+                        Label(title: {
+                            if !name.isEmpty {
+                                Text("**Welcome, \(name)!**")
+                                    .font(.largeTitle)
+                            } else {
+                                Text("**Welcome, \(userManager.getUsername())**")
+                                    .font(.largeTitle)
+                            }
+                        }, icon: {
+                            ProfilePicture(showEdit: false, size: CGSize(width: 42, height: 42))
+                                .environmentObject(userManager)
+                        })
                         Spacer()
                     }
                     
@@ -57,14 +63,6 @@ struct ProfileView: View {
                     .padding(.leading, 20)
                 }
                 VStack {
-//                    VStack(spacing: 32) {
-//                        ProfilePicture()
-//                            .environmentObject(userManager)
-//                            .frame(width: 200, height: 200)
-//                            .shadow(radius: 12)
-//                        Divider()
-//                    }
-                    
                     ScrollView {
                         VStack(alignment: .leading, spacing: 16) {
                             Section(header: Text("About Me").font(.callout)) {
@@ -178,11 +176,6 @@ struct ProfileView: View {
             if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
                 AnalyticsManager.logViewProfileEvent()
             }
-            if self.userManager.profile.givenName.isEmpty {
-                self.name = userManager.getUsername()
-            } else {
-                self.name = userManager.profile.givenName
-            }
         }
         .sheet(isPresented: $showingNewEducation) {
             NavigationView {
@@ -231,7 +224,7 @@ struct ProfileView: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ProfileView()
+            ProfileView(name: .constant("Adam"))
                 .environmentObject(UserManager())
         }
     }

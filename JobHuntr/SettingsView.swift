@@ -16,34 +16,60 @@ struct SettingsView: View {
     @State var showingDeleteAccount: Bool = false
     
     var body: some View {
-        List {
-            // Account
-            Section(header: Text("Account Management")) {
-                Button("Sign Out") {
-                    Task {
-                        await sessionManager.signOut()
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            ScrollView {
+                VStack(alignment: .leading) {
+                    // Account
+                    Section(header:
+                        Text("ACCOUNT MANAGEMENT")
+                        .font(.caption)
+                        .padding([.top, .leading])
+                    ) {
+                        ListCard {
+                            Button("Sign Out") {
+                                Task {
+                                    await sessionManager.signOut()
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        
                     }
-                }
-                
-            }
-            
-            // Other
-            Section(header: Text("Other")) {
-                Button {
-                    showFeedbackForm = true
-                } label: {
-                    Text("Send Feedback")
-                }
-                Link("Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)
-            }
-            
-            Section {
-                Button("Delete Account") {
-                    Task {
-                        showingDeleteAccount = true
+                    
+                    // Other
+                    Section(header:
+                        Text("OTHER")
+                        .font(.caption)
+                        .padding([.top, .leading])
+                    ) {
+                        ListCard {
+                            Button {
+                                showFeedbackForm = true
+                            } label: {
+                                Text("Send Feedback")
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        ListCard {
+                            Link("Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)
+                                .buttonStyle(.plain)
+                        }
                     }
+                    
+                    Section {
+                        ListCard {
+                            Button("Delete Account") {
+                                Task {
+                                    showingDeleteAccount = true
+                                }
+                            }
+                            .foregroundColor(.red)
+                        }
+                    }
+                    .padding(.top, 64)
                 }
-                .foregroundColor(.red)
+                .padding()
             }
         }
         .actionSheet(isPresented: $showingDeleteAccount) {

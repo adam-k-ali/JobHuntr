@@ -91,6 +91,10 @@ class AnalyticsManager {
         Amplify.Analytics.record(event: event)
     }
     
+    public static func logNewCourseEvent() {
+        logBasicEvent(name: "update.new_course")
+    }
+    
 //    public static func logUpdateAboutMeEvent() {
 //        logBasicEvent(name: "update.update_about_me")
 //    }
