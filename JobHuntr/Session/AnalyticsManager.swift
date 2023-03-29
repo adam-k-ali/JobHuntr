@@ -14,6 +14,10 @@ class AnalyticsManager {
         Amplify.Analytics.record(event: event)
     }
     
+    public static func logAppLoad() {
+        logBasicEvent(name: "app_loaded")
+    }
+    
     // ======================================================
     // Auth Events
     // ======================================================

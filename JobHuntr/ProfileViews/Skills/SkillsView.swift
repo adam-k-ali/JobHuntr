@@ -40,7 +40,6 @@ struct SkillsView: View {
                 NewSkillView()
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
         
     }

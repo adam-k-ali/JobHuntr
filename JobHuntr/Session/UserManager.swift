@@ -41,6 +41,8 @@ class UserManager: ObservableObject {
     /// The user's education history
     @Published public var education: [Education] = []
     
+    @Published public var courses: [String: [Course]] = [:]
+    
     /// The user's job history
     @Published public var jobs: [Job] = []
     
@@ -232,17 +234,79 @@ class UserManager: ObservableObject {
         }
     }
     
+    /// Load all the user's education records.
     public func loadUserEducation() async {
         do {
             // Query the DataStore
-            let education = try await Amplify.DataStore.query(Education.self, where: Education.keys.userID == self.userId)
+            let educationRecords = try await Amplify.DataStore.query(Education.self, where: Education.keys.userID == self.userId)
+            
+            educationRecords.forEach { education in
+                Task {
+                    await self.loadEducationCourses(educationID: education.id)
+                }
+            }
             
             DispatchQueue.main.async {
-                self.education = education
+                self.education = educationRecords
                 print("User education loaded")
             }
         } catch let error as DataStoreError {
             print("Error fetching user education. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func lazyCoursesForEducation(educationId: String) -> [Course] {
+        return self.courses[educationId] ?? []
+    }
+    
+    public func saveCourse(course: Course) async {
+        // Update locally
+        DispatchQueue.main.async {
+            if self.courses.keys.contains(course.educationID) {
+                self.courses[course.educationID]?.append(course)
+            } else {
+                self.courses[course.educationID] = [course]
+            }
+        }
+        // Update on cloud
+        do {
+            try await Amplify.DataStore.save(course)
+        } catch let error as DataStoreError {
+            print("Error saving course. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func loadEducationCourses(educationID: String) async {
+        do {
+            // Query the DataStore
+            let courses = try await Amplify.DataStore.query(Course.self, where: Course.keys.educationID == educationID)
+            
+            DispatchQueue.main.async {
+                self.courses[educationID] = courses
+                print("User education loaded")
+            }
+        } catch let error as DataStoreError {
+            print("Error fetching user jobs. \(error)")
+        } catch {
+            print("Unexpected error. \(error)")
+        }
+    }
+    
+    public func removeCourse(course: Course) async {
+        // Remove course from local storage
+        DispatchQueue.main.async {
+            self.courses[course.educationID]?.removeAll(where: {$0.id == course.id})
+        }
+        
+        // Remove course from cloud
+        do {
+            try await Amplify.DataStore.delete(Course.self, where: Course.keys.id == course.id)
+        } catch let error as DataStoreError {
+            print("Error deleting course from DataStore. \(error)")
         } catch {
             print("Unexpected error. \(error)")
         }

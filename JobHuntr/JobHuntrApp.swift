@@ -66,6 +66,10 @@ struct JobHuntrApp: App {
         
         // Dismiss launch screen
         self.launchManager.dismiss()
+        
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
+            AnalyticsManager.logAppLoad()
+        }
     }
     
     func configure() {

@@ -26,6 +26,8 @@ struct InstitutionCard: View {
     
     var subheading: String = ""
     
+    var isLink: Bool = false
+    
     var body: some View {
         HStack {
             ZStack {
@@ -52,6 +54,11 @@ struct InstitutionCard: View {
             }
             .padding()
 //            .padding()
+            Spacer()
+            if isLink {
+                Image(systemName: "chevron.right")
+                    .padding()
+            }
         }
         .onAppear {
             if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {

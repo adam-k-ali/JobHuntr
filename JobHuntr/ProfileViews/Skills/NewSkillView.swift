@@ -19,10 +19,9 @@ struct NewSkillView: View {
             VStack {
                 TextField("Skill", text: $skillName)
                     .textFieldStyle(FormTextFieldStyle())
-                    .colorScheme(.dark)
-                    .padding()
                 Spacer()
             }
+            .padding()
         }
         .navigationTitle("New Skill")
         .toolbar {
@@ -32,7 +31,7 @@ struct NewSkillView: View {
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Done") {
+                Button("Add") {
                     Task {
                         await userManager.addUserSkill(skillName: self.skillName)
                     }
@@ -44,8 +43,10 @@ struct NewSkillView: View {
     }
 }
 
-//struct NewSkillView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NewSkillView()
-//    }
-//}
+struct NewSkillView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            NewSkillView()
+        }
+    }
+}

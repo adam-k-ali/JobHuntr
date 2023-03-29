@@ -24,6 +24,30 @@ struct ProfileView: View {
         ZStack {
             AppColors.background.ignoresSafeArea()
             VStack {
+                HStack {
+                    HStack {
+                        ProfilePicture(showEdit: false, size: CGSize(width: 42, height: 42))
+                            .environmentObject(userManager)
+                            
+                        Text("**Welcome, \(self.name)!**")
+                            .font(.largeTitle)
+                            .lineLimit(2)
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                    Button(action: {
+                        showingEditProfile = true
+                    }, label: {
+                        Image(systemName: "pencil")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                    })
+                    .buttonStyle(.plain)
+//                    .padding(.top, 50)
+                }
+                .padding(24)
+                
                 if !userManager.profile.jobTitle.isEmpty {
                     HStack {
                         Text(userManager.profile.jobTitle)
@@ -33,26 +57,26 @@ struct ProfileView: View {
                     .padding(.leading, 20)
                 }
                 VStack {
-                    VStack(spacing: 32) {
-                        ProfilePicture()
-                            .environmentObject(userManager)
-                            .frame(width: 200, height: 200)
-                            .shadow(radius: 12)
-                        Divider()
-                    }
+//                    VStack(spacing: 32) {
+//                        ProfilePicture()
+//                            .environmentObject(userManager)
+//                            .frame(width: 200, height: 200)
+//                            .shadow(radius: 12)
+//                        Divider()
+//                    }
                     
                     ScrollView {
                         VStack(alignment: .leading, spacing: 16) {
-                            Section(header: Text("Skills").font(.callout)) {
-                                SkillsView(skills: $userManager.skills)
-                                    .environmentObject(userManager)
-                            }
                             Section(header: Text("About Me").font(.callout)) {
                                 ListCard {
                                     Text(userManager.profile.about.isEmpty ? "A brief profile about me." : userManager.profile.about)
                                 }
                             }
-                            Section(header: Text("Education").font(.callout)) {
+                            Section(header: Text("My Skills").font(.callout)) {
+                                SkillsView(skills: $userManager.skills)
+                                    .environmentObject(userManager)
+                            }
+                            Section(header: Text("My Education").font(.callout)) {
                                 
                                 if (userManager.education.isEmpty) {
                                     ListCard {
@@ -63,16 +87,23 @@ struct ProfileView: View {
                                 ForEach($userManager.education) { $education in
                                     let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
                                     let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
-                                    
-                                    ListCard(isChangeable: true, onDelete: {
-                                        deleteEducation(education: education)
+                                    NavigationLink(destination: {
+                                        NavigationView {
+                                            EducationDetailView(education: education)
+                                        }
                                     }) {
-                                        InstitutionCard(type: .education,
-                                                        companyID: education.companyID,
-                                                        title: education.roleName,
-                                                        subheading: "\(startDate) - \(endDate)"
-                                        )
+                                        ListCard(isChangeable: true, onDelete: {
+                                            deleteEducation(education: education)
+                                        }) {
+                                            InstitutionCard(type: .education,
+                                                            companyID: education.companyID,
+                                                            title: education.roleName,
+                                                            subheading: "\(startDate) - \(endDate)",
+                                                            isLink: true
+                                            )
+                                        }
                                     }
+                                    .buttonStyle(.plain)
                                 }
                                 // New Education card
                                 ListCard {
@@ -90,7 +121,7 @@ struct ProfileView: View {
                                 
                             }
                             
-                            Section(header: Text("Experience").font(.callout)) {
+                            Section(header: Text("My Experience").font(.callout)) {
                                 if userManager.jobs.isEmpty {
                                     ListCard {
                                         Text("No Experience")
@@ -143,7 +174,6 @@ struct ProfileView: View {
             }
             
         }
-        .navigationTitle("Welcome, \(self.name)!")
         .onAppear {
             if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
                 AnalyticsManager.logViewProfileEvent()
@@ -154,36 +184,23 @@ struct ProfileView: View {
                 self.name = userManager.profile.givenName
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button(action: {
-                    showingEditProfile = true
-                }, label: {
-                    Image(systemName: "pencil")
-                })
-            }
-
-        }
         .sheet(isPresented: $showingNewEducation) {
             NavigationView {
                 NewEducationView()
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
         .sheet(isPresented: $showingNewJob) {
             NavigationView {
                 NewJobView()
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
         .sheet(isPresented: $showingEditProfile) {
             NavigationView {
                 EditProfileView()
                     .environmentObject(userManager)
             }
-            .colorScheme(.dark)
         }
         .sheet(isPresented: $showingEditEducation) {
             if let education = self.selectedEducation {
