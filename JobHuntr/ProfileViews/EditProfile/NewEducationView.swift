@@ -1,38 +1,27 @@
 //
-//  EditEducationView.swift
+//  NewEducationView.swift
 //  JobHuntr
 //
-//  Created by Adam Ali on 21/03/2023.
+//  Created by Adam Ali on 17/03/2023.
 //
 
 import SwiftUI
 import Amplify
 
-struct EditEducationView: View {
+struct NewEducationView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var userManager: UserManager
     
-    
-    @State var entryId: String = ""
-    @State var companyId: String = ""
-    @State var companyName: String = ""
+    @State var institution: String = ""
     @State var courseName: String = ""
     @State var start: Date = Date()
     @State var end: Date = Date()
-    
-    init(education: Education) {
-        self.entryId = education.id
-        self.companyId = education.companyID
-        self.courseName = education.roleName
-        self.start = education.startDate.foundationDate
-        self.end = education.endDate.foundationDate
-    }
     
     var body: some View {
         ZStack {
             AppColors.background.ignoresSafeArea()
             VStack(alignment: .leading) {
-                TextField("Institution", text: $companyName)
+                TextField("Institution", text: $institution)
                     .textFieldStyle(FormTextFieldStyle())
                     .colorScheme(.dark)
                     .padding()
@@ -61,19 +50,11 @@ struct EditEducationView: View {
                         .colorScheme(.dark)
                 }
                 .padding()
-                
+                Spacer()
             }
             .padding()
         }
-        .onAppear {
-            Task {
-                if let company = await GlobalDataManager.fetchCompany(id: companyId) {
-                    companyName = company.name
-                } else {
-                    companyName = "Unknown Company"
-                }
-            }
-        }
+        .navigationTitle("Add Education")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Dismiss") {
@@ -84,20 +65,24 @@ struct EditEducationView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
                     Task {
-                        await userManager.saveEducation(id: entryId, companyName: companyName, courseName: courseName, startDate: start, endDate: end)
+                        let companyID = await GlobalDataManager.companyIdFromName(name: institution)
+                        let education = Education(userID: userManager.getUserId(), companyID: companyID, startDate: Temporal.Date(start), endDate: Temporal.Date(end), roleName: courseName)
+                        await userManager.education.save(record: education)
                     }
                     presentationMode.wrappedValue.dismiss()
                 }
                 .colorScheme(.dark)
-                .disabled(companyName.isEmpty || courseName.isEmpty)
+                .disabled(institution.isEmpty || courseName.isEmpty)
             }
         }
-
     }
 }
 
-struct EditEducationView_Previews: PreviewProvider {
+struct NewEducationView_Previews: PreviewProvider {
     static var previews: some View {
-        EditEducationView(education: Education(userID: "", companyID: "", startDate: Temporal.Date.now(), endDate: Temporal.Date.now(), roleName: ""))
+        NavigationView {
+            NewEducationView()
+                .environmentObject(UserManager())
+        }
     }
 }

@@ -8,6 +8,15 @@
 import Amplify
 import Foundation
 
+protocol DataManager {
+    associatedtype T
+        
+    /// Load the data for given userId.
+    func load(userId: String) async;
+    func save(record: T) async;
+    func delete(record: T) async;
+}
+
 /// Manages data that belongs to all users
 class GlobalDataManager {
     /**
@@ -32,7 +41,7 @@ class GlobalDataManager {
         return nil
     }
     
-    public static func findCompanyByName(name companyName: String) async -> Company? {
+    public static func companyFromName(name companyName: String) async -> Company? {
         let companyKeys = Company.keys
         do {
             let company = try await Amplify.DataStore.query(Company.self, where: companyKeys.name == companyName)
@@ -55,7 +64,7 @@ class GlobalDataManager {
      */
     public static func saveOrFetchCompany(company: Company) async -> String {
         // Check if the company already exists.
-        if let company = await findCompanyByName(name: company.name) {
+        if let company = await companyFromName(name: company.name) {
             return company.id
         }
         
@@ -70,6 +79,29 @@ class GlobalDataManager {
         }
         
         return company.id
+    }
+    
+    public static func companyIdFromName(name: String) async -> String {
+        let company = Company(name: name, website: "", email: "", phone: "")
+        return await GlobalDataManager.saveOrFetchCompany(company: company)
+    }
+    
+    public static func companyFromId(id: String) async -> Company? {
+        print("Finding company record from id: \(id)")
+        let companyKeys = Company.keys
+        do {
+            let company = try await Amplify.DataStore.query(Company.self, where: companyKeys.id == id)
+            if company.isEmpty {
+                return nil
+            }
+            print("Company found.")
+            return company[0]
+        } catch let error as DataStoreError {
+            print("Error finding company by id \(error)")
+        } catch {
+            print("Unexpected Error \(error)")
+        }
+        return nil
     }
     
     public static func submitFeedback(feedback: Feedback) async {

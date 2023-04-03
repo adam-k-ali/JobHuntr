@@ -43,8 +43,10 @@ struct UpdateApplicationView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Update") {
                     Task {
+                        // Update application current stage
                         application.currentStage = applicationStage
-                        await userManager.saveOrUpdateApplication(application: application, company: nil)
+                        // Save updated appplication
+                        await userManager.applications.save(record: application)
                     }
                     presentationMode.wrappedValue.dismiss()
                 }

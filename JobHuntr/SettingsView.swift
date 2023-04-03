@@ -91,7 +91,7 @@ struct SettingsView: View {
         .onDisappear {
             // TODO: Replace this with a 'save' button in toolbar?
             Task {
-                await userManager.saveUserSettings()
+                await userManager.settings.save()
             }
         }
         .sheet(isPresented: $showFeedbackForm) {

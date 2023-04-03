@@ -66,11 +66,13 @@ struct NewApplicationView: View {
     }
     
     func saveApplication() async {
+        // Save the company
         let company = Company(name: companyName, website: companyWebsite, email: companyEmail, phone: companyPhone)
+        let companyId = await GlobalDataManager.saveOrFetchCompany(company: company)
         
-        let application = Application(dateApplied: Temporal.Date(dateApplied), currentStage: .applied, userID: userManager.getUserId(), jobTitle: jobTitle, companyID: company.id)
+        let application = Application(dateApplied: Temporal.Date(dateApplied), currentStage: .applied, userID: userManager.getUserId(), jobTitle: jobTitle, companyID: companyId)
         
-        await userManager.saveOrUpdateApplication(application: application, company: company)
+        await userManager.applications.save(record: application)
     }
 }
 

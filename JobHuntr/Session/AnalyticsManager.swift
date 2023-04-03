@@ -71,6 +71,7 @@ class AnalyticsManager {
         ]
         let event = BasicAnalyticsEvent(name: "update.new_company", properties: properties)
         Amplify.Analytics.record(event: event)
+        print("New company created (\(companyName))")
     }
     
     public static func logNewApplicationEvent(jobTitle: String, companyName: String) {
@@ -80,6 +81,7 @@ class AnalyticsManager {
         ]
         let event = BasicAnalyticsEvent(name: "update.new_application", properties: properties)
         Amplify.Analytics.record(event: event)
+        print("New application logged (\(jobTitle) at \(companyName))")
     }
     
     public static func logUpdateApplicationEvent(applicationId: String, newStage: ApplicationStage) {
@@ -89,10 +91,27 @@ class AnalyticsManager {
         ]
         let event = BasicAnalyticsEvent(name: "update.update_application", properties: properties)
         Amplify.Analytics.record(event: event)
+        print("Updated application \(applicationId) to \(newStage.rawValue)")
     }
     
     public static func logNewCourseEvent() {
         logBasicEvent(name: "update.new_course")
+    }
+    
+    public static func logDataStoreError(error: DataStoreError, message: String) {
+        let properties: AnalyticsProperties = [
+            "message": message,
+            "errorDescription": error.errorDescription,
+            "debugDescription": error.debugDescription
+        ]
+        
+        let event = BasicAnalyticsEvent(name: "error.data_store", properties: properties)
+        print("============Error============")
+        print(message)
+        print(error.errorDescription)
+        print(error.debugDescription)
+        print("=============================")
+        Amplify.Analytics.record(event: event)
     }
     
 //    public static func logUpdateAboutMeEvent() {

@@ -33,7 +33,7 @@ struct NewSkillView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
                     Task {
-                        await userManager.addUserSkill(skillName: self.skillName)
+                        await userManager.skills.save(record: self.skillName)
                     }
                     presentationMode.wrappedValue.dismiss()
                 }

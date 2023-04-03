@@ -39,16 +39,16 @@ struct JobHuntrApp: App {
                     case .confirmCode(let username):
                         ConfirmationView(username: username)
                             .environmentObject(sessionManager)
-                    case .session:
-                        ContentView()
-                            .environmentObject(sessionManager)
-                            .environmentObject(userManager)
                     case .confirmReset(let username):
                         ResetConfirmationView(username: username)
                             .environmentObject(sessionManager)
                     case .resetPassword:
                         ResetPasswordView()
                             .environmentObject(sessionManager)
+                    case .session:
+                        ContentView()
+                            .environmentObject(sessionManager)
+                            .environmentObject(userManager)
                     }
                     SignUpView()
                 }

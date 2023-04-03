@@ -82,7 +82,6 @@ struct LoginView: View {
                     Text("Forgotten Password")
                 })
                 .buttonStyle(SecondaryButtonStyle())
-                
                 Spacer()
                 HStack {
                     Text("Don't have an account?")
@@ -94,6 +93,15 @@ struct LoginView: View {
                             .foregroundColor(Color(uiColor: .systemBlue))
                     })
                 }
+                
+//                Group {
+//                    LabelledDivider(label: "Or")
+//                    
+//                    SignInWithAppleButton(onRequest: {_ in }, onCompletion: {_ in })
+//                        .frame(width: 300, height: 50)
+//                }
+                
+                
             }
             .padding()
         }

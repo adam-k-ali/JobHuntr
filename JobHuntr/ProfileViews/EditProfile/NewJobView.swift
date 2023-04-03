@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Amplify
 
 struct NewJobView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -87,7 +88,9 @@ struct NewJobView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
                     Task {
-                        await userManager.saveJob(companyName: companyName, jobTitle: jobTitle, description: jobDescription, startDate: start, endDate: isCurrent ? nil : end)
+                        let companyID = await GlobalDataManager.companyIdFromName(name: companyName)
+                        let job = Job(userID: userManager.getUserId(), companyID: companyID, jobTitle: jobTitle, jobDescription: jobDescription, endDate: isCurrent ? nil : Temporal.Date(end), startDate: Temporal.Date(start))
+                        await userManager.jobs.save(record: job)
                     }
                     presentationMode.wrappedValue.dismiss()
                 }

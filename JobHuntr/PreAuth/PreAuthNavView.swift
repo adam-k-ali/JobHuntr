@@ -1,37 +1,31 @@
 //
-//  NavigationTabView.swift
+//  PreAuthNavView.swift
 //  JobHuntr
 //
-//  Created by Adam Ali on 27/03/2023.
+//  Created by Adam Ali on 01/04/2023.
 //
 
 import SwiftUI
 
-struct NavigationTabView: View {
+struct PreAuthNavView: View {
     @EnvironmentObject var sessionManager: SessionManager
     @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var launchManager: LaunchStateManager
     
-    @State var tabSelection = 2
+    @State var tabSelection = 1
     
     var body: some View {
         TabView(selection: $tabSelection) {
             NavigationView {
-                ApplicationsView(applicationsManager: userManager.applications)
+                LoginView()
+                    .environmentObject(sessionManager)
                     .environmentObject(userManager)
+                    .environmentObject(launchManager)
             }
             .tabItem {
-                Label("Applications", systemImage: "list.bullet.clipboard")
+                Label("Login", systemImage: "list.bullet.clipboard")
             }
             .tag(1)
-            
-            NavigationView {
-                ProfileView()
-                    .environmentObject(userManager)
-            }
-            .tabItem {
-                Label("Profile", systemImage: "person")
-            }
-            .tag(2)
             
             NavigationView {
                 SettingsView()
@@ -41,15 +35,16 @@ struct NavigationTabView: View {
             .tabItem {
                 Label("Settings", systemImage: "gearshape")
             }
-            .tag(3)
+            .tag(2)
         }
     }
 }
 
-struct NavigationTabView_Previews: PreviewProvider {
+struct PreAuthNavView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationTabView()
+        PreAuthNavView()
             .environmentObject(SessionManager())
             .environmentObject(UserManager())
+            .environmentObject(LaunchStateManager())
     }
 }

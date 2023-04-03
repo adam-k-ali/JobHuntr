@@ -57,7 +57,7 @@ struct NewCourseView: View {
                 Button("Add") {
                     let course = Course(educationID: educationId, name: courseName, description: description, grade: grade)
                     Task {
-                        await userManager.saveCourse(course: course)
+                        await userManager.courses.save(record: course)
                     }
                     presentationMode.wrappedValue.dismiss()
                 }

@@ -20,7 +20,7 @@ struct ProfileCardView: View {
                 .ignoresSafeArea()
             VStack(alignment: .center, spacing: 12) {
                 ZStack {
-                    if let profilePic = userManager.profilePic {
+                    if let profilePic = userManager.profile.profilePic {
                         Image(uiImage: profilePic)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
@@ -35,16 +35,16 @@ struct ProfileCardView: View {
                 }
                 .shadow(color: .black.opacity(0.7), radius: 2, x: 0, y: -2)
                 
-                if userManager.profile.givenName.isEmpty || userManager.profile.familyName.isEmpty {
+                if userManager.profile.profile.givenName.isEmpty || userManager.profile.profile.familyName.isEmpty {
                     Text("\(userManager.getUsername())")
                         .font(.headline)
                 } else {
-                    Text("\(userManager.profile.givenName) \(userManager.profile.familyName)")
+                    Text("\(userManager.profile.profile.givenName) \(userManager.profile.profile.familyName)")
                         .font(.headline)
                 }
                 
-                if !userManager.profile.jobTitle.isEmpty {
-                    Text("\(userManager.profile.jobTitle)")
+                if !userManager.profile.profile.jobTitle.isEmpty {
+                    Text("\(userManager.profile.profile.jobTitle)")
                 }
             }
             .padding(0)

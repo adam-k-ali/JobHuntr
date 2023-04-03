@@ -14,7 +14,7 @@ struct ProfilePicture: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            if let profilePic = userManager.profilePic {
+            if let profilePic = userManager.profile.profilePic {
                 Image(uiImage: profilePic)
                     .resizable()
                     .aspectRatio(contentMode: .fill)

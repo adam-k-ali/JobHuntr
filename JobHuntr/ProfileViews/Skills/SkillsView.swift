@@ -21,7 +21,7 @@ struct SkillsView: View {
                         Text(skill)
                     }, onDelete: {
                         Task {
-                            await userManager.removeUserSkill(skillName: skill)
+                            await userManager.skills.delete(record: skill)
                         }
                     })
                 }

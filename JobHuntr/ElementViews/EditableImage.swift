@@ -28,7 +28,7 @@ struct EditableImage: View {
                     .clipShape(Circle())
                     .frame(width: width ?? 64.0, height: height ?? 64.0)
             } else {
-                if let profilePic = userManager.profilePic {
+                if let profilePic = userManager.profile.profilePic {
                     Image(uiImage: profilePic)
                         .resizable()
                         .clipShape(Circle())
@@ -73,7 +73,8 @@ struct EditableImage: View {
         .onDisappear {
             Task {
                 if let image = image {
-                    await userManager.uploadProfilePicture(image: image)
+                    userManager.profile.profilePic = image
+                    await userManager.profile.saveProfilePicture()
                 }
             }
         }

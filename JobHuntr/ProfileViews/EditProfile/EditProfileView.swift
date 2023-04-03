@@ -49,10 +49,10 @@ struct EditProfileView: View {
             
         }
         .onAppear {
-            self.givenName = userManager.profile.givenName
-            self.familyName = userManager.profile.familyName
-            self.jobTitle = userManager.profile.jobTitle
-            self.about = userManager.profile.about
+            self.givenName = userManager.profile.profile.givenName
+            self.familyName = userManager.profile.profile.familyName
+            self.jobTitle = userManager.profile.profile.jobTitle
+            self.about = userManager.profile.profile.about
         }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -63,13 +63,13 @@ struct EditProfileView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Done") {
                     // Update local storage
-                    userManager.profile.givenName = givenName
-                    userManager.profile.familyName = familyName
-                    userManager.profile.jobTitle = jobTitle
-                    userManager.profile.about = about
+                    userManager.profile.profile.givenName = givenName
+                    userManager.profile.profile.familyName = familyName
+                    userManager.profile.profile.jobTitle = jobTitle
+                    userManager.profile.profile.about = about
                     // Save the new information
                     Task {
-                        await userManager.saveUserProfile()
+                        await userManager.profile.save()
                     }
                     presentationMode.wrappedValue.dismiss()
                 }

@@ -82,13 +82,13 @@ struct EducationDetailView: View {
     
     func deleteCourse(course: Course) {
         Task {
-            await userManager.removeCourse(course: course)
+            await userManager.courses.delete(record: course)
         }
         self.reload()
     }
     
     func reload() {
-        self.courses = userManager.lazyCoursesForEducation(educationId: education.id)
+        self.courses = userManager.courses.lazyCoursesForEducation(educationId: education.id)
     }
 }
 
