@@ -10,6 +10,8 @@ import SwiftUI
 struct ProfileHeader: View {
     @EnvironmentObject var userManager: UserManager
     
+    @ObservedObject var profileManager: UserProfileManager
+    
     var name: String
     
     var body: some View {
@@ -18,8 +20,8 @@ struct ProfileHeader: View {
                 Text("**Welcome, \(name)!**")
                     .font(.largeTitle)
             }, icon: {
-                ProfilePicture(showEdit: false, size: CGSize(width: 42, height: 42))
-                    .environmentObject(userManager)
+                ProfilePicture(profileManager: profileManager, size: CGSize(width: 42, height: 42), showEdit: false)
+//                    .environmentObject(userManager)
             })
             Spacer()
         }
@@ -28,7 +30,7 @@ struct ProfileHeader: View {
 
 struct ProfileHeader_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileHeader(name: "John")
+        ProfileHeader(profileManager: UserProfileManager(), name: "John")
             .environmentObject(UserManager())
     }
 }

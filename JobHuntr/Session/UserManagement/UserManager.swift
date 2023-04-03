@@ -15,13 +15,13 @@ class UserManager: ObservableObject {
     private var username: String = ""
     private var userId: String = ""
         
-    @Published public var profile: UserProfileManager = UserProfileManager()
-    @Published public var settings: UserSettingsManager = UserSettingsManager()
+//    @Published public var settings: UserSettingsManager = UserSettingsManager()
+    @ObservedObject public var profile: UserProfileManager = UserProfileManager()
     @ObservedObject public var applications: UserApplicationManager = UserApplicationManager()
-    @Published public var education: UserEducationManager = UserEducationManager()
-    @Published public var courses: UserCourseManager = UserCourseManager()
-    @Published public var jobs: UserJobManager = UserJobManager()
-    @Published public var skills: UserSkillsManager = UserSkillsManager()
+    @ObservedObject public var education: UserEducationManager = UserEducationManager()
+    @ObservedObject public var courses: UserCourseManager = UserCourseManager()
+    @ObservedObject public var jobs: UserJobManager = UserJobManager()
+    @ObservedObject public var skills: UserSkillsManager = UserSkillsManager()
         
     public func load(username: String, userId: String, completion: @escaping () -> Void) {
         print("Loading user \(username)")
@@ -38,7 +38,8 @@ class UserManager: ObservableObject {
     
     private func downloadUserData() async {
         print("Downloading user data")
-        await self.settings.load(userId: self.userId)
+        await self.profile.load(userId: self.userId)
+//        await self.settings.load(userId: self.userId)
         await self.applications.load(userId: self.userId)
         await self.education.load(userId: self.userId)
         await self.courses.load(userId: self.userId)

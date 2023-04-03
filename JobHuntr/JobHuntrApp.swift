@@ -63,9 +63,7 @@ struct JobHuntrApp: App {
 
         // Configure Amplify
         self.configure()
-        
-        // Dismiss launch screen
-        self.launchManager.dismiss()
+
         
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
             AnalyticsManager.logAppLoad()
@@ -84,6 +82,8 @@ struct JobHuntrApp: App {
             if user != nil {
                 self.userManager.load(username: user!.username, userId: user!.userId) {
                     print("User loaded")
+                    // Dismiss launch screen
+                    self.launchManager.dismiss()
                 }
             }
         }

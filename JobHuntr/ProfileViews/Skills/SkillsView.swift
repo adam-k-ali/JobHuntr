@@ -8,20 +8,21 @@
 import SwiftUI
 
 struct SkillsView: View {
-    @EnvironmentObject var userManager: UserManager
-    @Binding var skills: [String]
+//    @EnvironmentObject var userManager: UserManager
+    
+    @ObservedObject var skillManager: UserSkillsManager
     
     @State var showingNewSkill = false
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
-                ForEach(skills, id: \.self) { skill in
+                ForEach(skillManager.records, id: \.self) { skill in
                     SkillCardView(content: {
                         Text(skill)
                     }, onDelete: {
                         Task {
-                            await userManager.skills.delete(record: skill)
+                            await skillManager.delete(record: skill)
                         }
                     })
                 }
@@ -37,8 +38,8 @@ struct SkillsView: View {
         }
         .sheet(isPresented: $showingNewSkill) {
             NavigationView {
-                NewSkillView()
-                    .environmentObject(userManager)
+                NewSkillView(skillManager: skillManager)
+//                    .environmentObject(userManager)
             }
         }
         
@@ -47,6 +48,7 @@ struct SkillsView: View {
 
 struct SkillsView_Previews: PreviewProvider {
     static var previews: some View {
-        SkillsView(skills: .constant(["UI Design", "Recruitment", "Testing", "Project Leader"]))
+        SkillsView(skillManager: UserSkillsManager())
+//            .environmentObject(UserManager())
     }
 }

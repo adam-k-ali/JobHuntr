@@ -11,6 +11,7 @@ import Amplify
 struct NewEducationView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var userManager: UserManager
+    @ObservedObject var educationManager: UserEducationManager
     
     @State var institution: String = ""
     @State var courseName: String = ""
@@ -67,7 +68,7 @@ struct NewEducationView: View {
                     Task {
                         let companyID = await GlobalDataManager.companyIdFromName(name: institution)
                         let education = Education(userID: userManager.getUserId(), companyID: companyID, startDate: Temporal.Date(start), endDate: Temporal.Date(end), roleName: courseName)
-                        await userManager.education.save(record: education)
+                        await educationManager.save(record: education)
                     }
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -81,7 +82,7 @@ struct NewEducationView: View {
 struct NewEducationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            NewEducationView()
+            NewEducationView(educationManager: UserEducationManager())
                 .environmentObject(UserManager())
         }
     }

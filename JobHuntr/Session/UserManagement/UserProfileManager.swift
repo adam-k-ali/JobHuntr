@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Amplify
 
-class UserProfileManager {
+class UserProfileManager: ObservableObject {
     @Published var profile: Profile
     @Published public var profilePic: UIImage?
     
@@ -100,6 +100,7 @@ class UserProfileManager {
     
     public func save() async {
         do {
+            print("Saving profile - \(self.profile)")
             try await Amplify.DataStore.save(self.profile)
         } catch let error as DataStoreError {
             print("Error saving user's profile. \(error)")

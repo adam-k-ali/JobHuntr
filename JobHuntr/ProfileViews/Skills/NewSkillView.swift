@@ -9,7 +9,9 @@ import SwiftUI
 
 struct NewSkillView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var userManager: UserManager
+//    @EnvironmentObject var userManager: UserManager
+    
+    @ObservedObject var skillManager: UserSkillsManager
     
     @State var skillName: String = ""
     
@@ -33,7 +35,7 @@ struct NewSkillView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
                     Task {
-                        await userManager.skills.save(record: self.skillName)
+                        await skillManager.save(record: self.skillName)
                     }
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -46,7 +48,8 @@ struct NewSkillView: View {
 struct NewSkillView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            NewSkillView()
+            NewSkillView(skillManager: UserSkillsManager())
+//                .environmentObject(UserManager())
         }
     }
 }

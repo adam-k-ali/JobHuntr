@@ -72,7 +72,7 @@ struct EducationDetailView: View {
         }
         .sheet(isPresented: $showingNewCourse) {
             NavigationView {
-                NewCourseView(educationId: education.id)
+                NewCourseView(courseManager: userManager.courses, educationId: education.id)
             }
             .onDisappear {
                 self.reload()

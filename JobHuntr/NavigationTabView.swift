@@ -25,7 +25,7 @@ struct NavigationTabView: View {
             .tag(1)
             
             NavigationView {
-                ProfileView()
+                ProfileView(profileManager: userManager.profile)
                     .environmentObject(userManager)
             }
             .tabItem {

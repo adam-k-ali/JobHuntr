@@ -8,7 +8,7 @@
 import Foundation
 import Amplify
 
-class UserEducationManager: DataManager {
+class UserEducationManager: ObservableObject, DataManager {
     typealias T = Education
     
     @Published var records: [Education] = []

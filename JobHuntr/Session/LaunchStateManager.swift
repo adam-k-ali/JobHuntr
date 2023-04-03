@@ -26,6 +26,7 @@ final class LaunchStateManager: ObservableObject {
     }
     
     @MainActor public func dismiss() {
+        print("Launch screen dismissed")
         Task {
             self.state = .finished
         }

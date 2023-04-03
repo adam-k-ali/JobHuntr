@@ -9,7 +9,9 @@ import SwiftUI
 
 struct EditProfileView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var userManager: UserManager
+//    @EnvironmentObject var userManager: UserManager
+    
+    @ObservedObject var profileManager: UserProfileManager
     
     @State var givenName: String = ""
     @State var familyName: String = ""
@@ -49,10 +51,10 @@ struct EditProfileView: View {
             
         }
         .onAppear {
-            self.givenName = userManager.profile.profile.givenName
-            self.familyName = userManager.profile.profile.familyName
-            self.jobTitle = userManager.profile.profile.jobTitle
-            self.about = userManager.profile.profile.about
+            self.givenName = profileManager.profile.givenName
+            self.familyName = profileManager.profile.familyName
+            self.jobTitle = profileManager.profile.jobTitle
+            self.about = profileManager.profile.about
         }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -63,13 +65,13 @@ struct EditProfileView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Done") {
                     // Update local storage
-                    userManager.profile.profile.givenName = givenName
-                    userManager.profile.profile.familyName = familyName
-                    userManager.profile.profile.jobTitle = jobTitle
-                    userManager.profile.profile.about = about
+                    profileManager.profile.givenName = givenName
+                    profileManager.profile.familyName = familyName
+                    profileManager.profile.jobTitle = jobTitle
+                    profileManager.profile.about = about
                     // Save the new information
                     Task {
-                        await userManager.profile.save()
+                        await profileManager.save()
                     }
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -79,8 +81,9 @@ struct EditProfileView: View {
     }
 }
 
-//struct EditProfileView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EditProfileView()
-//    }
-//}
+struct EditProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        EditProfileView(profileManager: UserProfileManager())
+//            .environmentObject(UserManager())
+    }
+}

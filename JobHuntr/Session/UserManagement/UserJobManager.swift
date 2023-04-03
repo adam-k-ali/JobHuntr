@@ -8,7 +8,7 @@
 import Foundation
 import Amplify
 
-class UserJobManager: DataManager {
+class UserJobManager: ObservableObject, DataManager {
     typealias T = Job
     
     @Published var records: [Job] = []

@@ -21,10 +21,12 @@ struct ProfileView: View {
     
     @EnvironmentObject var userManager: UserManager
     
-    @State var activeSheet: ProfileAction?
     @State var selectedEducation: Education?
+    @State var showingEditView: Bool = false
     
     @State var name: String = ""
+    
+    @ObservedObject var profileManager: UserProfileManager
 
     var body: some View {
         ZStack {
@@ -32,14 +34,14 @@ struct ProfileView: View {
             VStack {
                 HStack {
                     HStack {
-                        ProfileHeader(name: name)
+                        ProfileHeader(profileManager: profileManager, name: name)
                             .environmentObject(userManager)
                         Spacer()
                     }
                     
                     Spacer()
                     Button(action: {
-                        activeSheet = .editProfile
+                        showingEditView = true
                     }, label: {
                         Image(systemName: "pencil")
                             .resizable()
@@ -50,9 +52,9 @@ struct ProfileView: View {
                 .padding(24)
                 
                 // Subtitle: Current Job Title
-                if !userManager.profile.profile.jobTitle.isEmpty {
+                if !profileManager.profile.jobTitle.isEmpty {
                     HStack {
-                        Text(userManager.profile.profile.jobTitle)
+                        Text(profileManager.profile.jobTitle)
                             .font(.headline)
                         Spacer()
                     }
@@ -70,19 +72,10 @@ struct ProfileView: View {
             }
             reload()
         }
-        .sheet(item: $activeSheet) { sheet in
+        .sheet(isPresented: $showingEditView) {
             NavigationView {
-                switch sheet {
-                case .newEducation:
-                    NewEducationView()
-                        .environmentObject(userManager)
-                case .newJob:
-                    NewJobView()
-                        .environmentObject(userManager)
-                case .editProfile:
-                    EditProfileView()
-                        .environmentObject(userManager)
-                }
+                EditProfileView(profileManager: profileManager)
+                //                .environmentObject(userManager)
             }
             .onDisappear {
                 reload()
@@ -97,135 +90,32 @@ struct ProfileView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Section(header: Text("About Me").font(.callout)) {
                         ListCard {
-                            Text(userManager.profile.profile.about.isEmpty ? "A brief profile about me." : userManager.profile.profile.about)
+                            Text(profileManager.profile.about.isEmpty ? "A brief profile about me." : userManager.profile.profile.about)
                         }
                     }
                     Section(header: Text("My Skills").font(.callout)) {
-                        SkillsView(skills: $userManager.skills.records)
-                            .environmentObject(userManager)
+                        SkillsView(skillManager: userManager.skills)
+//                            .environmentObject(userManager)
                     }
                     Section(header: Text("My Education").font(.callout)) {
-                        educationList
+                        EducationListView(educationManager: userManager.education)
+                            .environmentObject(userManager)
                     }
                     
                     Section(header: Text("My Experience").font(.callout)) {
-                        jobsList
+                        JobsListView(jobsManager: userManager.jobs)
+                            .environmentObject(userManager)
                     }
                 }
-            }
-        }
-    }
-    
-    var educationList: some View {
-        Group {
-            if (userManager.education.records.isEmpty) {
-                ListCard {
-                    Text("No Education History")
-                }
-            }
-            // List of education history
-            ForEach($userManager.education.records) { $education in
-                let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
-                let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
-                NavigationLink(destination: {
-                    NavigationView {
-                        EducationDetailView(education: education)
-                    }
-                }) {
-                    ListCard(isChangeable: true, onDelete: {
-                        deleteEducation(education: education)
-                    }) {
-                        InstitutionCard(type: .education,
-                                        companyID: education.companyID,
-                                        title: education.roleName,
-                                        subheading: "\(startDate) - \(endDate)",
-                                        isLink: true
-                        )
-                    }
-                }
-                .buttonStyle(.plain)
-            }
-            // New Education card
-            ListCard {
-                Button(action: {
-                    activeSheet = .newEducation
-                }) {
-                    HStack {
-                        Spacer()
-                        Text("Add Education")
-                        Spacer()
-                    }
-                }
-                .buttonStyle(.plain)
-            }
-        }
-    }
-    
-    var jobsList: some View {
-        Group {
-            if userManager.jobs.records.isEmpty {
-                ListCard {
-                    Text("No Experience")
-                }
-            }
-            // Work experience list
-            ForEach($userManager.jobs.records) { $job in
-                let startDate = job.startDate.foundationDate.format(formatString: "MMM yyyy")
-                if job.endDate != nil {
-                    let endDate = job.endDate!.foundationDate.format(formatString: "MMM yyyy")
-                    ListCard(isChangeable: true, onDelete: {
-                        deleteJob(job: job)
-                    }) {
-                        InstitutionCard(type: .placeOfWork,
-                                        companyID: job.companyID,
-                                        title: job.jobTitle,
-                                        subheading: "\(startDate) - \(endDate)")
-                    }
-                } else {
-                    ListCard(isChangeable: true, onDelete: {
-                        deleteJob(job: job)
-                    }) {
-                        InstitutionCard(type: .placeOfWork,
-                                        companyID: job.companyID,
-                                        title: job.jobTitle,
-                                        subheading: "\(startDate) - Present")
-                    }
-                }
-            }
-            
-            // New Experience Button
-            ListCard {
-                Button(action: {
-                    activeSheet = .newJob
-                }) {
-                    HStack {
-                        Spacer()
-                        Text("Add Experience")
-                        Spacer()
-                    }
-                }
-                .buttonStyle(.plain)
             }
         }
     }
     
     func reload() {
-        if userManager.profile.profile.givenName.isEmpty {
+        if profileManager.profile.givenName.isEmpty {
             self.name = userManager.getUsername()
         } else {
-            self.name = userManager.profile.profile.givenName
-        }
-    }
-    
-    func deleteEducation(education: Education) {
-        Task {
-            await userManager.education.delete(record: education)
-        }
-    }
-    
-    func deleteJob(job: Job) {
-        Task {
-            await userManager.jobs.delete(record: job)
+            self.name = profileManager.profile.givenName
         }
     }
 }
@@ -234,7 +124,7 @@ struct ProfileView: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ProfileView()
+            ProfileView(profileManager: UserProfileManager())
                 .environmentObject(UserManager())
         }
     }

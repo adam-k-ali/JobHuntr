@@ -11,6 +11,8 @@ struct NewCourseView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var userManager: UserManager
     
+    @ObservedObject var courseManager: UserCourseManager
+    
     var educationId: String
     @State var courseName: String = ""
     @State var grade: String = ""
@@ -70,7 +72,7 @@ struct NewCourseView: View {
 struct NewCourseView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            NewCourseView(educationId: "")
+            NewCourseView(courseManager: UserCourseManager(), educationId: "")
                 .environmentObject(UserManager())
         }
     }

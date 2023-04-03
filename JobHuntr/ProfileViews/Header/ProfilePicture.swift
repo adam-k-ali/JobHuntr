@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct ProfilePicture: View {
-    @EnvironmentObject var userManager: UserManager
-    @State var showEdit: Bool = false
+//    @EnvironmentObject var userManager: UserManager
+    @ObservedObject var profileManager: UserProfileManager
+    
     @State var size: CGSize
+    
+    @State var showEdit: Bool = false
     
     var body: some View {
         ZStack(alignment: .top) {
-            if let profilePic = userManager.profile.profilePic {
+            if let profilePic = profileManager.profilePic {
                 Image(uiImage: profilePic)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -44,7 +47,7 @@ struct ProfilePicture: View {
 
 struct ProfilePicture_Previews: PreviewProvider {
     static var previews: some View {
-        ProfilePicture(size: CGSize(width: 128, height: 128))
-            .environmentObject(UserManager())
+        ProfilePicture(profileManager: UserProfileManager(), size: CGSize(width: 128, height: 128))
+//            .environmentObject(UserManager())
     }
 }

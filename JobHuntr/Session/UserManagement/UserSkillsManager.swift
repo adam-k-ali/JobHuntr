@@ -9,7 +9,7 @@ import Foundation
 import Amplify
 
 // TODO: All functions need completing - this is a bit more complicated than education/courses/jobs hahaha
-class UserSkillsManager: DataManager {
+class UserSkillsManager: ObservableObject, DataManager {
     typealias T = String
     
     @Published var records: [String] = []

@@ -12,6 +12,8 @@ struct NewJobView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var userManager: UserManager
     
+    @ObservedObject var jobsManager: UserJobManager
+    
     @State var companyName: String = ""
     @State var jobTitle: String = ""
     @State var jobDescription: String = ""
@@ -90,7 +92,7 @@ struct NewJobView: View {
                     Task {
                         let companyID = await GlobalDataManager.companyIdFromName(name: companyName)
                         let job = Job(userID: userManager.getUserId(), companyID: companyID, jobTitle: jobTitle, jobDescription: jobDescription, endDate: isCurrent ? nil : Temporal.Date(end), startDate: Temporal.Date(start))
-                        await userManager.jobs.save(record: job)
+                        await jobsManager.save(record: job)
                     }
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -100,8 +102,9 @@ struct NewJobView: View {
     }
 }
 
-//struct NewJobView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NewJobView()
-//    }
-//}
+struct NewJobView_Previews: PreviewProvider {
+    static var previews: some View {
+        NewJobView(jobsManager: UserJobManager())
+            .environmentObject(UserManager())
+    }
+}

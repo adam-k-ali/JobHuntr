@@ -39,7 +39,7 @@ struct SettingsView: View {
                     
                     // Other
                     Section(header:
-                        Text("OTHER")
+                        Text("GENERAL")
                         .font(.caption)
                         .padding([.top, .leading])
                     ) {
@@ -51,13 +51,18 @@ struct SettingsView: View {
                             }
                             .buttonStyle(.plain)
                         }
+                        
+                    }
+                    
+                    Section(header:
+                        Text("PRIVACY")
+                        .font(.caption)
+                        .padding([.top, .leading])
+                    ) {
                         ListCard {
                             Link("Privacy Policy", destination: URL(string: "https://adamkali.com/privacy-policy")!)
                                 .buttonStyle(.plain)
                         }
-                    }
-                    
-                    Section {
                         ListCard {
                             Button("Delete Account") {
                                 Task {
@@ -67,7 +72,6 @@ struct SettingsView: View {
                             .foregroundColor(.red)
                         }
                     }
-                    .padding(.top, 64)
                 }
                 .padding()
             }
@@ -88,12 +92,12 @@ struct SettingsView: View {
                 AnalyticsManager.logViewSettingsEvent()
             }
         }
-        .onDisappear {
-            // TODO: Replace this with a 'save' button in toolbar?
-            Task {
-                await userManager.settings.save()
-            }
-        }
+//        .onDisappear {
+//            // TODO: Replace this with a 'save' button in toolbar?
+//            Task {
+//                await userManager.settings.save()
+//            }
+//        }
         .sheet(isPresented: $showFeedbackForm) {
             NavigationView {
                 FeedbackView()
