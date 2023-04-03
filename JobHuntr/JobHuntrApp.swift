@@ -85,6 +85,8 @@ struct JobHuntrApp: App {
                     // Dismiss launch screen
                     self.launchManager.dismiss()
                 }
+            } else {
+                self.launchManager.dismiss()
             }
         }
     }

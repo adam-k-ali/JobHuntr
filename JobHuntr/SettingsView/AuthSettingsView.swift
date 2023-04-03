@@ -1,14 +1,14 @@
 //
-//  SettingsViewq.swift
+//  AuthSettingsView.swift
 //  JobHuntr
 //
-//  Created by Adam Ali on 03/03/2023.
+//  Created by Adam Ali on 03/04/2023.
 //
 
 import SwiftUI
-import Amplify
 
-struct SettingsView: View {
+/// The settings view a user sees if they're signed in.
+struct AuthSettingsView: View {
     @EnvironmentObject var sessionManager: SessionManager
     @EnvironmentObject var userManager: UserManager
     
@@ -34,7 +34,6 @@ struct SettingsView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        
                     }
                     
                     // Other
@@ -101,17 +100,16 @@ struct SettingsView: View {
         .sheet(isPresented: $showFeedbackForm) {
             NavigationView {
                 FeedbackView()
-                    .environmentObject(userManager)
             }
         }
         .navigationTitle("Settings")
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
+struct AuthSettingsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SettingsView()
+            AuthSettingsView()
                 .environmentObject(SessionManager())
                 .environmentObject(UserManager())
         }

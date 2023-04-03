@@ -37,6 +37,8 @@
 		7229BE5D29BFC39A005C3AAA /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7229BE5C29BFC39A005C3AAA /* UserManager.swift */; };
 		7229BE5F29BFD1B9005C3AAA /* GlobalDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7229BE5E29BFD1B9005C3AAA /* GlobalDataManager.swift */; };
 		722D9B9829DB2BFC00BF5A1D /* JobsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722D9B9729DB2BFC00BF5A1D /* JobsListView.swift */; };
+		722D9B9E29DB4F5D00BF5A1D /* AuthSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722D9B9D29DB4F5D00BF5A1D /* AuthSettingsView.swift */; };
+		722D9BA029DB4F9700BF5A1D /* UnAuthSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722D9B9F29DB4F9700BF5A1D /* UnAuthSettingsView.swift */; };
 		723B703C29C650B7003587D2 /* Skill+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723B703829C650B7003587D2 /* Skill+Schema.swift */; };
 		723B703D29C650B7003587D2 /* UserSkills+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723B703929C650B7003587D2 /* UserSkills+Schema.swift */; };
 		723B703E29C650B7003587D2 /* UserSkills.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723B703A29C650B7003587D2 /* UserSkills.swift */; };
@@ -138,6 +140,8 @@
 		7229BE5C29BFC39A005C3AAA /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		7229BE5E29BFD1B9005C3AAA /* GlobalDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalDataManager.swift; sourceTree = "<group>"; };
 		722D9B9729DB2BFC00BF5A1D /* JobsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobsListView.swift; sourceTree = "<group>"; };
+		722D9B9D29DB4F5D00BF5A1D /* AuthSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSettingsView.swift; sourceTree = "<group>"; };
+		722D9B9F29DB4F9700BF5A1D /* UnAuthSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnAuthSettingsView.swift; sourceTree = "<group>"; };
 		723B703829C650B7003587D2 /* Skill+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Skill+Schema.swift"; path = "amplify/generated/models/Skill+Schema.swift"; sourceTree = "<group>"; };
 		723B703929C650B7003587D2 /* UserSkills+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserSkills+Schema.swift"; path = "amplify/generated/models/UserSkills+Schema.swift"; sourceTree = "<group>"; };
 		723B703A29C650B7003587D2 /* UserSkills.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserSkills.swift; path = amplify/generated/models/UserSkills.swift; sourceTree = "<group>"; };
@@ -269,6 +273,16 @@
 			path = Header;
 			sourceTree = "<group>";
 		};
+		722D9B9C29DB4F4D00BF5A1D /* SettingsView */ = {
+			isa = PBXGroup;
+			children = (
+				72DC200E29B2005600E373C2 /* SettingsView.swift */,
+				722D9B9D29DB4F5D00BF5A1D /* AuthSettingsView.swift */,
+				722D9B9F29DB4F9700BF5A1D /* UnAuthSettingsView.swift */,
+			);
+			path = SettingsView;
+			sourceTree = "<group>";
+		};
 		7267CE9E29B4FFA50021E0ED /* ElementViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -394,6 +408,7 @@
 		72FE4A6129968ED200F81353 /* JobHuntr */ = {
 			isa = PBXGroup;
 			children = (
+				722D9B9C29DB4F4D00BF5A1D /* SettingsView */,
 				72EE1C5D29C6882700791160 /* Style */,
 				727D2C6129C4EF6500736435 /* ProfileViews */,
 				7229BE5B29BFC37E005C3AAA /* Session */,
@@ -406,7 +421,6 @@
 				72FE4A6629968ED200F81353 /* Assets.xcassets */,
 				72FE4A6829968ED200F81353 /* Preview Content */,
 				72DC200C29B169E900E373C2 /* ModelExtensions.swift */,
-				72DC200E29B2005600E373C2 /* SettingsView.swift */,
 				72FD4A1A29C49E6E00A6F310 /* LoadingView.swift */,
 				72FD4A1E29C4A29800A6F310 /* ContentView.swift */,
 				72FD4A2229C4AB5F00A6F310 /* FeedbackView.swift */,
@@ -566,6 +580,7 @@
 				7267CEA629B786510021E0ED /* EditableImage.swift in Sources */,
 				727F62FE29D21E0600B160A2 /* NavigationTabView.swift in Sources */,
 				7229BE5D29BFC39A005C3AAA /* UserManager.swift in Sources */,
+				722D9BA029DB4F9700BF5A1D /* UnAuthSettingsView.swift in Sources */,
 				72833E0629C61DCB00A023AE /* LongPressButton.swift in Sources */,
 				7217E72C29C6312900017A82 /* Education.swift in Sources */,
 				723B703F29C650B7003587D2 /* Skill.swift in Sources */,
@@ -582,6 +597,7 @@
 				7201505E29D5D53D004A103D /* UserApplicationManager.swift in Sources */,
 				727D2C6329C4EF7600736435 /* NewEducationView.swift in Sources */,
 				72DC200F29B2005600E373C2 /* SettingsView.swift in Sources */,
+				722D9B9E29DB4F5D00BF5A1D /* AuthSettingsView.swift in Sources */,
 				7217E73B29C6312900017A82 /* UserSettings.swift in Sources */,
 				727F631629D4879500B160A2 /* UserEducationManager.swift in Sources */,
 				727F630E29D470A800B160A2 /* LabelledDivider.swift in Sources */,

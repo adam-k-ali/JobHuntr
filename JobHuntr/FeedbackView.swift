@@ -8,20 +8,26 @@
 import SwiftUI
 
 struct FeedbackView: View {
-    @EnvironmentObject var userManager: UserManager
+//    @EnvironmentObject var userManager: UserManager
     @Environment(\.presentationMode) var presentationMode
     
     @State private var feedback: Feedback = Feedback(type: .generalFeedback, message: "", userID: "")
     
     var body: some View {
-        Form {
-            Picker(selection: $feedback.type, label: Text("Type of Feedback")) {
-                Text("General Feedback").tag(FeedbackType.generalFeedback)
-                Text("Feature Request").tag(FeedbackType.featureRequest)
-                Text("Bug Report").tag(FeedbackType.bugReport)
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            VStack(alignment: .leading) {
+                TextField("Message", text: $feedback.message)
+                    .textFieldStyle(FormTextFieldStyle())
+                Picker(selection: $feedback.type, label: Text("Type of Feedback")) {
+                    Text("General Feedback").tag(FeedbackType.generalFeedback)
+                    Text("Feature Request").tag(FeedbackType.featureRequest)
+                    Text("Bug Report").tag(FeedbackType.bugReport)
+                }
+                .pickerStyle(.wheel)
+                Spacer()
             }
-            
-            TextField("Message", text: $feedback.message)
+            .padding()
         }
         .navigationTitle("Feedback")
         .toolbar {
@@ -32,7 +38,8 @@ struct FeedbackView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Submit") {
-                    feedback.userID = userManager.getUserId()
+                    // As of V1.1, all feedback should be anonymous.
+//                    feedback.userID = userManager.getUserId()
                     Task {
                         await GlobalDataManager.submitFeedback(feedback: feedback)
                     }
@@ -46,7 +53,8 @@ struct FeedbackView: View {
 
 struct FeedbackView_Previews: PreviewProvider {
     static var previews: some View {
-        FeedbackView()
-            .environmentObject(UserManager())
+        NavigationView {
+            FeedbackView()
+        }
     }
 }

@@ -105,6 +105,18 @@ struct LoginView: View {
             }
             .padding()
         }
+        .toolbar {
+            ToolbarItem {
+                NavigationLink(destination: {
+                    SettingsView()
+                        .environmentObject(sessionManager)
+                        .environmentObject(userManager)
+                }, label: {
+                    Image(systemName: "gearshape")
+                        .font(.headline)
+                })
+            }
+        }
     }
     
     func signIn() {
@@ -134,6 +146,7 @@ struct LoginView_Previews: PreviewProvider {
         NavigationView {
             LoginView()
                 .environmentObject(SessionManager())
+                .environmentObject(UserManager())
         }
     }
 }
