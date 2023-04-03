@@ -72,10 +72,10 @@ struct SignUpView: View {
                         })
                         .foregroundColor(Color(uiColor: UIColor.systemBlue))
                     }
-                    Spacer()
+//                    Spacer()
                     
                     
-                    
+                    Divider()
                     HStack {
                         Text("View our")
                             .font(.headline)
@@ -102,5 +102,6 @@ struct SignUpView: View {
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpView()
+            .environmentObject(SessionManager())
     }
 }
