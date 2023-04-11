@@ -14,46 +14,51 @@ struct EducationListView: View {
     @State var showNewEducation: Bool = false
     
     var body: some View {
-        Group {
-            if educationManager.records.isEmpty {
-                ListCard {
-                    Text("No Education History")
-                }
-            }
-            // List of education history
-            ForEach($educationManager.records) { $education in
-                let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
-                let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
-                NavigationLink(destination: {
-                    NavigationView {
-                        EducationDetailView(education: education)
+        VStack {
+            Group {
+                if educationManager.records.isEmpty {
+                    ListCard {
+                        Text("No Education History")
                     }
-                }) {
-                    ListCard(isChangeable: true, onDelete: {
-                        deleteEducation(education: education)
+                }
+                // List of education history
+                ForEach($educationManager.records) { $education in
+                    let startDate = education.startDate.foundationDate.format(formatString: "MMM yyyy")
+                    let endDate = education.endDate.foundationDate.format(formatString: "MMM yyyy")
+                    NavigationLink(destination: {
+                        NavigationView {
+                            EducationDetailView(education: education)
+                        }
                     }) {
-                        InstitutionCard(type: .education,
-                                        companyID: education.companyID,
-                                        title: education.roleName,
-                                        subheading: "\(startDate) - \(endDate)",
-                                        isLink: true
-                        )
+                        ListCard(isChangeable: true, onDelete: {
+                            deleteEducation(education: education)
+                        }) {
+                            InstitutionCard(type: .education,
+                                            companyID: education.companyID,
+                                            title: education.roleName,
+                                            subheading: "\(startDate) - \(endDate)",
+                                            isLink: true
+                            )
+                        }
                     }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
-            // New Education card
-            ListCard {
-                Button(action: {
-                    showNewEducation = true
-                }) {
-                    HStack {
-                        Spacer()
-                        Text("Add Education")
-                        Spacer()
+            
+            Group {
+                // New Education card
+                ListCard {
+                    Button(action: {
+                        showNewEducation = true
+                    }) {
+                        HStack {
+                            Spacer()
+                            Text("Add Education")
+                            Spacer()
+                        }
                     }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
         }
         .sheet(isPresented: $showNewEducation) {

@@ -19,36 +19,37 @@ struct NewEducationView: View {
     @State var end: Date = Date()
     
     var body: some View {
+        let bgColor = Color(uiColor: .systemGray6)
+
         ZStack {
             AppColors.background.ignoresSafeArea()
             VStack(alignment: .leading) {
                 TextField("Institution", text: $institution)
                     .textFieldStyle(FormTextFieldStyle())
-                    .colorScheme(.dark)
                     .padding()
                 
                 TextField("Name of Course", text: $courseName)
                     .textFieldStyle(FormTextFieldStyle())
-                    .colorScheme(.dark)
                     .padding(.horizontal)
                 
                 ZStack {
                     RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(AppColors.primary)
+                        .foregroundColor(bgColor)
                         .frame(height: 64)
+                    
                     DatePicker("Start Date", selection: $start, displayedComponents: [.date])
                         .padding(.horizontal)
-                        .colorScheme(.dark)
+                    
                 }
                 .padding([.top, .horizontal])
                 
                 ZStack {
                     RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(AppColors.primary)
+                        .foregroundColor(bgColor)
                         .frame(height: 64)
+                    
                     DatePicker("End Date", selection: $end, displayedComponents: [.date])
                         .padding(.horizontal)
-                        .colorScheme(.dark)
                 }
                 .padding()
                 Spacer()
@@ -61,7 +62,6 @@ struct NewEducationView: View {
                 Button("Dismiss") {
                     presentationMode.wrappedValue.dismiss()
                 }
-                .colorScheme(.dark)
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
