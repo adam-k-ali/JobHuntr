@@ -74,6 +74,7 @@
 		72921F9F299AC5F200165D38 /* UpdateApplicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72921F9E299AC5F200165D38 /* UpdateApplicationView.swift */; };
 		7297DCC129CDFBF100563322 /* LaunchStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7297DCC029CDFBF100563322 /* LaunchStateManager.swift */; };
 		7297DCC329CE8EFA00563322 /* SecureInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7297DCC229CE8EFA00563322 /* SecureInputView.swift */; };
+		72D995BB29DDE1AF00F81FAE /* InterviewQuestionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D995BA29DDE1AF00F81FAE /* InterviewQuestionsView.swift */; };
 		72DC200D29B169E900E373C2 /* ModelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DC200C29B169E900E373C2 /* ModelExtensions.swift */; };
 		72DC200F29B2005600E373C2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DC200E29B2005600E373C2 /* SettingsView.swift */; };
 		72DC201629B26A8A00E373C2 /* ResetConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DC201529B26A8A00E373C2 /* ResetConfirmationView.swift */; };
@@ -178,6 +179,7 @@
 		72921F9E299AC5F200165D38 /* UpdateApplicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateApplicationView.swift; sourceTree = "<group>"; };
 		7297DCC029CDFBF100563322 /* LaunchStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchStateManager.swift; sourceTree = "<group>"; };
 		7297DCC229CE8EFA00563322 /* SecureInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureInputView.swift; sourceTree = "<group>"; };
+		72D995BA29DDE1AF00F81FAE /* InterviewQuestionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterviewQuestionsView.swift; sourceTree = "<group>"; };
 		72DC200C29B169E900E373C2 /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
 		72DC200E29B2005600E373C2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		72DC201529B26A8A00E373C2 /* ResetConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetConfirmationView.swift; sourceTree = "<group>"; };
@@ -366,6 +368,14 @@
 			path = ApplicationViews;
 			sourceTree = "<group>";
 		};
+		72D995B929DDE19E00F81FAE /* InterviewPreparation */ = {
+			isa = PBXGroup;
+			children = (
+				72D995BA29DDE1AF00F81FAE /* InterviewQuestionsView.swift */,
+			);
+			path = InterviewPreparation;
+			sourceTree = "<group>";
+		};
 		72DC201429B26A5E00E373C2 /* AuthViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -408,6 +418,7 @@
 		72FE4A6129968ED200F81353 /* JobHuntr */ = {
 			isa = PBXGroup;
 			children = (
+				72D995B929DDE19E00F81FAE /* InterviewPreparation */,
 				722D9B9C29DB4F4D00BF5A1D /* SettingsView */,
 				72EE1C5D29C6882700791160 /* Style */,
 				727D2C6129C4EF6500736435 /* ProfileViews */,
@@ -599,6 +610,7 @@
 				72DC200F29B2005600E373C2 /* SettingsView.swift in Sources */,
 				722D9B9E29DB4F5D00BF5A1D /* AuthSettingsView.swift in Sources */,
 				7217E73B29C6312900017A82 /* UserSettings.swift in Sources */,
+				72D995BB29DDE1AF00F81FAE /* InterviewQuestionsView.swift in Sources */,
 				727F631629D4879500B160A2 /* UserEducationManager.swift in Sources */,
 				727F630E29D470A800B160A2 /* LabelledDivider.swift in Sources */,
 				72921F92299AA63D00165D38 /* ApplicationCardView.swift in Sources */,
@@ -767,7 +779,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = JobHuntr/JobHuntr.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"JobHuntr/Preview Content\"";
 				DEVELOPMENT_TEAM = 2597S9U4NK;
 				ENABLE_PREVIEWS = YES;
@@ -784,7 +796,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adamkali.JobHuntr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -803,7 +815,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = JobHuntr/JobHuntr.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"JobHuntr/Preview Content\"";
 				DEVELOPMENT_TEAM = 2597S9U4NK;
 				ENABLE_PREVIEWS = YES;
@@ -820,7 +832,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adamkali.JobHuntr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

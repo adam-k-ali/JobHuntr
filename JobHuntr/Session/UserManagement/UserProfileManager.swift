@@ -17,6 +17,10 @@ class UserProfileManager: ObservableObject {
         self.profile = Profile(userID: "", givenName: "", familyName: "", profilePicture: "", jobTitle: "", about: "")
     }
     
+    init(profile: Profile) {
+        self.profile = profile
+    }
+    
     public func load(userId: String) async {
         do {
             // Query the DataStore

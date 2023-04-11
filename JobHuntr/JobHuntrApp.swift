@@ -63,7 +63,10 @@ struct JobHuntrApp: App {
 
         // Configure Amplify
         self.configure()
-
+        
+        #if !targetEnvironment(simulator)
+        Amplify.Analytics.disable()
+        #endif
         
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
             AnalyticsManager.logAppLoad()

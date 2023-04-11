@@ -23,65 +23,28 @@ struct ProfileView: View {
     
     @State var selectedEducation: Education?
     @State var showingEditView: Bool = false
-    
-    @State var name: String = ""
-    
+        
     @ObservedObject var profileManager: UserProfileManager
 
     var body: some View {
         ZStack {
             AppColors.background.ignoresSafeArea()
             VStack {
-                HStack {
-                    HStack {
-                        ProfileHeader(profileManager: profileManager, name: name)
-                            .environmentObject(userManager)
-                        Spacer()
-                    }
-                    
-                    Spacer()
-                    Button(action: {
-                        showingEditView = true
-                    }, label: {
-                        Image(systemName: "pencil")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                    })
-                    .buttonStyle(.plain)
-                }
-                .padding(24)
-                
-                // Subtitle: Current Job Title
-                if !profileManager.profile.jobTitle.isEmpty {
-                    HStack {
-                        Text(profileManager.profile.jobTitle)
-                            .font(.headline)
-                        Spacer()
-                    }
-                    .padding(.leading, 20)
-                }
-                
+                ProfileHeader(profileManager: profileManager)
+                    .environmentObject(userManager)
+                    .padding()
+                    .padding(.horizontal)
+                Divider()
+                    .padding(.horizontal)
                 cvView
                     .padding()
             }
-            
         }
         .onAppear {
             if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
                 AnalyticsManager.logViewProfileEvent()
             }
-            reload()
         }
-        .sheet(isPresented: $showingEditView) {
-            NavigationView {
-                EditProfileView(profileManager: profileManager)
-                //                .environmentObject(userManager)
-            }
-            .onDisappear {
-                reload()
-            }
-        }
-        
     }
     
     var cvView: some View {
@@ -110,21 +73,13 @@ struct ProfileView: View {
             }
         }
     }
-    
-    func reload() {
-        if profileManager.profile.givenName.isEmpty {
-            self.name = userManager.getUsername()
-        } else {
-            self.name = profileManager.profile.givenName
-        }
-    }
 }
 
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ProfileView(profileManager: UserProfileManager())
+            ProfileView(profileManager: UserProfileManager(profile: Profile(userID: "", givenName: "John", familyName: "Doe", profilePicture: "", jobTitle: "Software Engineer", about: "")))
                 .environmentObject(UserManager())
         }
     }

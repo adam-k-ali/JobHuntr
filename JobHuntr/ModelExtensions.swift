@@ -30,6 +30,12 @@ extension UserSettings {
     var defaults: UserSettings { return UserSettings(userID: "", colorBlind: false) }
 }
 
+extension Profile {
+    var defaultProfile: Profile {
+        return Profile(userID: "", givenName: "John", familyName: "Doe", profilePicture: "", jobTitle: "Software Engineer", about: "")
+    }
+}
+
 extension ApplicationStage: Comparable {
     public static func < (lhs: ApplicationStage, rhs: ApplicationStage) -> Bool {
         return lhs.intValue < rhs.intValue

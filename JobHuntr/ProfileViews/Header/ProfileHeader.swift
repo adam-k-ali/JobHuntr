@@ -9,28 +9,45 @@ import SwiftUI
 
 struct ProfileHeader: View {
     @EnvironmentObject var userManager: UserManager
-    
     @ObservedObject var profileManager: UserProfileManager
-    
-    var name: String
-    
+
+    @State var showingEditView: Bool = false
+        
     var body: some View {
-        HStack {
-            Label(title: {
-                Text("**Welcome, \(name)!**")
-                    .font(.largeTitle)
-            }, icon: {
-                ProfilePicture(profileManager: profileManager, size: CGSize(width: 42, height: 42), showEdit: false)
-//                    .environmentObject(userManager)
-            })
+        HStack(alignment: .top) {
+            VStack(alignment: .leading) {
+                ProfilePicture(profileManager: profileManager, size: CGSize(width: 64, height: 64), showEdit: false)
+                Group {
+                    Text("\(profileManager.profile.givenName) \(profileManager.profile.familyName)")
+                        .font(.headline)
+                    if !profileManager.profile.jobTitle.isEmpty {
+                        Text(profileManager.profile.jobTitle)
+                    }
+                }
+            }
+        
             Spacer()
+            Button(action: {
+                showingEditView = true
+            }, label: {
+                Image(systemName: "pencil")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+            })
+            .buttonStyle(.plain)
+        }
+        .sheet(isPresented: $showingEditView) {
+            NavigationView {
+                EditProfileView(profileManager: profileManager)
+                //                .environmentObject(userManager)
+            }
         }
     }
 }
 
 struct ProfileHeader_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileHeader(profileManager: UserProfileManager(), name: "John")
+        ProfileHeader(profileManager: UserProfileManager(profile: Profile(userID: "", givenName: "John", familyName: "Doe", profilePicture: "", jobTitle: "Software Engineer", about: "")))
             .environmentObject(UserManager())
     }
 }

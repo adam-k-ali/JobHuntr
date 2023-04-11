@@ -2,10 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Privacy Policy</key>
+	<string>https://adamkali.com/privacy-policy/</string>
 	<key>NSIdentityUsageDescription</key>
-	<string>The app uses your e-mail address to deliver current and future features to you and other users. These include allowing you to track your job applications wherever you are, on any device. We will also use your job application information to provide insights into where you may be successful in applying.
-We will never use your e-mail address to contact you without consent. In signing up it is used to verify your identity to prevent spam/bot accounts.
-You are able to delete your account at any time, which will wipe any information we have that is linked to your identity.</string>
+	<string>In Short: We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent. To find more specific information on what information we collect, and how we use it, please see our privacy policy.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera needed to take a profile picture</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
