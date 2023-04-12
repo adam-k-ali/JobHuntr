@@ -17,7 +17,7 @@ import SwiftUI
 
 @main
 struct JobHuntrApp: App {
-    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+//    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     
     @ObservedObject var sessionManager: SessionManager = SessionManager()
     @ObservedObject var launchManager: LaunchStateManager = LaunchStateManager()
