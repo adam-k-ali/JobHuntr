@@ -36,6 +36,7 @@
 		7217E74329C640A500017A82 /* SkillCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217E74229C640A500017A82 /* SkillCardView.swift */; };
 		7229BE5D29BFC39A005C3AAA /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7229BE5C29BFC39A005C3AAA /* UserManager.swift */; };
 		7229BE5F29BFD1B9005C3AAA /* GlobalDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7229BE5E29BFD1B9005C3AAA /* GlobalDataManager.swift */; };
+		722B416729E6FF93009A67C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722B416629E6FF93009A67C4 /* AppDelegate.swift */; };
 		722D9B9829DB2BFC00BF5A1D /* JobsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722D9B9729DB2BFC00BF5A1D /* JobsListView.swift */; };
 		722D9B9E29DB4F5D00BF5A1D /* AuthSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722D9B9D29DB4F5D00BF5A1D /* AuthSettingsView.swift */; };
 		722D9BA029DB4F9700BF5A1D /* UnAuthSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722D9B9F29DB4F9700BF5A1D /* UnAuthSettingsView.swift */; };
@@ -140,6 +141,7 @@
 		7217E74229C640A500017A82 /* SkillCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillCardView.swift; sourceTree = "<group>"; };
 		7229BE5C29BFC39A005C3AAA /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		7229BE5E29BFD1B9005C3AAA /* GlobalDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalDataManager.swift; sourceTree = "<group>"; };
+		722B416629E6FF93009A67C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		722D9B9729DB2BFC00BF5A1D /* JobsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobsListView.swift; sourceTree = "<group>"; };
 		722D9B9D29DB4F5D00BF5A1D /* AuthSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSettingsView.swift; sourceTree = "<group>"; };
 		722D9B9F29DB4F9700BF5A1D /* UnAuthSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnAuthSettingsView.swift; sourceTree = "<group>"; };
@@ -436,6 +438,7 @@
 				72FD4A1E29C4A29800A6F310 /* ContentView.swift */,
 				72FD4A2229C4AB5F00A6F310 /* FeedbackView.swift */,
 				727F62FD29D21E0600B160A2 /* NavigationTabView.swift */,
+				722B416629E6FF93009A67C4 /* AppDelegate.swift */,
 			);
 			path = JobHuntr;
 			sourceTree = "<group>";
@@ -565,6 +568,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				722B416729E6FF93009A67C4 /* AppDelegate.swift in Sources */,
 				72921F9F299AC5F200165D38 /* UpdateApplicationView.swift in Sources */,
 				7217E72A29C6312900017A82 /* Education+Schema.swift in Sources */,
 				72ED1E3F299B08BC00EC3B14 /* SessionManager.swift in Sources */,

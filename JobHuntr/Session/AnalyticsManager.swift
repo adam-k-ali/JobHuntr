@@ -34,7 +34,7 @@ class AnalyticsManager {
     }
     
     public static func logUserSignUpEvent() {
-        logBasicEvent(name: "_userauth.sign_out")
+        logBasicEvent(name: "_userauth.sign_up")
     }
     
     public static func logAuthFailEvent(description: String) {

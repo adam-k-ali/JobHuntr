@@ -17,6 +17,8 @@ import SwiftUI
 
 @main
 struct JobHuntrApp: App {
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    
     @ObservedObject var sessionManager: SessionManager = SessionManager()
     @ObservedObject var launchManager: LaunchStateManager = LaunchStateManager()
     @ObservedObject var userManager: UserManager = UserManager()
@@ -67,6 +69,10 @@ struct JobHuntrApp: App {
         #if !targetEnvironment(simulator)
         Amplify.Analytics.disable()
         #endif
+        
+        // Register for Push Notifications
+//        self.registerForPushNotifications()
+        
         
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
             AnalyticsManager.logAppLoad()
@@ -144,14 +150,25 @@ struct JobHuntrApp: App {
         }
     }
     
-//    func startDataStore() async {
-//        do {
-//            try await Amplify.DataStore.start()
-//            print("DataStore Started")
-//        } catch let error as DataStoreError {
-//            print("Failed with error \(error)")
-//        } catch {
-//            print("Unexpected Error \(error)")
-//        }
-//    }
+    func registerForPushNotifications() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+            guard success else {return}
+            print("Notification Permission Granted")
+        }
+        
+        
+    }
+    
+    func getNotificationSettings() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            print("Notification settings: \(settings)")
+            guard settings.authorizationStatus == .authorized else { return }
+            
+            DispatchQueue.main.async {
+                // Register with Apple Push Notification Service
+                UIApplication.shared.registerForRemoteNotifications()
+            }
+        }
+    }
+    
 }
